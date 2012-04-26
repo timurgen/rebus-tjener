@@ -14,7 +14,7 @@ import db.UserDBAdapter;
 public class Test {
     public static void main(String[] args) {
         UserDBAdapter a = new UserDBAdapter();
-        a.persistUser(new User("test", "test222"));
+        a.persistUser(new User("test2", "test222"));
     }
     
 }

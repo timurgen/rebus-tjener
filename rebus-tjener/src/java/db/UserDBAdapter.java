@@ -2,10 +2,7 @@
 package db;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
@@ -22,9 +19,9 @@ public class UserDBAdapter {
     //constructor
     public UserDBAdapter() {
         emf = Persistence.createEntityManagerFactory("$objectdb/db/usr.odb");
-        System.out.println("entity manager factory OK"); //debugg
+        //System.out.println("entity manager factory OK"); //debugg
         em = emf.createEntityManager();
-        System.out.println("entity manager OK"); //debugg
+        //System.out.println("entity manager OK"); //debugg
     }
     //destructor
     @Override
@@ -35,36 +32,20 @@ public class UserDBAdapter {
     /**
      * legger ny bruker til database
      * @param u
-     * @return true om bruker ble lagret ellers false
+     * @return true om bruker ble lagret ellers persistence exception
      */
     public boolean persistUser(User u) {
         try {
             em.getTransaction().begin();
             em.persist(u);
             em.getTransaction().commit();
-            System.out.println("bruker lagt til database"); //debugg
+            //System.out.println("bruker lagt til database"); //debugg
             return true;
         }
-        catch(Exception e){
-            e.printStackTrace();
+        catch(PersistenceException e){
+            System.out.println(e.getMessage());
             return false;
         }
-    }
-    /**
-     * Metode sjekker om bruker med gitt brukernavn eksisterer i database
-     * @param u Bruker objekt
-     * @return true om brukernavn eksisterer ellers false 
-     */
-    public boolean checkIfUserExists(User u) {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<User> q = cb.createQuery(User.class);
-        Root<User> c = q.from(User.class);
-        q.select(c);
-        ParameterExpression<String> p = cb.parameter(String.class);
-        q.where(cb.equal(c.get("username"), p));
-        TypedQuery query = em.createQuery(q);
-        List<User> result = query.getResultList();
-        return true; //om brukernavn eksisterer i database
     }
     
     
