@@ -2,6 +2,7 @@
 package db;
 
 import java.io.Serializable;
+import javax.jdo.annotations.Unique;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,7 +31,7 @@ public class User implements Serializable {
         this.id = id;
     }
     
-    private String name;
+    @Unique private String name;
     private String pass;
 
     public String getName() {
@@ -56,7 +57,7 @@ public class User implements Serializable {
     public User(String name, String pass) {
         this.name = name;
         this.pass = pass;
-        System.out.println("user created");
+        //System.out.println("user created OK"); //debugg
     }
     
     
