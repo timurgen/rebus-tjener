@@ -1,10 +1,15 @@
 
 package db;
 
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Root;
 
 /**
  *
@@ -17,7 +22,9 @@ public class UserDBAdapter {
     //constructor
     public UserDBAdapter() {
         emf = Persistence.createEntityManagerFactory("$objectdb/db/usr.odb");
+        System.out.println("entity manager factory OK"); //debugg
         em = emf.createEntityManager();
+        System.out.println("entity manager OK"); //debugg
     }
     //destructor
     @Override
@@ -35,9 +42,11 @@ public class UserDBAdapter {
             em.getTransaction().begin();
             em.persist(u);
             em.getTransaction().commit();
+            System.out.println("bruker lagt til database"); //debugg
             return true;
         }
         catch(Exception e){
+            e.printStackTrace();
             return false;
         }
     }
@@ -47,6 +56,14 @@ public class UserDBAdapter {
      * @return true om brukernavn eksisterer ellers false 
      */
     public boolean checkIfUserExists(User u) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<User> q = cb.createQuery(User.class);
+        Root<User> c = q.from(User.class);
+        q.select(c);
+        ParameterExpression<String> p = cb.parameter(String.class);
+        q.where(cb.equal(c.get("username"), p));
+        TypedQuery query = em.createQuery(q);
+        List<User> result = query.getResultList();
         return true; //om brukernavn eksisterer i database
     }
     
