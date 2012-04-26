@@ -1,7 +1,10 @@
 
 package db;
 
+import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
@@ -10,9 +13,14 @@ import javax.persistence.Id;
  */
 
 @Entity
-public class User {
-    @Id
+public class User implements Serializable {
+    @Id  @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
+    /**
+     * default constructor uten argumenter
+     */
+    public User() {
+    }
 
     public Long getId() {
         return id;
@@ -21,5 +29,35 @@ public class User {
     public void setId(Long id) {
         this.id = id;
     }
+    
+    private String name;
+    private String pass;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPass() {
+        return pass;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
+    /**
+     * constructor
+     * @param name brukernavn
+     * @param pass passord (i klartekst nå)
+     */
+    public User(String name, String pass) {
+        this.name = name;
+        this.pass = pass;
+        System.out.println("user created");
+    }
+    
     
 }
