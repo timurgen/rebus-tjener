@@ -1,7 +1,6 @@
 
 package db;
 
-import java.util.List;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -47,6 +46,44 @@ public class UserDBAdapter {
             return false;
         }
     }
+    /**
+     * 
+     * @param id
+     * @return 
+     */
+    public User getUserById(long id) {
+        User u1 = em.find(User.class, id);
+        return u1;      
+    }
+    
+    /**
+     * 
+     * @param name
+     * @return 
+     */
+    public User getUserByName(String name) {
+        TypedQuery q = em.createQuery("SELECT u FROM User u WHERE u.name = :name", User.class);
+        User u1 = (User) q.setParameter("name", name).getSingleResult();
+        return u1;     
+    }
+    /**
+     * 
+     * @param name
+     * @param pass
+     * @return 
+     */
+    public boolean autentificate(String name, String pass) {
+        TypedQuery q = em.createQuery("SELECT u FROM User u WHERE u.name = :name AND u.pass = :pass", User.class);
+        try {
+            User u1 = (User)q.setParameter("name", name).setParameter("pass", pass).getSingleResult();
+            return true;
+        }
+        catch(PersistenceException pe) {
+            System.out.println(pe.getMessage());
+            return false;
+        }
+    }
+    
     
     
     
