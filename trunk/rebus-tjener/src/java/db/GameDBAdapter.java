@@ -1,10 +1,9 @@
 package db;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.jdo.JDOHelper;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.PersistenceException;
+import javax.persistence.*;
 
 /**
  *
@@ -55,6 +54,12 @@ public class GameDBAdapter {
         JDOHelper.makeDirty(g, "pointList");
         em.getTransaction().commit();
         
+    }
+    
+    public List<Game> getAllGames () {
+        TypedQuery<Game> q1 = em.createQuery("SELECT g FROM Game g", Game.class);
+        List<Game> results = q1.getResultList();
+        return results;
     }
     
 

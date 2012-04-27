@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Entity
 public class Game implements Serializable{
     @Id  @GeneratedValue(strategy=GenerationType.AUTO)
-    private Long id; //primary key 
+    private Long idGame; //primary key 
     private String name; //navn av spill
     private int varighet; //varighet av spill
     private boolean isOpen; //true om løp åpent for alle ellers false
@@ -29,7 +29,6 @@ public class Game implements Serializable{
      * constructor
      * @param name
      * @param varighet
-     * @param pointQuantity
      * @param isOpen
      * @param startDate 
      */
@@ -46,7 +45,7 @@ public class Game implements Serializable{
     //Getter&setter block
 
     public Long getId() {
-        return id;
+        return idGame;
     }
 
     public boolean isIsOpen() {

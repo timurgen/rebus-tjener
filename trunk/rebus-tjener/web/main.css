@@ -1,0 +1,52 @@
+/* 
+    Document   : main
+    Created on : Apr 27, 2012, 8:45:18 PM
+    Author     : 490501
+    Description:
+        Purpose of the stylesheet follows.
+*/
+body {
+    background-color: #fff5ee;
+}
+root { 
+    display: block;
+}
+
+div.gameline {
+    
+}
+
+div.menu_main {
+    width: 100%;
+    height: 100pt;
+}
+
+hr {
+    color: #f00;
+    background-color: #f00;
+    height: 5px;
+    width: 50%;
+    position: relative;
+    top: 100%;
+    right: 25%;
+}
+div.menu_element {
+    display: inline;
+    position: relative;
+    top: 100pt;  
+}
+table{
+    border: 2pt solid black;
+    padding: 2pt;
+    background-color: #ffefd5;
+    font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse:collapse;
+    position: relative;
+    
+    
+}
+td, th {
+    font-size:1em;
+    border:1px solid #ffdead;
+    padding:3px 7px 2px 7px
+}
