@@ -1,5 +1,6 @@
 package db;
 
+import javax.jdo.JDOHelper;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -30,7 +31,7 @@ public class GameDBAdapter {
      * @param g object av Game klasse
      * @return true om alt er OK ellers exception
      */
-    public boolean persistgame(Game g) {
+    public boolean persistGame(Game g) {
         try {
             em.getTransaction().begin();
             em.persist(g);
@@ -41,6 +42,19 @@ public class GameDBAdapter {
             System.out.println(e.getMessage());
             return false; //bare for å ungå feil i kompiler, aldri returneres
         }
+    }
+    public Game getGameById(long id) {
+        Game g = em.find(Game.class, id);
+        return g;
+    }
+    
+    public void addPointToGameInDB(GamePunkt gp, long gameId) {
+        Game g = this.getGameById(gameId);
+        em.getTransaction().begin();
+        g.addPoint(gp);
+        JDOHelper.makeDirty(g, "pointList");
+        em.getTransaction().commit();
+        
     }
     
 
