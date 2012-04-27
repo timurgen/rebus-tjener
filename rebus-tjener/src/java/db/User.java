@@ -30,9 +30,10 @@ public class User implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    
+    //variabler
     @Unique private String name;
     private String pass;
+    ////////////////////////////
 
     public String getName() {
         return name;
