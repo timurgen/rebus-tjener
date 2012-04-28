@@ -7,6 +7,7 @@
 */
 body {
     background-color: #fff5ee;
+    
 }
 root { 
     display: block;
@@ -17,21 +18,22 @@ div.gameline {
 }
 
 div.menu_main {
-    width: 100%;
+    width: 80%;
     height: 100pt;
+    position: relative;
+    left: 250pt;
 }
 
-hr {
+hr{
     color: #f00;
-    background-color: #f00;
-    height: 5px;
-    width: 50%;
+    background-color: black;
+    height: 3px;
+    width: 100%;
     position: relative;
-    top: 100%;
-    right: 25%;
+    right: 0%;
 }
 div.menu_element {
-    display: inline;
+    
     position: relative;
     top: 100pt;  
 }
@@ -42,11 +44,119 @@ table{
     font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse:collapse;
     position: relative;
+    left: 250pt;
+    top: 40pt;
     
     
 }
 td, th {
     font-size:1em;
     border:1px solid #ffdead;
-    padding:3px 7px 2px 7px
+    padding:3px 7px 2px 7px;
 }
+div.footer {
+    width: 80%;
+    position: relative;
+    left: 250pt;
+    top: 40pt;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    
+}
+
+a.button {
+    background: transparent url('bg_button_a.gif') no-repeat scroll top right;
+    color: #444;
+    display: block;
+    float: left;
+    font: normal 12px arial, sans-serif;
+    height: 24px;
+    margin-right: 6px;
+    padding-right: 18px; /* sliding doors padding */
+    text-decoration: none;
+}
+
+a.button span {
+    background: transparent url('bg_button_span.gif') no-repeat;
+    display: block;
+    line-height: 14px;
+    padding: 5px 0 5px 18px;
+}
+a.button:active {
+    background-position: bottom right;
+    color: #000;
+    outline: none; /* hide dotted outline in Firefox */
+}
+
+a.button:active span {
+    background-position: bottom left;
+    padding: 6px 0 4px 18px; /* push text down 1px */
+}
+
+div.join-button {
+	-webkit-box-shadow: rgba(0, 0, 0, 0.0.97) 0px 1px 0px 0px;
+	background-color: #d5d5d5;
+	border: 1px solid #29447E;
+	font-family: 'Lucida Grande', Tahoma, Verdana, Arial, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 2px 6px;
+	height: 28px;
+        width:50pt;
+	color: #4f7942;
+	border-radius: 5px;
+}
+div.join-button-2 {
+	-webkit-box-shadow: rgba(0, 0, 0, 0.0.97) 0px 1px 0px 0px;
+	background-color: #d5d5d5;
+	border: 1px solid #29447E;
+	font-family: 'Lucida Grande', Tahoma, Verdana, Arial, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 2px 6px;
+	height: 28px;
+        width:50pt;
+	color: #ea7500;
+	border-radius: 5px;
+}
+div.login_area {
+    width: 50%;
+    height: 300pt;
+    /*background-color: #cadaba;*/
+    /*opacity: 0.4;*/
+    background: rgba(202, 218, 186, 0.3);
+    position: relative;
+    left: 250pt;
+    top: 40pt;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    
+
+}
+div.login_box {
+    opacity: 0.7;
+    border: 2pt solid black;
+    padding: 4pt;
+    background-color: #ffefd5;
+    position: relative;
+    left: 30%;
+    top: 30%;
+    width: 250pt;
+    height: 90pt;
+    color: green;
+}
+
+A:link{ text-decoration: none; }
+A:visited{ text-decoration: none; }
+A:hover{ text-decoration: none;}
+input.login { 
+    -webkit-border-radius: 5px; 
+    -moz-border-radius: 5px; 
+    border-radius: 5px;
+    margin: 5pt;
+}
+div.wrong_message {
+    color:red;
+    font-size: large;
+}
+
