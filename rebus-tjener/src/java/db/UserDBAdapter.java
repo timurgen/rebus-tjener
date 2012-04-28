@@ -72,16 +72,10 @@ public class UserDBAdapter {
      * @param pass
      * @return 
      */
-    public boolean autentificate(String name, String pass) {
+    public boolean autentificate(String name, String pass) throws PersistenceException{
         TypedQuery q = em.createQuery("SELECT u FROM User u WHERE u.name = :name AND u.pass = :pass", User.class);
-        try {
             User u1 = (User)q.setParameter("name", name).setParameter("pass", pass).getSingleResult();
             return true;
-        }
-        catch(PersistenceException pe) {
-            System.out.println(pe.getMessage());
-            return false;
-        }
     }
     
     

@@ -9,20 +9,21 @@
 %>
 
 <div class="menu_main">
-    <div class="menu_element"><a href="">Main page</a></div>
-    <div class="menu_element"><a href="">About</a></div>
+    <div class="menu_element"><a class="button" href=""><span>Main page</span></a></div>
+    <div class="menu_element"><a class="button" href=""><span>About</span></a></div>
     <%
     if(session.getAttribute("username") != null) {
     %>
-    <div class="menu_element"><a href="">Log out</a></div>
+    <div class="menu_element"><a class="button" href=""><span>Create game</span></a></div>
+    <div class="menu_element"><a class="button" href="login?mode=logout"><span>Log out</span></a></div>
+    
     
     <%
        } else {
     %>
-    <div class="menu_element"><a href="">Sign in</a></div>
-    <div class="menu_element"><a href="">Sign up</a></div>
+    <div class="menu_element"><a class="button" href=""><span>Sign in</span></a></div>
+    <div class="menu_element"><a class="button" href=""><span>Sign up</span></a></div>
     <%
        }
-    %>    
-    <hr>   
+    %>     
 </div>

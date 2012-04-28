@@ -2,8 +2,13 @@ package db;
 
 import exceptions.GameEndException;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.*;
 
 /**
@@ -17,11 +22,11 @@ public class Game implements Serializable{
     private String name; //navn av spill
     private int varighet; //varighet av spill
     private boolean isOpen; //true om løp åpent for alle ellers false
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date startDate; //klokkeslett for oppstart
+    private long startDate; //klokkeslett for oppstart
     @OneToMany(cascade=CascadeType.PERSIST)
     private ArrayList<GamePunkt> pointList;
     private int currentPoint;
+    private String authorName;
 
     public Game() {
     }
@@ -32,11 +37,19 @@ public class Game implements Serializable{
      * @param isOpen
      * @param startDate 
      */
-    public Game(String name, int varighet, boolean isOpen, Date startDate) {
+    public Game(String authorName, String name, int varighet, boolean isOpen, String start) {
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        try {
+            Date date = formatter.parse(start);
+            this.startDate = date.getTime();
+        } catch (ParseException ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.authorName = authorName;
         this.name = name;
         this.varighet = varighet;
         this.isOpen = isOpen;
-        this.startDate = startDate;
+        
         this.pointList = new ArrayList<GamePunkt>();
         this.currentPoint = 0;
     }
@@ -64,11 +77,11 @@ public class Game implements Serializable{
         this.name = name;
     }
 
-    public Date getStartDate() {
+    public long getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(long startDate) {
         this.startDate = startDate;
     }
 
@@ -79,6 +92,13 @@ public class Game implements Serializable{
     public void setVarighet(int varighet) {
         this.varighet = varighet;
     }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+    
+    
+    
     ////////////////////////////////////////////////////////////////////////////
     /**
      * 
