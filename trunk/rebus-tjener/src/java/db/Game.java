@@ -25,6 +25,7 @@ public class Game implements Serializable{
     private long startDate; //klokkeslett for oppstart
     @OneToMany(cascade=CascadeType.PERSIST)
     private ArrayList<GamePunkt> pointList;
+    private ArrayList<Long> partisipants; //idier til påmeldte
     private int currentPoint;
     private String authorName;
 
@@ -107,6 +108,11 @@ public class Game implements Serializable{
     public void addPoint(GamePunkt gp) {
         this.pointList.add(gp);
     }
+    /**
+     * 
+     * @return
+     * @throws Exception 
+     */
     public GamePunkt getNextPunkt() throws Exception {
         if(this.currentPoint < this.pointList.size()) {   
             return this.pointList.get(this.currentPoint++);
@@ -115,6 +121,37 @@ public class Game implements Serializable{
             throw new GameEndException("max antal reached");
         }
     }
+    /**
+     * 
+     * @param id til deltaker
+     * @throws Exception 
+     */
+    public void addPartisipant(long id) throws Exception {
+        if(this.partisipants.contains(id)){
+            throw new Exception("user allerede i list");
+        }
+        else {
+            this.partisipants.add(id);
+        }
+    }
+    
+    /**
+     * 
+     * @return ArrayList med id'er til deltakere
+     */
+    public ArrayList<Long> getAllPartisipants() {
+        return this.partisipants;
+    }
+    /**
+     * 
+     * @param id til deltaker
+     * @return true om deltaker meldt på løp ellers false
+     */
+    public boolean getPartisipant(long id) {
+        return (this.partisipants.contains(id));
+    }
+    
+
     
 
 }
