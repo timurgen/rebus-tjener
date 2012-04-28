@@ -1,6 +1,6 @@
 <%-- 
-    Document   : login
-    Created on : Apr 28, 2012, 9:12:25 AM
+    Document   : register
+    Created on : Apr 28, 2012, 12:42:41 PM
     Author     : 490501
 --%>
 
@@ -17,21 +17,21 @@
     </head>
     <body>
         <%@include file='menu.jsp'%>
-        <div class="login_area">
+        <div class="register_area">
             
-            <div class="login_box">
+            <div class="register_box">
                 <form action="login?mode=login" method="post" name="login_form">
                 
                     <% if(wrongMessage != null) { %>
                     <div class="wrong_message" id="msg_wrong"><center><% out.print(wrongMessage); %> </center></div>
                     <% } %>
-                
                     <label name="lbl_name" id="id_lbl_name">Username:</label>
-                    <input class="login" type="text" name="name"/><br />
+                    <input class="register" type="text" name="name"/><br />
                     <label name="lbl_pass" id="id_lbl_pass">Password:</label>
-                    <input class="login" type="password" name="pass"/><br/>
-                    <input type="submit" value="Log in" name="btn_login" />
-                    <a href="register.jsp">Sign up</a>
+                    <input class="register" type="password" name="pass"/><br/>
+                    <label name="lbl_pass" id="id_lbl_pass">Retype:&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <input class="register" type="password" name="pass2"/><br/>
+                    <input type="submit" value="Send" name="btn_login" />
                 </form>
             </div>
         </div>

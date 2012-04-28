@@ -16,13 +16,14 @@
     %>
     <div class="menu_element"><a class="button" href=""><span>Create game</span></a></div>
     <div class="menu_element"><a class="button" href="login?mode=logout"><span>Log out</span></a></div>
+    <p>Logged as: <% out.println(session.getAttribute("username")); %></p>
     
     
     <%
        } else {
     %>
-    <div class="menu_element"><a class="button" href=""><span>Sign in</span></a></div>
-    <div class="menu_element"><a class="button" href=""><span>Sign up</span></a></div>
+    <div class="menu_element"><a class="button" href="login.jsp"><span>Sign in</span></a></div>
+    <div class="menu_element"><a class="button" href="register.jsp"><span>Sign up</span></a></div>
     <%
        }
     %>     
