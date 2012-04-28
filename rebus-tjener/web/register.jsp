@@ -13,14 +13,14 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link type="text/css" rel="stylesheet" href="main.css" />
-        <title>Login Page</title>
+        <title>Registration</title>
     </head>
     <body>
         <%@include file='menu.jsp'%>
         <div class="register_area">
             
             <div class="register_box">
-                <form action="login?mode=login" method="post" name="login_form">
+                <form action="login?mode=register" method="post" name="register_form">
                 
                     <% if(wrongMessage != null) { %>
                     <div class="wrong_message" id="msg_wrong"><center><% out.print(wrongMessage); %> </center></div>
