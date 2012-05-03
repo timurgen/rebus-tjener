@@ -13,13 +13,13 @@
 <%  //setter opp forbindelse med database
     GameDBAdapter gameDB = new GameDBAdapter();
     //test
-        Game g = new Game("Timur","name", 90,false, "01/05/2012 22:15:00");
-        GamePunkt gg = new GamePunkt(47.5645,125.4565,50,"name 5", "text of mega rebus");
-        g.addPoint(gg);   
-        gg = new GamePunkt(48.5645,125.4565,50,"name 6", "text of mega rebus");
-        g.addPoint(gg);
-        gameDB.persistGame(g);
-        gameDB.addPointToGameInDB(gg, 1);
+        //Game g = new Game("test","name", 90,false, "29/04/2012 13:15:00");
+        //GamePunkt gg = new GamePunkt(47.5645,125.4565,50,"name 5", "text of mega rebus");
+        //g.addPoint(gg);   
+        //gg = new GamePunkt(48.5645,125.4565,50,"name 6", "text of mega rebus");
+        //g.addPoint(gg);
+        //gameDB.persistGame(g);
+        //gameDB.addPointToGameInDB(gg, 1);
     //plukker ut spilllist
     List<Game> gameList = gameDB.getAllGames();
 %>
@@ -32,8 +32,9 @@
     </head>
     <body>
         <%@include file='menu.jsp'%>
+        <!--Viser list med alle spill som er registrert på systemmet-->
         <% if(gameList.size() > 0) {
-            out.println("<table>");
+            out.println("<table class=\"gamelist\">"); //table header
             out.println("<tr>");
             out.println("<th>name of game</th>");
             out.println("<th>Start time</th>");
@@ -41,7 +42,7 @@
             out.println("<th>Join</th>");
             out.println("</tr>");
             for(int i = 0; i < gameList.size(); i++) {
-
+                    //tabell innhold
                     out.println("<tr>");
                         out.println("<td>");
                             out.println(gameList.get(i).getName());
@@ -64,7 +65,7 @@
                             out.println("</td>");
                         }
                         else if(gameList.get(i).isIsOpen() == false & session.getAttribute("username")== null ) {
-                        //om brukeren er ikke pålogget og spill bare for de som er registrert so viser ikke
+                        //om brukeren er ikke pålogget og spill bare for de som er registrert so viser tilsvarende melding
                             out.println("<td>");
                                 long gameId = gameList.get(i).getId();
                                 //html button

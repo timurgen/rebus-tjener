@@ -5,9 +5,11 @@
     Description:
         Purpose of the stylesheet follows.
 */
+html { height: 100% }
+
 body {
     background-color: #fff5ee;
-    
+    height: 100%; margin: 0; padding: 0
 }
 root { 
     display: block;
@@ -37,7 +39,7 @@ div.menu_element {
     position: relative;
     top: 100pt;  
 }
-table{
+table.gamelist{
     border: 2pt solid black;
     padding: 2pt;
     background-color: #ffefd5;
@@ -45,9 +47,10 @@ table{
     border-collapse:collapse;
     position: relative;
     left: 250pt;
-    top: 40pt;
-    
-    
+    top: 40pt;   
+}
+table.gamepoint {
+    border: 0pt;
 }
 td, th {
     font-size:1em;
@@ -162,7 +165,7 @@ div.login_box {
 A:link{ text-decoration: none; }
 A:visited{ text-decoration: none; }
 A:hover{ text-decoration: none;}
-input.login, input.register { 
+input.login, input.register, input.addGame { 
     -webkit-border-radius: 5px; 
     -moz-border-radius: 5px; 
     border-radius: 5px;
@@ -173,3 +176,35 @@ div.wrong_message {
     font-size: large;
 }
 
+div.wrong_credentials {
+    position: relative;
+    top: 30%;
+    left: 30%;
+    width: 300pt;
+    height: 150pt;
+    padding: 4pt;
+    border: 2pt solid #ff0000;
+    background-color: #ffefd5;
+    -webkit-border-radius: 5px; 
+    -moz-border-radius: 5px; 
+    border-radius: 5px;
+    margin: 5pt;
+}
+
+
+div.create_game_form {
+    position: relative;
+    margin-bottom: 30pt;
+    width: 50%;
+    top: 10%;
+    left: 15%;
+    
+}
+
+#map_canvas {
+    height: 480pt;
+    width: 640pt;
+    padding-bottom: 20pt;
+    margin: 40pt;
+        
+}
