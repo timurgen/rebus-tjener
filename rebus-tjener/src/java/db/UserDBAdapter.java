@@ -38,11 +38,17 @@ public class UserDBAdapter {
             em.getTransaction().begin();
             em.persist(u);
             em.getTransaction().commit();
-            //System.out.println("bruker lagt til database"); //debugg
+            System.out.println("bruker lagt til database"); //debugg
+            em.clear();
+            em.close();
+            emf.close();
             return true;
         }
         catch(PersistenceException e){
-            System.out.println(e.getMessage());
+            System.out.println(e.getMessage()+"suka");
+            em.clear();
+            em.close();
+            emf.close();
             return false;
         }
     }
@@ -53,6 +59,7 @@ public class UserDBAdapter {
      */
     public User getUserById(long id) {
         User u1 = em.find(User.class, id);
+        finalize();
         return u1;      
     }
     
@@ -64,6 +71,7 @@ public class UserDBAdapter {
     public User getUserByName(String name) {
         TypedQuery q = em.createQuery("SELECT u FROM User u WHERE u.name = :name", User.class);
         User u1 = (User) q.setParameter("name", name).getSingleResult();
+        finalize();
         return u1;     
     }
     /**
@@ -76,9 +84,11 @@ public class UserDBAdapter {
         TypedQuery q = em.createQuery("SELECT u FROM User u WHERE u.name = :name AND u.pass = :pass", User.class);
         try {
             User u1 = (User)q.setParameter("name", name).setParameter("pass", pass).getSingleResult();
+            finalize();
             return true;
         }
         catch(PersistenceException e) {
+            finalize();
             throw new PersistenceException("username not found or password is invalid");
         }
 

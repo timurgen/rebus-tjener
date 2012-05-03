@@ -9,12 +9,12 @@
 %>
 
 <div class="menu_main">
-    <div class="menu_element"><a class="button" href=""><span>Main page</span></a></div>
-    <div class="menu_element"><a class="button" href=""><span>About</span></a></div>
+    <div class="menu_element"><a class="button" href="index.jsp"><span>Main page</span></a></div>
+    <div class="menu_element"><a class="button" href="about.jsp"><span>About</span></a></div>
     <%
     if(session.getAttribute("username") != null) {
     %>
-    <div class="menu_element"><a class="button" href=""><span>Create game</span></a></div>
+    <div class="menu_element"><a class="button" href="addgame.jsp"><span>Create game</span></a></div>
     <div class="menu_element"><a class="button" href="login?mode=logout"><span>Log out</span></a></div>
     <p>Logged as: <% out.println(session.getAttribute("username")); %></p>
     

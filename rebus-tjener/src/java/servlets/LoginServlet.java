@@ -1,6 +1,7 @@
 
 package servlets;
 
+import db.User;
 import db.UserDBAdapter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -43,6 +44,7 @@ public class LoginServlet extends HttpServlet {
                    HttpSession session = request.getSession();
                    session.setAttribute("username", name);
                    response.sendRedirect("index.jsp");
+                   
                 }
             }
             catch(PersistenceException pe) {
@@ -51,7 +53,12 @@ public class LoginServlet extends HttpServlet {
 
         }
         else if(request.getParameter("mode").equals("register")) {
-            //register
+            User user = new User(request.getParameter("name"), request.getParameter("pass"));
+            if(u.persistUser(user))
+                response.sendRedirect("login.jsp?wrongmessage=\"Registration completed you can log in now\"");
+            else
+                response.sendRedirect("login.jsp?wrongmessage=\"Username exists");
+
         }
         else if(request.getParameter("mode").equals("logout")) {
             //terminate session
