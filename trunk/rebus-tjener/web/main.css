@@ -200,6 +200,12 @@ div.create_game_form {
     left: 15%;
     
 }
+div.infoWindowMessage {
+    position: relative;
+    top: 5%;
+    left: 5%;
+    width: 70pt;
+}
 
 #map_canvas {
     height: 480pt;

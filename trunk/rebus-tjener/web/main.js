@@ -44,17 +44,12 @@ var contentString =
 var infoWindow;
 var loc;
 var number;
-var arrayName;
-var arrayText;
-var arrayLocation;
-var arrayRadius;
 var markers;
+var circle;
+var resultArray = {};
+var mapRef;
 function initialize() {
     number = 1;
-    arrayName = new Array();
-    arrayText = new Array();
-    arrayLocation = new Array();
-    arrayRadius = new Array();
     markers = new Array();
     infoWindow = new google.maps.InfoWindow({
     content: contentString
@@ -66,10 +61,12 @@ function initialize() {
     };
     var map = new google.maps.Map(document.getElementById("map_canvas"),
         myOptions);
+    mapRef = map;    
     //plasseser marker på map    
     google.maps.event.addListener(map, 'click', function(event) {
             infoWindow.setContent(contentString);
             placeMarker(event, map, infoWindow);
+            
             
     });
     
@@ -90,7 +87,11 @@ function savePoint() {
     
     var name = document.getElementById("pointName").value;
     var rebus = document.getElementById("pointText").value;
-    var radius = document.getElementById("pointRadius").value;
+    var radius = parseInt(document.getElementById("pointRadius").value);
+    if(isNaN(radius) || radius < 5){
+        alert("wrong radius");
+        exit;       
+    }
     if(name.length == 0) {
         alert("fill out name");
         exit;
@@ -121,15 +122,71 @@ function savePoint() {
     var cell4 = row.insertCell(3);
     cell4.innerHTML = radius;
     //legger til array
-    arrayName[number] = name;
-    arrayText[number] = rebus;
-    arrayLocation[number] = loc;
-    arrayRadius[number] = radius;
-    infoWindow.setContent("Added successfully");
+    //arrayName[number] = name;
+    //arrayText[number] = rebus;
+    //arrayLocation[number] = loc;
+    //arrayRadius[number] = radius;
+    resultArray[number] = {
+        pointName: name,
+        pointText: rebus,
+        pointLocation: loc,
+        pointRadius: radius
+    }
+    infoWindow.setContent("<div class=\"infoWindowMessage\">Added successfully</div>");
+    constructCircles(mapRef);
     number+=1;
 
 }
 
 function saveGame() {
+    alert("start function save");
     //sender a big big forespørsel til tjener
+    
+    for(var point in resultArray) {
+        alert("kjører løkke");
+        //felt med punktnavn
+        var input = document.createElement("input");
+        input.setAttribute("type", "hidden");
+        input.setAttribute("name", "punktname[]");
+        input.setAttribute("value", resultArray[point].pointName);
+        document.getElementById("addGameFormId").appendChild(input);
+        
+        //felt med rebustekst
+        var input = document.createElement("input");
+        input.setAttribute("type", "hidden");
+        input.setAttribute("name", "rebustekst[]");
+        input.setAttribute("value", resultArray[point].pointTexr);
+        document.getElementById("addGameFormId").appendChild(input);
+        //felt med koordinater
+        var input = document.createElement("input");
+        input.setAttribute("type", "hidden");
+        input.setAttribute("name", "location[]");
+        input.setAttribute("value", resultArray[point].pointLocation);
+        document.getElementById("addGameFormId").appendChild(input);
+        //felt med radius
+        var input = document.createElement("input");
+        input.setAttribute("type", "hidden");
+        input.setAttribute("name", "radius[]");
+        input.setAttribute("value", resultArray[point].pointRadius);
+        document.getElementById("addGameFormId").appendChild(input);
+    }
+    return false
+}
+
+function constructCircles(map) {
+    
+    for(var point in resultArray) {
+      var circleOptions = {
+        strokeColor: "#FF0000",
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: "#FF0000",
+        fillOpacity: 0.35,
+        map: map,
+        center: resultArray[point].pointLocation,
+        radius: resultArray[point].pointRadius
+     };
+    circle = new google.maps.Circle(circleOptions);
+    }
+
 }
