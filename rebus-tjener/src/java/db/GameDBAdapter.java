@@ -8,6 +8,7 @@ import javax.persistence.*;
 /**
  *
  * @author 490501
+ * @version 1.0.0
  */
 public class GameDBAdapter {
     EntityManagerFactory emf;

@@ -14,6 +14,7 @@ import javax.persistence.*;
 /**
  *Denne klassen representerer ett spill
  * @author 490501
+ * @version 1.0.0
  */
 @Entity
 public class Game implements Serializable{
@@ -39,7 +40,7 @@ public class Game implements Serializable{
      * @param startDate 
      */
     public Game(String authorName, String name, int varighet, boolean isOpen, String start) {
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        DateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
         try {
             Date date = formatter.parse(start);
             this.startDate = date.getTime();

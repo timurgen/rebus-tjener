@@ -32,16 +32,16 @@ public class AddGame extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-    response.setContentType("text/html;charset=UTF-8");
+    //response.setContentType("text/html;charset=UTF-8");
     PrintWriter out = response.getWriter();
     GameDBAdapter gdb = new GameDBAdapter();
     Game game;
     try {
         Enumeration paramNames = request.getParameterNames();
         out.println("<table border=1>");
-        String gameName =(String)paramNames.nextElement();
-        String varighet = (String)paramNames.nextElement();
-        String startDate = (String)paramNames.nextElement();
+        String gameName = request.getParameterValues((String)paramNames.nextElement())[0];
+        String varighet = request.getParameterValues((String)paramNames.nextElement())[0];
+        String startDate = request.getParameterValues((String)paramNames.nextElement())[0];
         boolean isOpenGame;
         if(request.getParameter("gameIsOpenBox") != null) {
             paramNames.nextElement();
@@ -62,7 +62,14 @@ public class AddGame extends HttpServlet {
             GamePunkt gp = new GamePunkt(lat, lng, Integer.valueOf(pointRadius[i]), pointName[i], pointText[i]);
             game.addPoint(gp);
         }
-        gdb.persistGame(game);
+        try {
+            gdb.persistGame(game);
+            response.sendRedirect("index.jsp");
+            
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
 //        while(paramNames.hasMoreElements()) {
 //            String paramName = (String)paramNames.nextElement();
 //            out.println("<TR><TD>" + paramName + "\n<TD>");
