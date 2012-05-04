@@ -10,6 +10,7 @@ import javax.persistence.Id;
 /**
  * Denne klassen representerer ett punkt i spill
  * @author 490501
+ * @version 1.0.0
  */
 @Entity
 public class GamePunkt implements Serializable{

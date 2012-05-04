@@ -2,14 +2,11 @@
 package db;
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.ParameterExpression;
-import javax.persistence.criteria.Root;
 
 /**
  *
  * @author 490501
+ * @author 1.0.0
  */
 public class UserDBAdapter {
     EntityManagerFactory emf;
@@ -55,11 +52,13 @@ public class UserDBAdapter {
     /**
      * 
      * @param id
-     * @return 
+     * @return user object med gitt id
      */
     public User getUserById(long id) {
         User u1 = em.find(User.class, id);
-        finalize();
+        em.clear();
+        em.close();
+        emf.close();
         return u1;      
     }
     
@@ -71,7 +70,9 @@ public class UserDBAdapter {
     public User getUserByName(String name) {
         TypedQuery q = em.createQuery("SELECT u FROM User u WHERE u.name = :name", User.class);
         User u1 = (User) q.setParameter("name", name).getSingleResult();
-        finalize();
+        em.clear();
+        em.close();
+        emf.close();
         return u1;     
     }
     /**

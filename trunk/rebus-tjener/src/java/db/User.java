@@ -11,6 +11,7 @@ import javax.persistence.Id;
 /**
  *
  * @author 490501
+ * @author 1.0.0
  */
 
 @Entity
