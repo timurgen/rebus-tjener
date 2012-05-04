@@ -28,12 +28,12 @@
         <div class="create_game_form">
             <form action="addgame" id="addGameFormId" name="add_game_form" onsubmit="return saveGame()" method="post" >
                 Name of game: <input class="addGame" type="text" id="gameNameId" name="gameName" /> 
-                Varighet min: <select id="gameVarighetId">
+                Varighet min: <select id="gameVarighetId" name="gameVarighet">
                     <% for(int i = 15; i < 180; i++) {
                         out.println("<option>"+i+"</option>");
                     } %>
                 </select>
-                <input type="Text" id="gameStartDateId" maxlength="25" size="25"><a href="javascript:NewCal('gameStartDateId','ddmmmyyyy',true,24)"><img src="images/cal.gif" width="16" height="16" border="0" alt="Pick a date"></a>
+                <input type="Text" id="gameStartDateId" maxlength="25" size="25" name="startDate"><a href="javascript:NewCal('gameStartDateId','ddmmmyyyy',true,24)"><img src="images/cal.gif" width="16" height="16" border="0" alt="Pick a date"></a>
                 Open for all:  
                 <input type="checkbox" id="gameIsOpenBoxId" name="gameIsOpenBox" checked="false">
                 <input type="submit" value="Save game" />
@@ -41,6 +41,7 @@
             <table border="0">
                 <tr>
             <td>
+                <button onclick="addField()">press me</button>
         <div id="map_canvas"></div></td>
         <td valign="top">
         <table id="points" width="350px" border="1">

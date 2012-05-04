@@ -139,38 +139,37 @@ function savePoint() {
 }
 
 function saveGame() {
-    alert("start function save");
-    //sender a big big forespørsel til tjener
     
+    //sender a big big forespørsel til tjener
+    var element;
     for(var point in resultArray) {
-        alert("kjører løkke");
         //felt med punktnavn
-        var input = document.createElement("input");
-        input.setAttribute("type", "hidden");
-        input.setAttribute("name", "punktname[]");
-        input.setAttribute("value", resultArray[point].pointName);
-        document.getElementById("addGameFormId").appendChild(input);
+        element = document.createElement("input");
+        element.setAttribute("type", "hidden");
+        element.setAttribute("name", "punktname[]");
+        element.setAttribute("value", resultArray[point].pointName);
+        document.getElementById("addGameFormId").appendChild(element);
         
         //felt med rebustekst
-        var input = document.createElement("input");
-        input.setAttribute("type", "hidden");
-        input.setAttribute("name", "rebustekst[]");
-        input.setAttribute("value", resultArray[point].pointTexr);
-        document.getElementById("addGameFormId").appendChild(input);
+        element = document.createElement("input");
+        element.setAttribute("type", "hidden");
+        element.setAttribute("name", "rebustekst[]");
+        element.setAttribute("value", resultArray[point].pointText);
+        document.getElementById("addGameFormId").appendChild(element);
         //felt med koordinater
-        var input = document.createElement("input");
-        input.setAttribute("type", "hidden");
-        input.setAttribute("name", "location[]");
-        input.setAttribute("value", resultArray[point].pointLocation);
-        document.getElementById("addGameFormId").appendChild(input);
+        element = document.createElement("input");
+        element.setAttribute("type", "hidden");
+        element.setAttribute("name", "location[]");
+        element.setAttribute("value", resultArray[point].pointLocation);
+        document.getElementById("addGameFormId").appendChild(element);
         //felt med radius
-        var input = document.createElement("input");
-        input.setAttribute("type", "hidden");
-        input.setAttribute("name", "radius[]");
-        input.setAttribute("value", resultArray[point].pointRadius);
-        document.getElementById("addGameFormId").appendChild(input);
+        element = document.createElement("input");
+        element.setAttribute("type", "hidden");
+        element.setAttribute("name", "radius[]");
+        element.setAttribute("value", resultArray[point].pointRadius);
+        document.getElementById("addGameFormId").appendChild(element);
     }
-    return false
+    return true
 }
 
 function constructCircles(map) {
