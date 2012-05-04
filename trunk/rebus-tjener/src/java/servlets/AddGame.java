@@ -2,9 +2,11 @@ package servlets;
 
 import db.Game;
 import db.GameDBAdapter;
+import db.GamePunkt;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
+import java.util.StringTokenizer;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -40,27 +42,46 @@ public class AddGame extends HttpServlet {
         String gameName =(String)paramNames.nextElement();
         String varighet = (String)paramNames.nextElement();
         String startDate = (String)paramNames.nextElement();
-        while(paramNames.hasMoreElements()) {
-            //common fileds such that name, varighet , osv
-
-            String paramName = (String)paramNames.nextElement();
-            out.println("<TR><TD>" + paramName + "\n<TD>");
-            String[] paramValues = request.getParameterValues(paramName);
-            if (paramValues.length == 1) {
-                String paramValue = paramValues[0];
-                if (paramValue.length() == 0)
-                    out.print("<I>No Value</I>");
-                else
-                    out.print(paramValue);
-            } else {
-                out.println("<UL>");
-                for(int i=0; i<paramValues.length; i++) {
-                    out.println("<LI>" + paramValues[i]);
-                }
-                out.println("</UL>");
-            }
+        boolean isOpenGame;
+        if(request.getParameter("gameIsOpenBox") != null) {
+            paramNames.nextElement();
+            isOpenGame = true; 
+        }        
+        else
+            isOpenGame = false;
+        game = new Game(request.getSession().getAttribute("username").toString(), gameName, Integer.valueOf(varighet), isOpenGame, startDate);
+        String[] pointName = request.getParameterValues((String)paramNames.nextElement());
+        String[] pointText = request.getParameterValues((String)paramNames.nextElement());
+        String[] pointLocation = request.getParameterValues((String)paramNames.nextElement());
+        String[] pointRadius = request.getParameterValues((String)paramNames.nextElement());
+        for(int i = 0; i < pointName.length; i++) {
+            String latLng = pointLocation[i].replace("(", "").replace(")", "");
+            StringTokenizer st = new StringTokenizer(latLng, ",");
+            double lat = Double.valueOf(st.nextToken());
+            double lng = Double.valueOf(st.nextToken());
+            GamePunkt gp = new GamePunkt(lat, lng, Integer.valueOf(pointRadius[i]), pointName[i], pointText[i]);
+            game.addPoint(gp);
         }
-        out.println("</table>");
+        gdb.persistGame(game);
+//        while(paramNames.hasMoreElements()) {
+//            String paramName = (String)paramNames.nextElement();
+//            out.println("<TR><TD>" + paramName + "\n<TD>");
+//            String[] paramValues = request.getParameterValues(paramName);
+//            if (paramValues.length == 1) {
+//                String paramValue = paramValues[0];
+//                if (paramValue.length() == 0)
+//                    out.print("<I>No Value</I>");
+//                else
+//                    out.print(paramValue);
+//            } else {
+//                out.println("<UL>");
+//                for(int i=0; i<paramValues.length; i++) {
+//                    out.println("<LI>" + paramValues[i]);
+//                }
+//                out.println("</UL>");
+//            }
+//        }
+//        out.println("</table>");
    
         } finally {            
             out.close();

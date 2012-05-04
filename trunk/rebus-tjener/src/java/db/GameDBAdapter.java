@@ -35,6 +35,8 @@ public class GameDBAdapter {
             em.getTransaction().begin();
             em.persist(g);
             em.getTransaction().commit();
+            em.close();
+            emf.close();
             return true;
         }
         catch(PersistenceException e){
