@@ -4,6 +4,8 @@
     Author     : obu
 --%>
 
+<%@page import="java.util.Date"%>
+<%@page import="java.util.ArrayList"%>
 <%@page import="db.UserDBAdapter"%>
 <%@page import="db.GameDBAdapter"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -15,12 +17,12 @@
     UserDBAdapter udb = new UserDBAdapter();
     try {
         gdb.addPartisipantToGame(gameId, udb.getUserByName(name).getId());
-        gdb.closeConnection();
+        wrongMessage = "User added successfully";
         
     }
     catch(Exception e) {
         wrongMessage = e.getMessage();
-        gdb.closeConnection();
+        //gdb.closeConnection();
     }
     
 %>
@@ -34,8 +36,24 @@
     <body>
         <%@include file='menu.jsp'%>
         <% if(wrongMessage != null) { %>
-        <div class="no_game_message"><h2><% out.print(wrongMessage); %></h2></div>
+        <div class="join_list"><h2><% out.print(wrongMessage); %></h2>
         <% } %>
+        <% 
+        ArrayList<Long> list = gdb.getGameById(gameId).getAllPartisipants();
+        out.println("Start date:" + new Date(gdb.getGameById(gameId).getStartDate()));
+        out.println("<p>Registred users</p><table class=\"userlist\"><th>nr.</th><th>Name</th>");
+            for(int i = 0; i < list.size(); i++) {
+                out.println("<tr>");
+                out.println("<td>");
+                out.println(i+1);
+                out.println("</td>");
+                out.println("<td>");
+                out.println(udb.getUserById(list.get(i)).getName());
+                out.println("</tr>");
+            }
+        out.println("</table>");
+        %>
+        </div>
         <%@include file="footer.jsp" %>
     </body>
 </html>

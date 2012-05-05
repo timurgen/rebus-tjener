@@ -24,7 +24,7 @@
         <% if(session.getAttribute("username") == null) { %>
             <div class="wrong_credentials"><h3>You have to be logged in to add new games</h3></div>
         <% } else {%>
-        
+        <div class="wrong_message" id="wrngMsg"></div>
         <div class="create_game_form">
             <form action="addgame" id="addGameFormId" name="add_game_form" onsubmit="return saveGame()" method="post" >
                 Name of game: <input class="addGame" type="text" id="gameNameId" name="gameName" /> 

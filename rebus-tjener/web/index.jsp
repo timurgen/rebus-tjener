@@ -2,6 +2,7 @@
     Document   : index
     Created on : Apr 26, 2012, 9:25:50 AM
     Author     : 490501
+    Version    : 1.0.0
 --%>
 
 <%@page import="db.GamePunkt"%>
@@ -11,6 +12,7 @@
 <%@page import="db.GameDBAdapter"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%  //setter opp forbindelse med database
+    
     GameDBAdapter gameDB = new GameDBAdapter();
     //test
         //Game g = new Game("test","name", 90,false, "29/04/2012 13:15:00");
