@@ -16,7 +16,7 @@
     %>
     <div class="menu_element"><a class="button" href="addgame.jsp"><span>Create game</span></a></div>
     <div class="menu_element"><a class="button" href="login?mode=logout"><span>Log out</span></a></div>
-    <p>Logged as: <% out.println(session.getAttribute("username")); %></p>
+    <p class="logged_as">Logged as: <% out.println(session.getAttribute("username")); %></p>
     
     
     <%

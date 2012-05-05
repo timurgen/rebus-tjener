@@ -139,6 +139,22 @@ function savePoint() {
 }
 
 function saveGame() {
+    //check user input
+    //check name
+//    if(document.getElementById("gameNameId").value.length <=0) {
+//        document.getElementById("wrngMsg").innerHTML = "Fill out name of game!";
+//        return false;
+//    }
+//    //check startdate
+//    if(document.getElementById("gameStartDateId").value.length < 15) {
+//        document.getElementById("wrngMsg").innerHTML = "Pick a date!";
+//        return false;        
+//    }
+//    if(resultArray[0].pointName.length == 0) {
+//        alert("nah!");
+//        document.getElementById("wrngMsg").innerHTML = "You have to add at least one point!";
+//        return false;         
+//    }
     
     //sender a big big forespørsel til tjener
     var element;

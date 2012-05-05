@@ -37,8 +37,6 @@ public class UserDBAdapter {
             em.getTransaction().commit();
             System.out.println("bruker lagt til database"); //debugg
             em.clear();
-            em.close();
-            emf.close();
             return true;
         }
         catch(PersistenceException e){

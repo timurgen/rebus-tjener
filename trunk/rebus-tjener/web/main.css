@@ -40,7 +40,7 @@ div.menu_element {
     top: 100pt;  
 }
 table.gamelist{
-    border: 2pt solid black;
+    border: 2pt solid activeborder;
     padding: 2pt;
     background-color: #ffefd5;
     font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
@@ -49,6 +49,19 @@ table.gamelist{
     left: 250pt;
     top: 40pt;   
 }
+table.userlist{
+    border: 3pt activeborder inset;
+    padding: 1pt;
+    background-color: #ffefd5;
+    font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse:collapse;
+    position: relative;
+    left: 50pt;
+    top: 0pt;
+    width : 80%;
+    width: content-box;
+}
+
 table.gamepoint {
     border: 0pt;
 }
@@ -232,4 +245,35 @@ div.no_game_message {
     -moz-border-radius: 15px; 
     border-radius: 15px;    
     
+}
+
+div.join_list {
+    border: 2pt solid  #4f7942;
+    padding: 20pt;
+    background-color: #ffefd5;
+    font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse:collapse;
+    position: relative;
+    left: 250pt;
+    top: 40pt;
+    width: 500pt;
+    height: auto;
+    text-align: left;
+    margin: 15pt;
+    -webkit-border-radius: 15px; 
+    -moz-border-radius: 15px; 
+    border-radius: 15px;    
+    
+}
+
+p.logged_as {
+    position:relative;
+    top: 60pt;
+    left: 0pt;
+    width: 100pt;
+    height: auto;
+    font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-size: 1em;
+    color: #999999;
+    border-bottom: #999999 solid thin;
 }
