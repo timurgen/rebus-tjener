@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="hello">Hello World, Rebus_KlientActivity!</string>
     <string name="app_name">Rebus_Klient</string>
+    <string name="welcome">welcome</string>
 
 </resources>
