@@ -1,23 +1,21 @@
 
 package servlets;
 
-import db.User;
-import db.UserDBAdapter;
 import java.io.IOException;
-import javax.persistence.PersistenceException;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
- *
+ * 04.05.2012
  * @author 490501
+ * @version 1.0.0
  */
-@WebServlet(name = "LoginServlet", urlPatterns = {"/login"})
-public class LoginServlet extends HttpServlet {
+@WebServlet(name = "AutentificateClient", urlPatterns = {"/android"})
+public class AutentificateClient extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -29,43 +27,15 @@ public class LoginServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        UserDBAdapter u = new UserDBAdapter();
-        
-        if(request.getParameter("mode").equals("login")) {
-            //log inn
-            String name = request.getParameter("name");
-            String pass = request.getParameter("pass");
-            try {
-                if(u.autentificate(name, pass)) {
-                   //setter opp session
-                   HttpSession session = request.getSession();
-                   session.setAttribute("username", name);
-                   session.setAttribute("userid", u.getUserByName(name).getId());
-                   response.sendRedirect("index.jsp");
-                   
-                }
-            }
-            catch(PersistenceException pe) {
-                response.sendRedirect("login.jsp?wrongmessage="+pe.getMessage());
-            }
+        PrintWriter out = response.getWriter();
+        try {
 
+        } finally {            
+            out.close();
         }
-        else if(request.getParameter("mode").equals("register")) {
-            User user = new User(request.getParameter("name"), request.getParameter("pass"));
-            if(u.persistUser(user))
-                response.sendRedirect("login.jsp?wrongmessage=\"Registration completed you can log in now\"");
-            else
-                response.sendRedirect("login.jsp?wrongmessage=\"Username exists");
-
-        }
-        else if(request.getParameter("mode").equals("logout")) {
-            //terminate session
-            request.getSession().invalidate();
-            response.sendRedirect("index.jsp");
-        }
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -214,3 +214,22 @@ div.infoWindowMessage {
     margin: 40pt;
         
 }
+
+div.no_game_message {
+    border: 2pt solid  #4f7942;
+    padding: 2pt;
+    background-color: #ffefd5;
+    font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse:collapse;
+    position: relative;
+    left: 250pt;
+    top: 40pt;
+    width: 500pt;
+    height: 30%;
+    text-align: center;
+    margin: 15pt;
+    -webkit-border-radius: 15px; 
+    -moz-border-radius: 15px; 
+    border-radius: 15px;    
+    
+}

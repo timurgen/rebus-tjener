@@ -51,7 +51,7 @@ public class Game implements Serializable{
         this.name = name;
         this.varighet = varighet;
         this.isOpen = isOpen;
-        
+        this.partisipants = new ArrayList<Long>();
         this.pointList = new ArrayList<GamePunkt>();
         this.currentPoint = 0;
     }

@@ -56,9 +56,6 @@ public class UserDBAdapter {
      */
     public User getUserById(long id) {
         User u1 = em.find(User.class, id);
-        em.clear();
-        em.close();
-        emf.close();
         return u1;      
     }
     
@@ -70,9 +67,6 @@ public class UserDBAdapter {
     public User getUserByName(String name) {
         TypedQuery q = em.createQuery("SELECT u FROM User u WHERE u.name = :name", User.class);
         User u1 = (User) q.setParameter("name", name).getSingleResult();
-        em.clear();
-        em.close();
-        emf.close();
         return u1;     
     }
     /**
@@ -85,11 +79,9 @@ public class UserDBAdapter {
         TypedQuery q = em.createQuery("SELECT u FROM User u WHERE u.name = :name AND u.pass = :pass", User.class);
         try {
             User u1 = (User)q.setParameter("name", name).setParameter("pass", pass).getSingleResult();
-            finalize();
             return true;
         }
         catch(PersistenceException e) {
-            finalize();
             throw new PersistenceException("username not found or password is invalid");
         }
 
