@@ -1,0 +1,41 @@
+<%-- 
+    Document   : join.jsp
+    Created on : May 4, 2012, 9:45:53 PM
+    Author     : obu
+--%>
+
+<%@page import="db.UserDBAdapter"%>
+<%@page import="db.GameDBAdapter"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    String wrongMessage = null;
+    String name = (String)session.getAttribute("username");
+    long gameId = Long.valueOf(request.getParameter("gameid"));
+    GameDBAdapter gdb = new GameDBAdapter();
+    UserDBAdapter udb = new UserDBAdapter();
+    try {
+        gdb.addPartisipantToGame(gameId, udb.getUserByName(name).getId());
+        gdb.closeConnection();
+        
+    }
+    catch(Exception e) {
+        wrongMessage = e.getMessage();
+        gdb.closeConnection();
+    }
+    
+%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link type="text/css" rel="stylesheet" href="main.css" />
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <%@include file='menu.jsp'%>
+        <% if(wrongMessage != null) { %>
+        <div class="no_game_message"><h2><% out.print(wrongMessage); %></h2></div>
+        <% } %>
+        <%@include file="footer.jsp" %>
+    </body>
+</html>

@@ -56,13 +56,25 @@ public class GameDBAdapter {
         g.addPoint(gp);
         JDOHelper.makeDirty(g, "pointList");
         em.getTransaction().commit();
-        
+    }
+    public void addPartisipantToGame(long gameId, long userId) throws Exception {
+        Game g = this.getGameById(gameId);
+        em.getTransaction().begin();
+        g.addPartisipant(userId);
+        JDOHelper.makeDirty(g, "partisipants");
+        em.getTransaction().commit();
     }
     
     public List<Game> getAllGames () {
         TypedQuery<Game> q1 = em.createQuery("SELECT g FROM Game g", Game.class);
         List<Game> results = q1.getResultList();
         return results;
+    }
+    
+    public void closeConnection() {
+        em.clear();
+        em.close();
+        emf.close();
     }
     
 

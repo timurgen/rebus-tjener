@@ -22,6 +22,8 @@
         //gameDB.addPointToGameInDB(gg, 1);
     //plukker ut spilllist
     List<Game> gameList = gameDB.getAllGames();
+    gameDB.closeConnection();
+    
 %>
 <!DOCTYPE html>
 <html>
@@ -85,6 +87,11 @@
                                 
                             out.println("</td>"); 
                         }
+                        else if(gameList.get(i).getAllPartisipants() != null && gameList.get(i).getAllPartisipants().contains(session.getAttribute("userid"))) {
+                            out.println("<td>");
+                            out.println("<div class=\"join-button-2\">Joined</div>");
+                            out.println("</td>");
+                        }
                         else {
                             out.println("<td>");
                                 long gameId = gameList.get(i).getId();
@@ -103,7 +110,12 @@
             out.println("</table>");
         }
        else {
-        out.println("a vot her tebe ");
+        %>
+        <div class="no_game_message">
+            <h1>No one game created, be first!</h1>
+        </div>
+        
+        <%
        }
         %>
         <%@include file="footer.jsp" %>
