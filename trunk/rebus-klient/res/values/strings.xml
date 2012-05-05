@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Rebus-Klient</string>
+    <string name="welcome">Welcome to Rebus</string>
+    <string name="textButtonLogin">Login</string>
+    <string name="textButtonFreePlay">Free Play</string>
+    <string name="textLogin">Login</string>
+    <string name="textUserName">UserName</string>
+    <string name="textPassword">Password</string>
+    <string name="textButtonSubmit">Submit</string>
+    <string name="textButtonRun">Run this Rebus</string>
+
+</resources>
