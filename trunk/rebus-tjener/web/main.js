@@ -66,12 +66,8 @@ function initialize() {
     google.maps.event.addListener(map, 'click', function(event) {
             infoWindow.setContent(contentString);
             placeMarker(event, map, infoWindow);
-            
-            
+    
     });
-    
-    
-
 }
 
 function placeMarker(event, map,infoWindow) {

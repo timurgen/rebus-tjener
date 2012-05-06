@@ -107,6 +107,8 @@ public class Game implements Serializable{
      * @param gp 
      */
     public void addPoint(GamePunkt gp) {
+        if(gp == null)
+            return;
         this.pointList.add(gp);
     }
     /**

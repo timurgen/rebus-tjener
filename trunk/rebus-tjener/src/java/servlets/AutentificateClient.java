@@ -32,9 +32,19 @@ public class AutentificateClient extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
-        //autentificate either as guest or registred user
-        } finally {            
+            if(request.getParameter("guest").equals("true")) {
+                out.println("you will be handled as guest");
+            }
+            else if(request.getParameter("name") != null && request.getParameter("pass") != null) {
+                out.println("you will be autentificate");
+            }
+            else {
+                out.println("ebat");
+            }
+        } finally {
+            
             out.close();
+            
         }
     }
 
