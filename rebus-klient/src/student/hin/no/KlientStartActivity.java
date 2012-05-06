@@ -28,7 +28,7 @@ public class KlientStartActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				Intent gamesListIntent = new Intent(KlientStartActivity.this, GamesListActivity.class);
+				Intent gamesListIntent = new Intent(KlientStartActivity.this, GamesAllActivity.class);
 				startActivity(gamesListIntent);
 			}
 		});//end of  buttonFreePlay.setOnClickListener
