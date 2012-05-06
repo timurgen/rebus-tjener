@@ -12,8 +12,15 @@
 <%@page import="db.GameDBAdapter"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%  //setter opp forbindelse med database
+    GameDBAdapter gameDB = null;
+    try {
+        gameDB = new GameDBAdapter();
+    }
+    catch(Exception e) {
+        log(e.getMessage());
+        e.printStackTrace();
+    }
     
-    GameDBAdapter gameDB = new GameDBAdapter();
     //test
         //Game g = new Game("test","name", 90,false, "29/04/2012 13:15:00");
         //GamePunkt gg = new GamePunkt(47.5645,125.4565,50,"name 5", "text of mega rebus");
@@ -24,7 +31,7 @@
         //gameDB.addPointToGameInDB(gg, 1);
     //plukker ut spilllist
     List<Game> gameList = gameDB.getAllGames();
-    gameDB.closeConnection();
+    //gameDB.closeConnection();
     
 %>
 <!DOCTYPE html>
@@ -78,6 +85,12 @@
                                 out.println("<a href=\"login.jsp\"><div class=\"join-button-2\">Sign in &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to join</div></a>"); 
                             out.println("</td>");      
                         }
+                        else if(gameList.get(i).getAllPartisipants() != null && gameList.get(i).getAllPartisipants().contains(session.getAttribute("userid"))) {
+                            long gameId = gameList.get(i).getId();
+                            out.println("<td>");
+                            out.println("<a href=join.jsp?gameid="+gameId+ "><div class=\"join-button-2\">Joined</div></a>");
+                            out.println("</td>");
+                        }
                         else if(session.getAttribute("username") != null & gameList.get(i).getAuthorName().equals(session.getAttribute("username"))) {
                             out.println("<td>");
                                 long gameId = gameList.get(i).getId();
@@ -85,14 +98,9 @@
                                 //out.print("<input type=\"submit\" onclick=\"joinGame(");
                                 //out.print(gameId + ")\" value=\"Join\" />");
                                 //med pure css button
-                                out.println("<a href=edit.jsp?gameid="+gameId+ "><div class=\"join-button\">Edit or Delete</div></a>");
+                                out.println("<a href=\"edit.jsp?gameid="+gameId+ "\"><div class=\"join-button\">Edit or Delete</div></a>");
                                 
                             out.println("</td>"); 
-                        }
-                        else if(gameList.get(i).getAllPartisipants() != null && gameList.get(i).getAllPartisipants().contains(session.getAttribute("userid"))) {
-                            out.println("<td>");
-                            out.println("<div class=\"join-button-2\">Joined</div>");
-                            out.println("</td>");
                         }
                         else {
                             out.println("<td>");

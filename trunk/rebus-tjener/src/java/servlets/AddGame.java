@@ -14,8 +14,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *
+ * Servlet that provide "add game" functionality
+ * @date 04 mai 2012
  * @author 490501
+ * @version 1.0.0
  */
 @WebServlet(name = "AddGame", urlPatterns = {"/addgame"})
 public class AddGame extends HttpServlet {
@@ -32,13 +34,11 @@ public class AddGame extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-    //response.setContentType("text/html;charset=UTF-8");
-    PrintWriter out = response.getWriter();
+    //PrintWriter out = response.getWriter();
     GameDBAdapter gdb = new GameDBAdapter();
     Game game;
     try {
         Enumeration paramNames = request.getParameterNames();
-        out.println("<table border=1>");
         String gameName = request.getParameterValues((String)paramNames.nextElement())[0];
         String varighet = request.getParameterValues((String)paramNames.nextElement())[0];
         String startDate = request.getParameterValues((String)paramNames.nextElement())[0];
@@ -68,30 +68,13 @@ public class AddGame extends HttpServlet {
             
         }
         catch(Exception e) {
+            log(e.getMessage());
             e.printStackTrace();
         }
-//        while(paramNames.hasMoreElements()) {
-//            String paramName = (String)paramNames.nextElement();
-//            out.println("<TR><TD>" + paramName + "\n<TD>");
-//            String[] paramValues = request.getParameterValues(paramName);
-//            if (paramValues.length == 1) {
-//                String paramValue = paramValues[0];
-//                if (paramValue.length() == 0)
-//                    out.print("<I>No Value</I>");
-//                else
-//                    out.print(paramValue);
-//            } else {
-//                out.println("<UL>");
-//                for(int i=0; i<paramValues.length; i++) {
-//                    out.println("<LI>" + paramValues[i]);
-//                }
-//                out.println("</UL>");
-//            }
-//        }
-//        out.println("</table>");
+ //out.println("</table>");
    
         } finally {            
-            out.close();
+            //out.close();
         }
     }
 

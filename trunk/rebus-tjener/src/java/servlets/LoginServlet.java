@@ -13,8 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- *
+ * Servlet that provide user autentification and registration of new users 
  * @author 490501
+ * @version 1.0.0
+ * 
  */
 @WebServlet(name = "LoginServlet", urlPatterns = {"/login"})
 public class LoginServlet extends HttpServlet {
@@ -33,8 +35,7 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         UserDBAdapter u = new UserDBAdapter();
         
-        if(request.getParameter("mode").equals("login")) {
-            //log inn
+        if(request.getParameter("mode").equals("login")) {//noen vil logge på
             String name = request.getParameter("name");
             String pass = request.getParameter("pass");
             try {
@@ -43,24 +44,23 @@ public class LoginServlet extends HttpServlet {
                    HttpSession session = request.getSession();
                    session.setAttribute("username", name);
                    session.setAttribute("userid", u.getUserByName(name).getId());
-                   response.sendRedirect("index.jsp");
-                   
+                   response.sendRedirect("index.jsp"); //sender tilbake til main side
                 }
             }
-            catch(PersistenceException pe) {
+            catch(PersistenceException pe) {//dersom noe går feil sender tilbake med feilmelding
+                log(pe.getMessage());
+                pe.printStackTrace();
                 response.sendRedirect("login.jsp?wrongmessage="+pe.getMessage());
             }
-
         }
-        else if(request.getParameter("mode").equals("register")) {
+        else if(request.getParameter("mode").equals("register")) {//noen vil bli registrert
             User user = new User(request.getParameter("name"), request.getParameter("pass"));
             if(u.persistUser(user))
                 response.sendRedirect("login.jsp?wrongmessage=\"Registration completed you can log in now\"");
             else
                 response.sendRedirect("login.jsp?wrongmessage=\"Username exists");
-
         }
-        else if(request.getParameter("mode").equals("logout")) {
+        else if(request.getParameter("mode").equals("logout")) {//bruker vil logge av
             //terminate session
             request.getSession().invalidate();
             response.sendRedirect("index.jsp");
