@@ -16,8 +16,16 @@
     GameDBAdapter gdb = new GameDBAdapter();
     UserDBAdapter udb = new UserDBAdapter();
     try {
-        gdb.addPartisipantToGame(gameId, udb.getUserByName(name).getId());
-        wrongMessage = "User added successfully";
+        //add as guest om det er lov
+        if(name == null) {
+            String id = session.getId();
+            wrongMessage = "your id is:<font color=\"red\"> " + id.substring(0, 8) + "</font> use it to begin game on your mobile phone";
+        }
+        else {
+            gdb.addPartisipantToGame(gameId, udb.getUserByName(name).getId());
+            wrongMessage = "User added successfully";           
+        }
+
         
     }
     catch(Exception e) {
@@ -36,7 +44,7 @@
     <body>
         <%@include file='menu.jsp'%>
         <% if(wrongMessage != null) { %>
-        <div class="join_list"><h2><% out.print(wrongMessage); %></h2>
+        <div class="join_list"><h5><% out.print(wrongMessage); %></h5>
         <% } %>
         <% 
         ArrayList<Long> list = gdb.getGameById(gameId).getAllPartisipants();

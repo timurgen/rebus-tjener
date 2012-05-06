@@ -277,3 +277,24 @@ p.logged_as {
     color: #999999;
     border-bottom: #999999 solid thin;
 }
+div.about {
+    position: relative;
+    top: 10pt;
+    left: 250pt;
+    height: auto;
+    font-family: tahoma,arial,verdana,sans-serif,Lucida Sans;
+    font-size: 15px;
+    padding: 15px 20px 40px;
+    line-height: 160%;
+}
+div.editgame {
+    position: relative;
+    top: 10pt;
+    left: 250pt;
+    height: auto;
+    width: 50%;
+    font-family: tahoma,arial,verdana,sans-serif,Lucida Sans;
+    font-size: 15px;
+    padding: 15px 20px 40px;
+    line-height: 160%;
+}
