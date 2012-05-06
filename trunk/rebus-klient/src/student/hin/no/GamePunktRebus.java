@@ -1,7 +1,13 @@
 package student.hin.no;
 
-public class GamePunktRebus {
+import java.io.Serializable;
 
+public class GamePunktRebus implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private double lat; 	//lattitude
     private double lng; 	//longitude
     private int radius; 	//radius for proksimity alarm

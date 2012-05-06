@@ -1,5 +1,6 @@
 package student.hin.no;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,9 +9,15 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class GameRebus 
+import android.text.format.Time;
+
+public class GameRebus implements Serializable
 {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Long idGame;
 	private String authorName;
 	private String name;
@@ -20,6 +27,7 @@ public class GameRebus
 	private ArrayList<Long> partisipants;
 	private ArrayList<GamePunktRebus> pointList;
 	private int currentPoint;
+	private String dateString;
 	
 	public GameRebus(String _authorName, String _name, int _varighet, boolean _isOpen, String _start)
 	{
@@ -38,6 +46,7 @@ public class GameRebus
 		varighet = _varighet;
 		isOpen = _isOpen;
 		currentPoint = 0;
+		dateString = _start;
 		
 		partisipants = new ArrayList<Long>();
 		pointList = new ArrayList<GamePunktRebus>();
@@ -71,6 +80,15 @@ public class GameRebus
 	    public long getStartDate() {
 	        return startDate;
 	    }
+	    
+	    public String getStartDateString()
+	    {
+	    	/*Time time = new Time();
+	    	time.set(startDate);
+	    	String startDateString = time.toString();*/
+	    	//String startDateString = Long.toString(startDate);
+	    	return dateString;
+	    }
 
 	    public void setStartDate(long startDate) {
 	        this.startDate = startDate;
@@ -78,6 +96,12 @@ public class GameRebus
 	
 	    public int getVarighet() {
 	        return varighet;
+	    }
+	    
+	    public String getVarighetString()
+	    {
+	    	String varighetString = Integer.toString(varighet);
+	    	return varighetString;
 	    }
 
 	    public void setVarighet(int varighet) {
@@ -95,6 +119,11 @@ public class GameRebus
 	    
 	    public void addPoint(GamePunktRebus gamePunktRebus) {
 	        this.pointList.add(gamePunktRebus);
+	    }
+	    
+	    public GamePunktRebus getFirstPoint()
+	    {
+	    	return pointList.get(0);
 	    }
 	    
 	    public GamePunktRebus getNextPunkt() throws Exception {

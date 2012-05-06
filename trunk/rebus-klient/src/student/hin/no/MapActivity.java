@@ -20,12 +20,19 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		super.onCreate(arg0);
 		setContentView(R.layout.map);
 		
+		GameRebus game = (GameRebus) getIntent().getExtras().getSerializable("game");
+		
 		mapView = (MapView)findViewById(R.id.mapView);
 		mapView.displayZoomControls(true);
 		mapView.setBuiltInZoomControls(true);
 		
-		double lat = 40.8;
-		double longi = -96.666;
+		//double lat = 68.44;
+		//double longi = 17.41;
+		
+		game.getClass();
+		
+		double lat = game.getFirstPoint().getLat();
+		double longi = game.getFirstPoint().getLng();
 		
 		geoPoint = new GeoPoint((int)(lat*1E6),(int)(longi*1E6));
 		

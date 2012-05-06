@@ -19,7 +19,7 @@ public class LoginActivity extends Activity{
 		
 		@Override
 		public void onClick(View v) {
-			Intent gameListIntent = new Intent(LoginActivity.this, GamesListActivity.class);
+			Intent gameListIntent = new Intent(LoginActivity.this, GamesAllActivity.class);
 			startActivity(gameListIntent);
 		}
 	});//end of buttonSubmit.setOnClickListener
