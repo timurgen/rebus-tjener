@@ -31,7 +31,7 @@ public class GamesAllActivity extends ListActivity{
 	protected void onListItemClick(ListView l, View v, int position, long id)
 	{
 		String item = (String)getListAdapter().getItem(position);
-		Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
+		//Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
 		Intent mapIntent = new Intent(GamesAllActivity.this, MapActivity.class);
 		mapIntent.putExtra("game", games.get(position));
 		startActivity(mapIntent);

@@ -66,6 +66,11 @@ public class GamePunktRebus implements Serializable{
     public int getRadius() {
         return radius;
     }
+    
+    public float getRadiusFloat()
+    {
+    	return Float.parseFloat(String.valueOf(radius));  	
+    }
 
     public void setRadius(int radius) {
         this.radius = radius;
