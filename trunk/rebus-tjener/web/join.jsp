@@ -4,6 +4,8 @@
     Author     : obu
 --%>
 
+<%@page import="db.Guest"%>
+<%@page import="db.GuestDBAdapter"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="db.UserDBAdapter"%>
@@ -13,15 +15,37 @@
     String wrongMessage = null;
     String name = (String)session.getAttribute("username");
     long gameId = Long.valueOf(request.getParameter("gameid"));
+    String guestId = (String)session.getAttribute("guestid");
     GameDBAdapter gdb = new GameDBAdapter();
     UserDBAdapter udb = new UserDBAdapter();
+    
+    
     try {
         //add as guest om det er lov
-        if(name == null) {
+        if(name == null & guestId == null) {
             String id = session.getId();
             wrongMessage = "your id is:<font color=\"red\"> " + id.substring(0, 8) + "</font> use it to begin game on your mobile phone";
+            GuestDBAdapter guestdb = new GuestDBAdapter();
+            Guest g = new Guest(id.substring(0, 8));
+            g.addGame(gameId);
+            guestdb.persistGuest(g);   
+            session.setAttribute("guestid", id.substring(0, 8));
+            
+            
+        }
+        else if(guestId != null) {
+            GuestDBAdapter guestdb = new GuestDBAdapter();
+            try {
+                guestdb.addGame(gameId, guestId);
+                wrongMessage = "Guest added successfully";   
+            }
+            catch(Exception e) {
+                wrongMessage = e.getMessage();   
+            }
+            
         }
         else {
+            
             gdb.addPartisipantToGame(gameId, udb.getUserByName(name).getId());
             wrongMessage = "User added successfully";           
         }

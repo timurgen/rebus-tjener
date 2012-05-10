@@ -1,9 +1,11 @@
 
 package servlets;
 
+import db.UserDBAdapter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,20 +32,47 @@ public class AutentificateClient extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
+        //PrintWriter out = response.getWriter();
         try {
-            if(request.getParameter("guest").equals("true")) {
-                out.println("you will be handled as guest");
+            
+            if(request.getParameter("guest")!= null && request.getParameter("guest").equals("true")) {
+                //out.println("you will be handled as guest");
+                response.setContentType("application/octet-stream");
+                byte[] sessionId = request.getSession().getId().getBytes();
+                response.setContentLength(sessionId.length);
+                ServletOutputStream outputStream = response.getOutputStream();
+                outputStream.write(sessionId);
+                outputStream.flush();
             }
             else if(request.getParameter("name") != null && request.getParameter("pass") != null) {
-                out.println("you will be autentificate");
+                String name = request.getParameter("name");
+                String pass = request.getParameter("pass");
+                UserDBAdapter udb = new UserDBAdapter();
+                try {
+                    if(udb.autentificate(name, pass)) {
+                        response.setContentType("application/octet-stream");
+                        ServletOutputStream outputStream = response.getOutputStream();
+                        byte[] userid = udb.getUserByName(name).getName().getBytes();
+                        outputStream.write(userid);
+                        outputStream.flush();
+                }
+                    else {
+                        response.sendError(1, "Wrong username or password");
+                    }
+                    
+                }
+                catch(Exception e) {
+                    response.sendError(403, e.getMessage());
+                }
+
+                
             }
             else {
-                out.println("ebat");
+                //out.println("ebat, domething går weird");
             }
         } finally {
             
-            out.close();
+            //out.close();
             
         }
     }

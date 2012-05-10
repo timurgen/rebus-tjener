@@ -16,7 +16,7 @@
         <%@include file='menu.jsp'%>
         <div class="about">
             <h3>Programmering for mobil og web. Karakterigivende prosjekt</h3>
-            <p>Utført av Timur Samkharadze og Vitaly Semenov</p>
+            <p>Utført av Anton Fofanov, Timur Samkharadze og Vitaly Semenov</p>
         </div>
         <%@include file="footer.jsp" %>
     </body>

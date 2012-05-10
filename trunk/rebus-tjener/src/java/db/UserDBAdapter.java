@@ -80,6 +80,9 @@ public class UserDBAdapter {
             return true;
         }
         catch(PersistenceException e) {
+            em.clear();
+            em.close();
+            emf.close();
             throw new PersistenceException("username not found or password is invalid");
         }
 

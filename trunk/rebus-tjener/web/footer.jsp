@@ -6,7 +6,7 @@
 --%>
 <div class="footer">
     <hr>
-    Designed and developed by Timur Samkharadze.<br />
+    Designed and developed by Timur Samkharadze, Vitaly Semenov and Anton Fofanov<br />
     <a href="http://www.objectdb.com">powered by objectDB&copy</a>&nbsp;&nbsp;&nbsp;&nbsp;
     <a href="http://glassfish.java.net">powered by<img src="glassfish_logo.jpg" /></a>
         
