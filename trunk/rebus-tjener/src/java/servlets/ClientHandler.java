@@ -6,6 +6,7 @@ package servlets;
 
 import db.Game;
 import db.GameDBAdapter;
+import db.UserDBAdapter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
@@ -41,20 +42,7 @@ public class ClientHandler extends HttpServlet {
                 getGameList(request, response);//returnerer navn klokkeslett og varighet i binaryformat
             }
             else if(request.getParameter("mode").equals("getgame")) {//returnerer valgt spill
-                if(request.getParameter("gameid") == null) {
-                    response.sendError(1042, "Game id not undefined");
-                    return;
-                }                
-                long gameid = Long.valueOf(request.getParameter("gameid"));
-                GameDBAdapter gdb = new GameDBAdapter();
-                Game g = gdb.getGameById(gameid);
-                ServletOutputStream sos = response.getOutputStream();
-                ObjectOutputStream oos = new ObjectOutputStream(sos);
-                oos.writeObject(g);
-                oos.flush();
-                oos.close();
-                sos.flush();
-                sos.close();
+
                 
              }
             else {
@@ -123,5 +111,26 @@ public class ClientHandler extends HttpServlet {
             sos.write(System.getProperty("line.separator").getBytes());
         }
         
+    }
+    
+    public void getGameById(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if(request.getParameter("gameid") == null) {
+            response.sendError(1042, "Game id not undefined");
+            return;
+        }
+        //sjekker om bruker ble registrert 
+        GameDBAdapter gdb = new GameDBAdapter();
+        long gameid = Long.valueOf(request.getParameter("gameid"));
+        Game g = gdb.getGameById(gameid);
+        UserDBAdapter udb = new UserDBAdapter();
+        long userId = udb.getUserByName((String)request.getSession().getAttribute(request.getParameter("name"))).getId();
+        
+        ServletOutputStream sos = response.getOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(sos);
+        oos.writeObject(g);
+        oos.flush();
+        oos.close();
+        sos.flush();
+        sos.close();
     }
 }
