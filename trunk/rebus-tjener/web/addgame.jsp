@@ -33,7 +33,7 @@
                         out.println("<option>"+i+"</option>");
                     } %>
                 </select>
-                <input type="Text" id="gameStartDateId" maxlength="25" size="25" name="startDate"><a href="javascript:NewCal('gameStartDateId','ddmmmyyyy',true,24)"><img src="images/cal.gif" width="16" height="16" border="0" alt="Pick a date"></a>
+                <input type="Text" id="gameStartDateId" maxlength="25" size="25" name="startDate"><a href="javascript:NewCal('gameStartDateId','ddmmyyyy',true,24)"><img src="images/cal.gif" width="16" height="16" border="0" alt="Pick a date"></a>
                 Open for all:  
                 <input type="checkbox" id="gameIsOpenBoxId" name="gameIsOpenBox" checked="false">
                 <input type="submit" value="Save game" />

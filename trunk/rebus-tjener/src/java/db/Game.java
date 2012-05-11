@@ -41,10 +41,10 @@ public class Game implements Serializable{
      */
     public Game(String authorName, String name, int varighet, boolean isOpen, String start) {
         
-        DateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
-        
+        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        System.out.print(start);
         try {
-            Date date = formatter.parse(formatter.format(start));
+            Date date = formatter.parse(start);
             this.startDate = date.getTime();
         } catch (ParseException ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
