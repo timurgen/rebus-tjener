@@ -130,12 +130,9 @@ public class GameRebus implements Serializable
 	        if(this.currentPoint < this.pointList.size()) {   
 	            return this.pointList.get(this.currentPoint++);
 	        }
-	        return this.pointList.get(this.currentPoint++);//<------Just a demo fix this later
-	        /*
 	        else {
-	           return ; 
+	           throw new Exception();  
 	        }
-	        */
 	    }
 	    
 	    /**
