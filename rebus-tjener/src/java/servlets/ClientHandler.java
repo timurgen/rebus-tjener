@@ -7,6 +7,7 @@ package servlets;
 import db.Game;
 import db.GameDBAdapter;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import javax.servlet.ServletException;
@@ -34,13 +35,33 @@ public class ClientHandler extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
-        if(request.getParameter("mode") != null && request.getParameter("mode").equals("gamelist")) {
-            System.out.println("hui");
-            getGameList(request, response);
+        
+        if(request.getParameter("mode") != null) {//sjekker om parameter gamemmode satt opp
+            if(request.getParameter("mode").equals("gamelist")) {//sjekker om brukeren vil plukke ut gamelist
+                getGameList(request, response);//returnerer navn klokkeslett og varighet i binaryformat
+            }
+            else if(request.getParameter("mode").equals("getgame")) {//returnerer valgt spill
+                if(request.getParameter("gameid") == null) {
+                    response.sendError(1042, "Game id not undefined");
+                    return;
+                }                
+                long gameid = Long.valueOf(request.getParameter("gameid"));
+                GameDBAdapter gdb = new GameDBAdapter();
+                Game g = gdb.getGameById(gameid);
+                ServletOutputStream sos = response.getOutputStream();
+                ObjectOutputStream oos = new ObjectOutputStream(sos);
+                oos.writeObject(g);
+                oos.flush();
+                oos.close();
+                sos.flush();
+                sos.close();
+                
+             }
+            else {
+                System.out.println("p");
+            }
         }
-        else {
-            System.out.println("p");
-        }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -93,6 +114,7 @@ public class ClientHandler extends HttpServlet {
         ServletOutputStream sos = response.getOutputStream();
         ArrayList<Game> gameList = (ArrayList<Game>) gdb.getAllGames();
         for(Game g: gameList) {
+            response.setContentType("application/octet-stream");
             sos.write(g.getName().getBytes());
             sos.write(" ".getBytes());
             sos.write(String.valueOf(g.getStartDate()).getBytes());
