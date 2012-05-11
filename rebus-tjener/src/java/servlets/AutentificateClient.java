@@ -52,11 +52,14 @@ public class AutentificateClient extends HttpServlet {
                     if(udb.autentificate(name, pass)) {
                         response.setContentType("application/octet-stream");
                         ServletOutputStream outputStream = response.getOutputStream();
-                        byte[] userid = udb.getUserByName(name).getName().getBytes();
+                        byte[] userName = udb.getUserByName(name).getName().getBytes();
+                        byte[] userId = String.valueOf(udb.getUserByName(name).getId()).getBytes();
                         byte[] sessionId = request.getSession().getId().getBytes();
-                        outputStream.write(userid);
+                        outputStream.write(userName);
                         outputStream.write(" ".getBytes());
                         outputStream.write(sessionId);
+                        outputStream.write(" ".getBytes());
+                        outputStream.write(userId);
                         outputStream.flush();
                 }
                     else {
