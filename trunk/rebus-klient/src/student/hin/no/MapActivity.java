@@ -39,8 +39,10 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 	
 	private Location rebusLocation;
 	
-	//Ne sovsem poniatnaya peremennaya
-	private static final String PROX_ALER_INTENT = "student.hin.no.ProximityAlert";
+	//CHANGES 11.05
+	private static final String PROX_ALER_INTENT = "student.hin.no.PBR";
+	private GamePunktRebus gamePunkt;
+	
 	
 	private LocationManager locationManager;
 	
@@ -50,15 +52,22 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		super.onCreate(arg0);
 		setContentView(R.layout.map);
 		
+		
+		
+		
 		//CHANGES <-- 10.05 
 		
 		game = (GameRebus) getIntent().getExtras().getSerializable("game");
 		game.getClass();
 		
 		//Poluchaem koordinati pervoy tochki!!!
-		rebusLocation = new Location("REBUS_LOCATION");
+		
 		//rebusLocation.setLatitude(game.getNextPunkt().getLat());
 		
+		//CHANGES 11.05 - poluchaem pervuu poziciu i naznachaem ee tochke v dal'neyshem budem meniat' poziciu pri dostizenii!!!
+		
+		changeGamePunkt();
+				
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		locationManager.requestLocationUpdates(
 												LocationManager.GPS_PROVIDER,
@@ -106,6 +115,11 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		
 		initMyLocation();
 		
+		//CHANGES 11.05
+		IntentFilter filter = new IntentFilter(TREASURE_PROXIMITY_ALERT);
+		this.registerReceiver(new ProximityIntentReceiver(), filter);
+		this.setProximityAlert();
+		
 		
 	}//end of on create
 
@@ -114,36 +128,20 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		// TODO Auto-generated method stub
 		super.onPause();
 		compass.disableCompass();
-	}
+	}//end of onPause
 
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
 		compass.enableCompass();
-	}
+	}//end of onResume
 
 	@Override
 	protected boolean isRouteDisplayed() {
 		// TODO Auto-generated method stub
 		return false;
 	}//end of isRouteDisplayed
-	
-	private void setProximityAlert()
-	{
-		String serviceString = Context.LOCATION_SERVICE;
-		locationManager = (LocationManager)getSystemService(serviceString);
-		
-		double lat = game.getFirstPoint().getLat();
-		double lng = game.getFirstPoint().getLng();;
-		float radius = game.getFirstPoint().getRadiusFloat();
-		long expiration = -1;
-		
-		Intent intent = new Intent(TREASURE_PROXIMITY_ALERT);
-		PendingIntent proximityIntent = PendingIntent.getBroadcast(this, -1, intent, 0);
-		locationManager.addProximityAlert(lat, lng, radius, expiration, proximityIntent);
-		
-	}//end of setProximityAlert
 	
 	//CHANGES <-- 10.05 
 	
@@ -162,10 +160,32 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 	private Location retrievelocationFromPreferences()
 	{
 		Location location = new Location("POINT_LOCATION");
+		
+		//gamePunkt = game.getNextPunkt();
+		
 		location.setLatitude(game.getFirstPoint().getLat());
 		location.setLongitude(game.getFirstPoint().getLng());
 		return location;
 	}
+	
+	private Location retriveLocation()
+	{
+		Location location = new Location("GAME_POINT");
+		
+		try 
+		{
+			gamePunkt = game.getNextPunkt();
+			location.setLatitude(gamePunkt.getLat());
+			location.setLatitude(gamePunkt.getLng());
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}//end of catch
+		
+		
+		return location;
+	}//end of retriveLocation
 	
 	private Location retrieveNextLocationFromPreferences() throws Exception
 	{
@@ -175,11 +195,12 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		return location;
 	}
 	
-	public class MyLocationListener implements LocationListener
+	public class MyLocationListener implements LocationListener 
 	{
 		@Override
 		public void onLocationChanged(Location location) {
-			Location pointLocation = retrievelocationFromPreferences();
+			//Location pointLocation = retrievelocationFromPreferences();
+			Location pointLocation = rebusLocation;
 			float distance = location.distanceTo(pointLocation);
 			geoPoint = new GeoPoint((int)(location.getLatitude()*1E6),(int)(location.getLongitude()*1E6));
 			
@@ -196,11 +217,12 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 			if(distance < game.getFirstPoint().getRadiusFloat())
 			{
 				Toast.makeText(MapActivity.this, "VOT mi I v TOCHKE", Toast.LENGTH_LONG).show();
+				changeGamePunkt();
+				setProximityAlert();
 			}
 			else
 			{
 				Toast.makeText(MapActivity.this,"Distance from Point:" + distance, Toast.LENGTH_LONG).show();
-				
 			}
 			
 		}
@@ -228,6 +250,45 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 	}
 	
 	//CHANGES
+	
+	//CHANGES 11.05
+	
+	private void setProximityAlert()
+	{
+		String serviceString = Context.LOCATION_SERVICE;
+		locationManager = (LocationManager)getSystemService(serviceString);
+		
+		/*
+		double lat = game.getFirstPoint().getLat();
+		double lng = game.getFirstPoint().getLng();
+		float radius = game.getFirstPoint().getRadiusFloat();
+		long expiration = -1;
+		*/
+		
+		double lat = gamePunkt.getLat();
+		double lng = gamePunkt.getLng();
+		float radius = gamePunkt.getRadiusFloat();
+		long expiration = -1;
+		
+		Intent intent = new Intent(TREASURE_PROXIMITY_ALERT);
+		PendingIntent proximityIntent = PendingIntent.getBroadcast(this, -1, intent, 0);
+		locationManager.addProximityAlert(lat, lng, radius, expiration, proximityIntent);
+		
+	}//end of setProximityAlert
+	
+	private void changeGamePunkt()
+	{
+		try {
+			gamePunkt = game.getNextPunkt();
+			rebusLocation = new Location("REBUS_LOCATION");
+			rebusLocation.setLatitude(gamePunkt.getLat());
+			rebusLocation.setLongitude(gamePunkt.getLng());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Toast.makeText(MapActivity.this,"FERDIG", Toast.LENGTH_LONG).show();
+		}
+	}
 	
 	
 

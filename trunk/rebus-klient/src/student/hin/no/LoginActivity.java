@@ -93,7 +93,7 @@ public class LoginActivity extends Activity{
 			String data = URLEncoder.encode("name", "UTF-8") + "=" +URLEncoder.encode(name, "UTF-8");
 			data += "&" + URLEncoder.encode("pass", "UTF-8") + "=" +URLEncoder.encode(pass, "UTF-8");
 			
-			myURL = "http://158.39.124.96:8080/rebus/android.jsp?" + data;
+			myURL = "http://158.39.124.96:8080/rebus/android?" + data;
 			url = new URL(myURL);
 			httpConnection = (HttpURLConnection)url.openConnection();
 			httpConnection.setConnectTimeout(2000);
