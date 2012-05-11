@@ -66,6 +66,15 @@
             </intent-filter>
         </activity>
         
+        <receiver
+            android:name=".ProximityBroadcastReceiver">
+            <intent-filter >
+        		<action android:name="student.hin.no.PBR" />        
+            </intent-filter>
+        </receiver>
+            
+            
+        
     </application>
 
 </manifest>
