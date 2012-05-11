@@ -3,6 +3,7 @@ package servlets;
 
 import db.UserDBAdapter;
 import java.io.IOException;
+import javax.jms.Session;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
@@ -52,7 +53,10 @@ public class AutentificateClient extends HttpServlet {
                         response.setContentType("application/octet-stream");
                         ServletOutputStream outputStream = response.getOutputStream();
                         byte[] userid = udb.getUserByName(name).getName().getBytes();
+                        byte[] sessionId = request.getSession().getId().getBytes();
                         outputStream.write(userid);
+                        outputStream.write(" ".getBytes());
+                        outputStream.write(sessionId);
                         outputStream.flush();
                 }
                     else {
