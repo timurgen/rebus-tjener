@@ -6,11 +6,12 @@ package servlets;
 
 import db.Game;
 import db.GameDBAdapter;
+import db.GuestDBAdapter;
 import db.UserDBAdapter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
@@ -35,34 +36,24 @@ public class ClientHandler extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        if(request.getParameter("username") == null) {
-//            response.sendError(1043, "user name did not found");
-//            return;
-//        }
-//        if(request.getParameter("userid") == null) {
-//            response.sendError(1044, "user id did not found");
-//            return;
-//        }
-            
-        
-        if(request.getParameter("mode") != null) {//sjekker om parameter gamemmode satt opp
-            if(request.getParameter("mode").equals("gamelist")) {//sjekker om brukeren vil plukke ut gamelist
-                getGameList(request, response);//returnerer navn klokkeslett og varighet i binaryformat
-            }
-            else if(request.getParameter("mode").equals("getgame")) {//returnerer valgt spill
-
-                
-             }
-            else {
-                System.out.println("p");
-            }
-        }
-        else {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {      
+        //dersom mode ikke satt opp returnerer feil
+        if(request.getParameter("mode") == null) {
             response.sendError(1045, "mode undefined");
             return;
+        } 
+        //dersom clinet har lyst på spill list
+        if(request.getParameter("mode").equals("gamelist")) {
+            getGameList(request, response);//returnerer navn klokkeslett og varighet i binaryformat
         }
-
+        //Dersowm bruker vil laste ned valgte spill
+        else if(request.getParameter("mode").equals("getgame")) {//returnerer valgt spill
+            getGameById(request, response);
+        }
+        else {
+            response.sendError(1047, "ukjent mode");
+            return;
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -122,21 +113,68 @@ public class ClientHandler extends HttpServlet {
             sos.write(" ".getBytes());
             sos.write(String.valueOf(g.getVarighet()).getBytes());
             sos.write(System.getProperty("line.separator").getBytes());
-        }
-        
+        }  
     }
     
+    /**
+     * 
+     * @param request
+     * @param response
+     * @throws IOException 
+     */
     public void getGameById(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        //sjekker om bruker satt opp game id
         if(request.getParameter("gameid") == null) {
-            response.sendError(1042, "Game id not undefined");
+            response.sendError(1042, "Game id undefined");
             return;
         }
-        //sjekker om bruker ble registrert 
+        long gameId = Long.valueOf(request.getParameter("gameid"));
+        //skaper GameDBhandler
         GameDBAdapter gdb = new GameDBAdapter();
+        //get systemtime
+        long currentTime = System.currentTimeMillis();
+        //get oppstartstid
+        long gameStart = gdb.getGameById(gameId).getStartDate();
+        //sjekker om det er rett tid å laste ned spill, (spill kan nedlastes kun etter start)
+        if(gameStart > currentTime) {
+            response.sendError(1043, "Game starts at" + new Date(gameStart).toString());
+            return;            
+        }
+        
+        //sjekker om det er bruker eller gest vil laste ned spill
+        if(request.getParameter("userid") != null & request.getParameter("guestid") != null){
+            response.sendError(1042, "Sorry, but you can't be user and guest at the same time");
+            return;
+        }
+        //håndterer brukere
+        if(request.getParameter("userid") != null) {
+            
+        }
+        //håndterer gester
+        if(request.getParameter("guestid") != null) {
+            
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        //sjekker om bruker eller gest ble registrert 
+        
         long gameid = Long.valueOf(request.getParameter("gameid"));
         Game g = gdb.getGameById(gameid);
+        
         UserDBAdapter udb = new UserDBAdapter();
         long userId = Long.valueOf(request.getParameter("name"));
+        
+        GuestDBAdapter guestDb = new GuestDBAdapter();
+
         response.setContentType("application/octet-stream");
         ServletOutputStream sos = response.getOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(sos);
@@ -147,4 +185,7 @@ public class ClientHandler extends HttpServlet {
         sos.flush();
         sos.close();
     }
+    
+    //send result
+    //get results
 }
