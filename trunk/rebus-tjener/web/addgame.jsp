@@ -41,7 +41,6 @@
             <table border="0">
                 <tr>
             <td>
-                <button onclick="addField()">press me</button>
         <div id="map_canvas"></div></td>
         <td valign="top">
         <table id="points" width="350px" border="1">
