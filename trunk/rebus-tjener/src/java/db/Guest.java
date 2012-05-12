@@ -45,6 +45,13 @@ public class Guest {
         this.gameList.add(id);
     }
     
+    /**
+     * returnere om bruker registrerte seg på gitt løp
+     */
+    public boolean isRegistred(long gameId){
+        return this.gameList.contains(gameId);
+    }
+    
     
     
 }

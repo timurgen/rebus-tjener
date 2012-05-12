@@ -100,13 +100,18 @@ public class ClientHandler extends HttpServlet {
     
     public void getGameList(HttpServletRequest request, HttpServletResponse response) throws IOException {
         //sjekker om session id stemmer
-        if(!request.getParameter("sid").equals(request.getSession().getId()))
+        if(!request.getParameter("sid").equals(request.getSession().getId())) {
             response.sendError(1041, "Session invalid");
+            return;
+        }
+            
         GameDBAdapter gdb = new GameDBAdapter();
         ServletOutputStream sos = response.getOutputStream();
         ArrayList<Game> gameList = (ArrayList<Game>) gdb.getAllGames();
         for(Game g: gameList) {
             response.setContentType("application/octet-stream");
+            sos.write(g.getId().byteValue());
+            sos.write(" ".getBytes());
             sos.write(g.getName().getBytes());
             sos.write(" ".getBytes());
             sos.write(String.valueOf(g.getStartDate()).getBytes());
@@ -123,11 +128,13 @@ public class ClientHandler extends HttpServlet {
      * @throws IOException 
      */
     public void getGameById(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        
         //sjekker om bruker satt opp game id
         if(request.getParameter("gameid") == null) {
             response.sendError(1042, "Game id undefined");
             return;
         }
+        
         long gameId = Long.valueOf(request.getParameter("gameid"));
         //skaper GameDBhandler
         GameDBAdapter gdb = new GameDBAdapter();
@@ -148,33 +155,24 @@ public class ClientHandler extends HttpServlet {
         }
         //håndterer brukere
         if(request.getParameter("userid") != null) {
-            
+            UserDBAdapter udb = new UserDBAdapter();
+            long userId = Long.valueOf(request.getParameter("userid"));
+            if(!gdb.getGameById(gameId).getAllPartisipants().contains(userId)) {
+                response.sendError(1047, "You have not been registred in this game");
+                return;                
+            }  
         }
         //håndterer gester
         if(request.getParameter("guestid") != null) {
-            
+            GuestDBAdapter guestDB = new GuestDBAdapter();
+            String guestId = request.getParameter("guestid");
+            if(!guestDB.getGuestById(guestId).isRegistred(gameId)) {
+                response.sendError(1047, "You have not been registred in this game");
+                return;                 
+            }
         }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        //sjekker om bruker eller gest ble registrert 
-        
-        long gameid = Long.valueOf(request.getParameter("gameid"));
-        Game g = gdb.getGameById(gameid);
-        
-        UserDBAdapter udb = new UserDBAdapter();
-        long userId = Long.valueOf(request.getParameter("name"));
-        
-        GuestDBAdapter guestDb = new GuestDBAdapter();
-
+        //dersom alt er ok, sender løp til stream output
+        Game g = gdb.getGameById(gameId);
         response.setContentType("application/octet-stream");
         ServletOutputStream sos = response.getOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(sos);
