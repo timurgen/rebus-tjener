@@ -4,7 +4,6 @@ import db.Game;
 import db.GameDBAdapter;
 import db.GamePunkt;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
 import javax.servlet.ServletException;
