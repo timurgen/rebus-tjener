@@ -44,12 +44,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/textButtonSubmit" />
-     
+     
      <TextView
-        android:id="@+id/statusview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textStyle="italic" />
+         android:id="@+id/statusview"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="100dp"
+		 android:layout_gravity="center"
+         android:textAppearance="?android:attr/textAppearanceMedium"
+         android:textStyle="italic" />
 
 </LinearLayout>

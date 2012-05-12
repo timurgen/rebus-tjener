@@ -25,6 +25,7 @@ public class LoginActivity extends Activity{
 	public String cookie = ""; 
 	private Handler handler = new Handler(); //Brukes til å oppdatere GUI
 	private TextView statusView;
+	private Thread thread = null;
 	
 	// Runnable som inneholder metoden som servlet-tråden starter:
 	private Runnable bakgrunnsProssesering = new Runnable() {
@@ -33,11 +34,21 @@ public class LoginActivity extends Activity{
 		}
 	};
 	
+	// Runnable som oppdaterer GUI
 	private Runnable doUpdateGUI = new Runnable() {
 		public void run() {
 		updateGUI();
 		}
 		};
+	
+	//Runnable som lukker bakgrunstrad og starter GamesAllActivity
+	private Runnable startGameList = new Runnable() {
+		public void run() {
+			thread.interrupt();
+			Intent gameListIntent = new Intent(LoginActivity.this, GamesAllActivity.class);
+			startActivity(gameListIntent);
+		}
+		};	
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,72 +85,88 @@ public class LoginActivity extends Activity{
 		
 		@Override
 		public void onClick(View v) {
-			Thread thread = new Thread(null, bakgrunnsProssesering, "logging inn");
-			thread.start();
-//			Intent gameListIntent = new Intent(LoginActivity.this, GamesAllActivity.class);
-//			startActivity(gameListIntent);
+			if ((name != null) && (pass != null)){
+				thread = new Thread(null, bakgrunnsProssesering, "logging inn");
+				thread.start();
+			}
+			else
+				statusView.setText("fill out BOTH fields");
 			}	
 		});//end of buttonSubmit.setOnClickListener
 		statusView = (TextView) findViewById(R.id.statusview);
 	}//end of onCreate
 	
 	private void kontaktServlet() {
-		responseMsg="kontakter rebus-tjener ...";
-		String myURL = "";
+		responseMsg="Contacting server ...";
 		handler.post(doUpdateGUI);
+		String myURL = "";
+		URL url = null;
+		HttpURLConnection httpConnection = null;
+		InputStream in = null;
 		try {
-			URL url = null;
-			HttpURLConnection httpConnection = null;
 			String data = URLEncoder.encode("name", "UTF-8") + "=" +URLEncoder.encode(name, "UTF-8");
 			data += "&" + URLEncoder.encode("pass", "UTF-8") + "=" +URLEncoder.encode(pass, "UTF-8");
 			
 			myURL = "http://158.39.124.96:8080/rebus/android?" + data;
 			url = new URL(myURL);
 			httpConnection = (HttpURLConnection)url.openConnection();
-			httpConnection.setConnectTimeout(2000);
-			if (httpConnection.getContentLength() > 0){
+			httpConnection.setRequestProperty("User-Agent","Mozilla/10.0 ( compatible ) ");
+			httpConnection.setRequestMethod("GET");
+			httpConnection.setDoInput(true);
+			httpConnection.setConnectTimeout(5000);
 				// Sett cookie dersom påfølgende kall:
-				if (mSession != null){
-					httpConnection.setRequestProperty("cookie", mSession);}
-				int contentLength = httpConnection.getContentLength();
-				StringBuffer buf = new StringBuffer(contentLength);
-				int enByte;
-				int responseCode = httpConnection.getResponseCode();
-				if (responseCode == HttpURLConnection.HTTP_OK) {
-					InputStream in = httpConnection.getInputStream();
-					// Leser ut cookie-stringen:
-					cookie = httpConnection.getHeaderField("Set-cookie");
-					if (cookie != null) {
-						int semicolon = cookie.indexOf(';');
-						mSession = cookie.substring(0, semicolon);
-					}
-					while ((enByte = in.read()) != -1){
-						buf.append((char) enByte);
-					}// Gjør om til char og legger til stringbuffret
-					responseMsg = buf.toString();
-					handler.post(doUpdateGUI);
-					in.close();
-				}else{
-					responseMsg = "HTTP feil ...";
-					handler.post(doUpdateGUI);
-					} //går videre til 
-			}else{
-				responseMsg = "Tjeneren sover";
+//				if (mSession != null){
+//					httpConnection.setRequestProperty("cookie", mSession);}
+			int contentLength = httpConnection.getContentLength();
+			StringBuffer buf = new StringBuffer(contentLength);
+			int enByte;
+			int responseCode = httpConnection.getResponseCode();
+			if (responseCode == HttpURLConnection.HTTP_OK) {
+				in = httpConnection.getInputStream();
+				// Leser ut cookie-stringen:
+//					cookie = httpConnection.getHeaderField("Set-cookie");
+//					if (cookie != null) {
+//						int semicolon = cookie.indexOf(';');
+//						mSession = cookie.substring(0, semicolon);
+//					}
+				while ((enByte = in.read()) != -1){
+					buf.append((char) enByte);
+				}// Gjør om til char og legger til stringbuffret
+				mSession=buf.toString();
+				responseMsg = "logg in - success";
 				handler.post(doUpdateGUI);
-			}
-			httpConnection.disconnect();
-		} 
+				handler.post(startGameList);
+				}
+			else // hvis HTTP responseCode ikke er OK (200) 
+				{
+					responseMsg = "HTTP error (status: " + responseCode + ")";
+					handler.post(doUpdateGUI);
+					}
+		} //end of try
 		catch (SocketTimeoutException e){
 			e.printStackTrace();
-			responseMsg="Tjeneren timeout";
+			responseMsg="Server is unavailable";
 			handler.post(doUpdateGUI);
 		}
 		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		finally{
+			try {
+				in.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (NullPointerException e){
+				e.printStackTrace();
+			}
+			httpConnection.disconnect();
+		}
 	}//end of kontaktServlet()
 
+	//skriver ut statusmeldinger
 	private void updateGUI() {
 		statusView.setText(responseMsg);
 		}
