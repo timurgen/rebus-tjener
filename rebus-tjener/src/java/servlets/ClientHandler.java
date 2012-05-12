@@ -35,7 +35,16 @@ public class ClientHandler extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        if(request.getParameter("username") == null) {
+//            response.sendError(1043, "user name did not found");
+//            return;
+//        }
+//        if(request.getParameter("userid") == null) {
+//            response.sendError(1044, "user id did not found");
+//            return;
+//        }
+            
         
         if(request.getParameter("mode") != null) {//sjekker om parameter gamemmode satt opp
             if(request.getParameter("mode").equals("gamelist")) {//sjekker om brukeren vil plukke ut gamelist
@@ -48,6 +57,10 @@ public class ClientHandler extends HttpServlet {
             else {
                 System.out.println("p");
             }
+        }
+        else {
+            response.sendError(1045, "mode undefined");
+            return;
         }
 
     }
@@ -123,10 +136,11 @@ public class ClientHandler extends HttpServlet {
         long gameid = Long.valueOf(request.getParameter("gameid"));
         Game g = gdb.getGameById(gameid);
         UserDBAdapter udb = new UserDBAdapter();
-        long userId = udb.getUserByName((String)request.getSession().getAttribute(request.getParameter("name"))).getId();
-        
+        long userId = Long.valueOf(request.getParameter("name"));
+        response.setContentType("application/octet-stream");
         ServletOutputStream sos = response.getOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(sos);
+        
         oos.writeObject(g);
         oos.flush();
         oos.close();

@@ -36,6 +36,8 @@ public class GameDBAdapter {
             em.getTransaction().begin();
             em.persist(g);
             em.getTransaction().commit();
+            em.clear();
+            em.close();
             return true;
         }
         catch(PersistenceException e){
@@ -54,6 +56,7 @@ public class GameDBAdapter {
         g.addPoint(gp);
         JDOHelper.makeDirty(g, "pointList");
         em.getTransaction().commit();
+        em.clear();
     }
     public void addPartisipantToGame(long gameId, long userId) throws Exception {
         Game g = this.getGameById(gameId);
@@ -61,6 +64,7 @@ public class GameDBAdapter {
         g.addPartisipant(userId);
         JDOHelper.makeDirty(g, "partisipants");
         em.getTransaction().commit();
+        em.clear();
     }
     
     public List<Game> getAllGames () {
