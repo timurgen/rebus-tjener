@@ -3,7 +3,7 @@ package servlets;
 
 import db.UserDBAdapter;
 import java.io.IOException;
-import javax.jms.Session;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "AutentificateClient", urlPatterns = {"/android"})
 public class AutentificateClient extends HttpServlet {
+    
 
     /**
      * Processes requests for both HTTP
@@ -31,13 +32,15 @@ public class AutentificateClient extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        //PrintWriter out = response.getWriter();
+        response.setContentType("text/plain");
+        PrintWriter out = null;
         try {
             
             if(request.getParameter("guest")!= null && request.getParameter("guest").equals("true")) {
+                out = response.getWriter();
                 //out.println("you will be handled as guest");
                 response.setContentType("application/octet-stream");
+                
                 byte[] sessionId = request.getSession().getId().getBytes();
                 response.setContentLength(sessionId.length);
                 ServletOutputStream outputStream = response.getOutputStream();
@@ -49,18 +52,22 @@ public class AutentificateClient extends HttpServlet {
                 String pass = request.getParameter("pass");
                 UserDBAdapter udb = new UserDBAdapter();
                 try {
-                    if(udb.autentificate(name, pass)) {
-                        response.setContentType("application/octet-stream");
+                    if(udb.autentificate(name, pass)) {                       
                         ServletOutputStream outputStream = response.getOutputStream();
                         byte[] userName = udb.getUserByName(name).getName().getBytes();
                         byte[] userId = String.valueOf(udb.getUserByName(name).getId()).getBytes();
                         byte[] sessionId = request.getSession().getId().getBytes();
+                        response.setContentType("application/octet-stream");
+                        response.setContentLength(userName.length+userId.length+sessionId.length+" ".length()+" ".length());
                         outputStream.write(userName);
                         outputStream.write(" ".getBytes());
                         outputStream.write(sessionId);
                         outputStream.write(" ".getBytes());
                         outputStream.write(userId);
                         outputStream.flush();
+                        //out = response.getWriter();
+                        //out.write("hui");
+                        //out.close();
                 }
                     else {
                         response.sendError(1, "Wrong username or password");
@@ -68,7 +75,7 @@ public class AutentificateClient extends HttpServlet {
                     
                 }
                 catch(Exception e) {
-                    response.sendError(403, e.getMessage());
+                    response.sendError(4030, e.getMessage());
                 }
 
                 
@@ -78,7 +85,7 @@ public class AutentificateClient extends HttpServlet {
             }
         } finally {
             
-            //out.close();
+            out.close();
             
         }
     }
