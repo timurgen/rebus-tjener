@@ -61,7 +61,18 @@ public class GamesAllActivity extends ListActivity{
 		gamesFromServlet = connectionhandler.GetDataFromServlet(getApplicationContext(), 1, "", "");
 		handler.post(doUpdateGUI);
 		thread.interrupt();
-		
+		gamesFromServlet = gamesFromServlet.trim();
+		String [] gameArray = gamesFromServlet.split(" ");
+			
+		//sjekker hvis det kommer et streng med 6 elementer for hvert spill
+		for ( int i=0; i< gameArray.length;){
+			
+				games.add(new GameRebus(gameArray[i],gameArray[i+1], gameArray[i+2], gameArray[i+3], gameArray[i+4],  gameArray[i+5]));
+				i = i+6;
+		}
+		for (int i = 0; i < games.size(); i++)
+			gamesList.add(games.get(i).getName() + " " + games.get(i).getVarighetString() + " " + games.get(i).getStartDateString());
+
 	}
 	
 	private void CreateGames()
