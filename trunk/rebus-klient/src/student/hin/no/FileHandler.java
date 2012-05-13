@@ -48,14 +48,15 @@ public class FileHandler {
 	public String ReadLogs(int whatToRead, Context context){
 		res = context.getResources();
 		logsFile = res.getString(R.string.logsFile);
-		String line;
-		int positionwhatToRead;
 		try {
 			fIn = context.openFileInput(logsFile);
 			InputStreamReader isr = new InputStreamReader(fIn);
     		BufferedReader reader = new BufferedReader(isr);
+    		
+    		/* whatToRead = 1 - Leser sesjons-id
+    		 * 
+    		 */
     		switch (whatToRead){
-    			//leser sesjon-id
 	    		case 1:
 	    		{
 	    			entryFromLogs = reader.readLine();

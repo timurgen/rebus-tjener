@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -14,11 +15,29 @@ public class GamesAllActivity extends ListActivity{
 
 	private ArrayList<GameRebus> games = new ArrayList<GameRebus>();
 	private ArrayList<String> gamesList = new ArrayList<String>();
+	private ConnectionHandler connectionhandler;
+	private String gamesFromServlet;
+	private Thread thread = null;
+	private Handler handler = new Handler(); //Brukes til å oppdatere GUI
+	
+	private Runnable bakgrunnsSjekkingListe = new Runnable() {
+		public void run() {
+			GetGamesListFromServlet();
+		}
+	};
+	// Runnable som oppdaterer GUI
+	private Runnable doUpdateGUI = new Runnable() {
+		public void run() {
+		updateGUI();
+		}
+		};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		
+		thread = new Thread(null, bakgrunnsSjekkingListe, "logging inn");
+		thread.start();
 		CreateGames();
 		
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.games_all, gamesList);
@@ -37,6 +56,14 @@ public class GamesAllActivity extends ListActivity{
 		startActivity(mapIntent);
 	}
 	
+	private void GetGamesListFromServlet(){
+		connectionhandler = new ConnectionHandler();
+		gamesFromServlet = connectionhandler.GetDataFromServlet(getApplicationContext(), 1, "", "");
+		handler.post(doUpdateGUI);
+		thread.interrupt();
+		
+	}
+	
 	private void CreateGames()
 	{
 		games.add(new GameRebus("vs","gameOne", 50, true, "05-May-2012 15:15:15"));
@@ -52,4 +79,7 @@ public class GamesAllActivity extends ListActivity{
 			gamesList.add(games.get(i).getName() + " " + games.get(i).getVarighetString() + " " + games.get(i).getStartDateString());
 	}
 	
+	private void updateGUI() {
+		// obnovit adapter dlya lista
+		}
 }//end of GamesAllActivity
