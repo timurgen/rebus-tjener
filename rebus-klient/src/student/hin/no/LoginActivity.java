@@ -26,7 +26,11 @@ public class LoginActivity extends Activity{
 	private Handler handler = new Handler(); //Brukes til å oppdatere GUI
 	private TextView statusView;
 	private Thread thread = null;
+	private FileHandler filehandler;
 	
+	/////
+	private ConnectionHandler conn;
+	////
 	// Runnable som inneholder metoden som servlet-tråden starter:
 	private Runnable bakgrunnsProssesering = new Runnable() {
 		public void run() {
@@ -97,12 +101,14 @@ public class LoginActivity extends Activity{
 	}//end of onCreate
 	
 	private void kontaktServlet() {
+		
 		responseMsg="Contacting server ...";
 		handler.post(doUpdateGUI);
 		String myURL = "";
 		URL url = null;
 		HttpURLConnection httpConnection = null;
 		InputStream in = null;
+		filehandler = new FileHandler();
 		try {
 			String data = URLEncoder.encode("name", "UTF-8") + "=" +URLEncoder.encode(name, "UTF-8");
 			data += "&" + URLEncoder.encode("pass", "UTF-8") + "=" +URLEncoder.encode(pass, "UTF-8");
@@ -124,17 +130,25 @@ public class LoginActivity extends Activity{
 			if (responseCode == HttpURLConnection.HTTP_OK) {
 				in = httpConnection.getInputStream();
 				// Leser ut cookie-stringen:
-//					cookie = httpConnection.getHeaderField("Set-cookie");
-//					if (cookie != null) {
-//						int semicolon = cookie.indexOf(';');
-//						mSession = cookie.substring(0, semicolon);
-//					}
+					cookie = httpConnection.getHeaderField("Set-cookie");
+					if (cookie != null) {
+						int semicolon = cookie.indexOf(';');
+						mSession = cookie.substring(0, semicolon);
+					}
 				while ((enByte = in.read()) != -1){
 					buf.append((char) enByte);
 				}// Gjør om til char og legger til stringbuffret
-				mSession=buf.toString();
-				responseMsg = "logg in - success";
+				cookie=buf.toString();
+				filehandler.WriteLog(mSession, getApplicationContext());
+				responseMsg = "logg in - success!";
 				handler.post(doUpdateGUI);
+				
+				////
+				conn = new ConnectionHandler();
+				conn.GetGameListFromServlet(getApplicationContext());
+				////
+				filehandler.CleanLogs(getApplicationContext());			
+				
 				handler.post(startGameList);
 				}
 			else // hvis HTTP responseCode ikke er OK (200) 
