@@ -58,7 +58,7 @@ public class GamesAllActivity extends ListActivity{
 		for ( int i=0; i< gameArray.length;){
 										//gameid	author-name		game-name		varighet		isOpen			date
 			games.add(new GameRebus(gameArray[i],gameArray[i+1], gameArray[i+2], gameArray[i+3], gameArray[i+4],  gameArray[i+5]));
-			i = i+6;
+			i = i+6; 
 		}
 		for (int i = 0; i < games.size(); i++)
 			gamesList.add(games.get(i).getName() + " " + games.get(i).getVarighetString() + " " + games.get(i).getStartDateString());
