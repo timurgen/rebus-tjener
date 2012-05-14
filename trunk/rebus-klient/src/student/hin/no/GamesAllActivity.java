@@ -52,15 +52,13 @@ public class GamesAllActivity extends ListActivity{
 		connectionhandler = new ConnectionHandler();
 		gamesFromServlet = connectionhandler.GetDataFromServlet(getApplicationContext(), 1, "", "");
 		gamesFromServlet = gamesFromServlet.trim();
-		String [] gameArray = gamesFromServlet.split(" ");
+		String [] gameArray = gamesFromServlet.split(",");
 			
 		//sjekker hvis det kommer et streng med 6 elementer for hvert spill
 		for ( int i=0; i< gameArray.length;){
 										//gameid	author-name		game-name		varighet		isOpen			date
-			//games.add(new GameRebus(gameArray[i],gameArray[i+1], gameArray[i+2], gameArray[i+3], gameArray[i+4],  gameArray[i+5]));
-			//i = i+6;
-			games.add(new GameRebus("author", gameArray[i+1], Integer.parseInt(gameArray[i+3]), true,  gameArray[i+5]));	
-			i=i+4;
+			games.add(new GameRebus(gameArray[i],gameArray[i+1], gameArray[i+2], gameArray[i+3], gameArray[i+4],  gameArray[i+5]));
+			i = i+6;
 		}
 		for (int i = 0; i < games.size(); i++)
 			gamesList.add(games.get(i).getName() + " " + games.get(i).getVarighetString() + " " + games.get(i).getStartDateString());
