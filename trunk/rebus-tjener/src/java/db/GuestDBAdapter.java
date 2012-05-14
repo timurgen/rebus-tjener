@@ -13,6 +13,7 @@ import javax.persistence.PersistenceException;
 /**
  *
  * @author 490501
+ * @version 1.0.0
  */
 public class GuestDBAdapter {
     EntityManagerFactory emf;

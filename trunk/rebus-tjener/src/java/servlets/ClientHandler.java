@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  *
  * @author 490501
+ * @version 1.0.1
  */
 @WebServlet(name = "ClientHandler", urlPatterns = {"/client"})
 public class ClientHandler extends HttpServlet {
