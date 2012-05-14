@@ -30,7 +30,7 @@ public class Game implements Serializable{
     private int currentPoint;
     private String authorName;
     @OneToMany(cascade=CascadeType.PERSIST)
-    private ArrayList<Results> results;
+    private ArrayList<Result> results;
 
     public Game() {
     }
@@ -57,7 +57,7 @@ public class Game implements Serializable{
         this.isOpen = isOpen;
         this.partisipants = new ArrayList<Long>();
         this.pointList = new ArrayList<GamePunkt>();
-        this.results = new ArrayList<Results>();
+        this.results = new ArrayList<Result>();
         this.currentPoint = 0;
     }
     
@@ -165,13 +165,13 @@ public class Game implements Serializable{
      * @throws Exception 
      */
     public void setResult(String gamerId, long result) throws Exception {
-        if(this.results.contains(new Results(gamerId, result))) {
+        if(this.results.contains(new Result(gamerId, result))) {
             throw new Exception("result exists for this gamer id");
         }
-        this.results.add(new Results(gamerId, result));
+        this.results.add(new Result(gamerId, result));
     }
     
-    public ArrayList<Results> getResults() {
+    public ArrayList<Result> getResults() {
         return this.results;
     }
     

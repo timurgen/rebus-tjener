@@ -15,7 +15,7 @@ import javax.persistence.Id;
  * @author 490501
  */
 @Entity
-public class Results implements Serializable {
+public class Result implements Serializable {
     @Id @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id; //
     
@@ -47,10 +47,10 @@ public class Results implements Serializable {
         this.result = result;
     }
 
-    public Results() {
+    public Result() {
     }
 
-    public Results(String gamerId, long result) {
+    public Result(String gamerId, long result) {
         this.gamerId = gamerId;
         this.result = result;
     }
