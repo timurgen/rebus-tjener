@@ -37,7 +37,7 @@ public class AutentificateClient extends HttpServlet {
         try {
             
             if(request.getParameter("guest")!= null && request.getParameter("guest").equals("true")) {
-                out = response.getWriter();
+                //out = response.getWriter();
                 //out.println("you will be handled as guest");
                 response.setContentType("application/octet-stream");
                 
@@ -85,7 +85,7 @@ public class AutentificateClient extends HttpServlet {
             }
         } finally {
             
-            out.close();
+            //out.close();
             
         }
     }
