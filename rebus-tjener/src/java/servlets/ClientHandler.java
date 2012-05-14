@@ -98,13 +98,7 @@ public class ClientHandler extends HttpServlet {
     }// </editor-fold>
     
     
-    public void getGameList(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        //sjekker om session id stemmer
-        if(!request.getParameter("sid").equals(request.getSession().getId())) {
-            response.sendError(1041, "Session invalid");
-            return;
-        }
-            
+    public void getGameList(HttpServletRequest request, HttpServletResponse response) throws IOException {   
         GameDBAdapter gdb = new GameDBAdapter();
         ServletOutputStream sos = response.getOutputStream();
         ArrayList<Game> gameList = (ArrayList<Game>) gdb.getAllGames();
@@ -112,12 +106,17 @@ public class ClientHandler extends HttpServlet {
             response.setContentType("application/octet-stream");
             sos.write(g.getId().byteValue());
             sos.write(" ".getBytes());
+            sos.write(g.getAuthorName().getBytes());
+            sos.write(" ".getBytes());
             sos.write(g.getName().getBytes());
             sos.write(" ".getBytes());
-            sos.write(String.valueOf(g.getStartDate()).getBytes());
-            sos.write(" ".getBytes());
             sos.write(String.valueOf(g.getVarighet()).getBytes());
+            sos.write(" ".getBytes());
+            sos.write(g.isIsOpen() ? "true".getBytes() : "false".getBytes());
+            sos.write(" ".getBytes());
+            sos.write(String.valueOf(g.getStartDate()).getBytes());
             sos.write(System.getProperty("line.separator").getBytes());
+            sos.flush();
         }  
     }
     
@@ -185,5 +184,8 @@ public class ClientHandler extends HttpServlet {
     }
     
     //send result
+    public void sendResults(HttpServletRequest request, HttpServletResponse response) {
+        
+    }
     //get results
 }
