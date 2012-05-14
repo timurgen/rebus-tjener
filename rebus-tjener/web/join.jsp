@@ -1,7 +1,7 @@
 <%-- 
     Document   : join.jsp
     Created on : May 4, 2012, 9:45:53 PM
-    Author     : obu
+    Author     : 490501
 --%>
 
 <%@page import="db.Guest"%>

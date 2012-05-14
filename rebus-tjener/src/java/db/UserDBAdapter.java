@@ -6,7 +6,7 @@ import javax.persistence.*;
 /**
  *
  * @author 490501
- * @author 1.0.0
+ * @version 1.0.0
  */
 public class UserDBAdapter {
     EntityManagerFactory emf;

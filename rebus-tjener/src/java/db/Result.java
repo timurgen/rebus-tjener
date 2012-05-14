@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package db;
 
 import java.io.Serializable;
@@ -13,6 +10,7 @@ import javax.persistence.Id;
 /**
  *
  * @author 490501
+ * @version 1.0.0
  */
 @Entity
 public class Result implements Serializable {
