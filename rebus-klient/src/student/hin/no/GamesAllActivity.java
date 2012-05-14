@@ -5,32 +5,25 @@ import java.util.ArrayList;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class GamesAllActivity extends ListActivity{
 
 	private ArrayList<GameRebus> games = new ArrayList<GameRebus>();
 	private ArrayList<String> gamesList = new ArrayList<String>();
+	ArrayAdapter<String> adapter;
 	private ConnectionHandler connectionhandler;
 	private String gamesFromServlet;
 	private Thread thread = null;
-	private Handler handler = new Handler(); //Brukes til å oppdatere GUI
 	
 	private Runnable bakgrunnsSjekkingListe = new Runnable() {
 		public void run() {
 			GetGamesListFromServlet();
+			thread.interrupt();
 		}
 	};
-	// Runnable som oppdaterer GUI
-	private Runnable doUpdateGUI = new Runnable() {
-		public void run() {
-		updateGUI();
-		}
-		};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState){
@@ -38,11 +31,10 @@ public class GamesAllActivity extends ListActivity{
 		
 		thread = new Thread(null, bakgrunnsSjekkingListe, "logging inn");
 		thread.start();
-		CreateGames();
+		//CreateGames();
 		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.games_all, gamesList);
+		adapter = new ArrayAdapter<String>(this, R.layout.games_all, gamesList);
 		setListAdapter(adapter);
-	
 		
 	}//end of onCreate
 	
@@ -59,20 +51,20 @@ public class GamesAllActivity extends ListActivity{
 	private void GetGamesListFromServlet(){
 		connectionhandler = new ConnectionHandler();
 		gamesFromServlet = connectionhandler.GetDataFromServlet(getApplicationContext(), 1, "", "");
-		handler.post(doUpdateGUI);
-		thread.interrupt();
 		gamesFromServlet = gamesFromServlet.trim();
 		String [] gameArray = gamesFromServlet.split(" ");
 			
 		//sjekker hvis det kommer et streng med 6 elementer for hvert spill
 		for ( int i=0; i< gameArray.length;){
-			
-				games.add(new GameRebus(gameArray[i],gameArray[i+1], gameArray[i+2], gameArray[i+3], gameArray[i+4],  gameArray[i+5]));
-				i = i+6;
+										//gameid	author-name		game-name		varighet		isOpen			date
+			//games.add(new GameRebus(gameArray[i],gameArray[i+1], gameArray[i+2], gameArray[i+3], gameArray[i+4],  gameArray[i+5]));
+			//i = i+6;
+			games.add(new GameRebus("author", gameArray[i+1], Integer.parseInt(gameArray[i+3]), true,  gameArray[i+5]));	
+			i=i+4;
 		}
 		for (int i = 0; i < games.size(); i++)
 			gamesList.add(games.get(i).getName() + " " + games.get(i).getVarighetString() + " " + games.get(i).getStartDateString());
-
+		adapter.notify();
 	}
 	
 	private void CreateGames()
@@ -89,8 +81,4 @@ public class GamesAllActivity extends ListActivity{
 		for (int i = 0; i < games.size(); i++)
 			gamesList.add(games.get(i).getName() + " " + games.get(i).getVarighetString() + " " + games.get(i).getStartDateString());
 	}
-	
-	private void updateGUI() {
-		// obnovit adapter dlya lista
-		}
 }//end of GamesAllActivity

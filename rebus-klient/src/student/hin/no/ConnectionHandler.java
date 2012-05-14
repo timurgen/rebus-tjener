@@ -12,12 +12,9 @@ import android.content.Context;
 public class ConnectionHandler {
 	private String responseMsg = "";
 	private String data, mSession = null;
-	//private Handler handler = new Handler(); //Brukes til å oppdatere GUI
-	//private Thread thread = null;
 	private FileHandler filehandler;
 	
 	public String GetDataFromServlet(Context context, int details, String name, String pass){
-		//detailes 0 - get gamelist, 1 - get game by id
 		String myURL = "";
 		URL url = null;
 		HttpURLConnection httpConnection = null;
@@ -25,9 +22,9 @@ public class ConnectionHandler {
 		filehandler = new FileHandler();
 		mSession = filehandler.ReadLogs(1, context);
 		try {
-			/* details equals "0" to log in
-			 * details equals "1" to get a gamelist
-			 * details equals "2" to get a game by id
+			/* details equals "0" to get url for log in
+			 * details equals "1" to get url for gamelist
+			 * details equals "2" to get url for game by id
 			 */
 			switch (details){
 				case 0:
@@ -50,9 +47,12 @@ public class ConnectionHandler {
 			httpConnection.setRequestMethod("GET");
 			httpConnection.setDoInput(true);
 			httpConnection.setConnectTimeout(5000);
-				// Sett cookie dersom påfølgende kall:
-			if (mSession != null){
+				
+			// Sett cookie dersom påfølgende kall:
+			if (mSession != null && details !=0){
 				httpConnection.setRequestProperty("cookie", mSession);}
+			
+			
 			int contentLength = httpConnection.getContentLength();
 			StringBuffer buf = new StringBuffer(contentLength);
 			int enByte;
@@ -67,12 +67,16 @@ public class ConnectionHandler {
 						mSession = mSession.substring(0, semicolon);
 						filehandler.WriteLog(mSession, context);
 					}
+					responseMsg = "Authentification: success!";
+				} //end (details ==0){
+							//hvis vi vil få informasjon om tilgjengelige spill
+				else{ 
+					while ((enByte = in.read()) != -1){
+						buf.append((char) enByte);
+					}//Char til stringbuffer
+					responseMsg=buf.toString();
 				}
-				while ((enByte = in.read()) != -1){
-					buf.append((char) enByte);
-				}// Gjør om til char og legger til stringbuffret
-				responseMsg=buf.toString();
-			}
+			} // end if (responseCode == HttpURLConnection.HTTP_OK) {
 			else // hvis HTTP responseCode ikke er OK (200) 
 			{
 				responseMsg = "Error: HTTP status " + responseCode;
@@ -99,5 +103,5 @@ public class ConnectionHandler {
 			httpConnection.disconnect();
 		}
 		return responseMsg;
-	}
+	}//end of public String GetDataFromServlet(..
 }

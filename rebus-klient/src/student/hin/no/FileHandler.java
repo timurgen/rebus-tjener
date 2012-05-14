@@ -25,7 +25,7 @@ public class FileHandler {
 		res = context.getResources();
 		logsFile = res.getString(R.string.logsFile);
 		try{
-			fOut = context.openFileOutput("logsFile", Context.MODE_APPEND);
+			fOut = context.openFileOutput("logsFile", 0);
 			OutputStreamWriter osw = new OutputStreamWriter(fOut);
 			osw.write(newEntry + "\n");
 			osw.close();
@@ -60,17 +60,6 @@ public class FileHandler {
 	    		case 1:
 	    		{
 	    			entryFromLogs = reader.readLine();
-//		    		entryFromLogs = line.substring(11);
-//		    		while (line != null){
-//		    			if (line.indexOf(" ")!=-1){
-//		    	    		positionwhatToRead = line.indexOf(" ");
-//		    				entryFromLogs = line.substring(positionwhatToRead + 1, positionwhatToRead + 29);
-//		    				break;
-//		    			}
-//		    			else {
-//		    				line = reader.readLine();
-//		    			}
-//		    		} //end while (line != null)
 		    		break;
 	    		}//end case 1:
 	    		
