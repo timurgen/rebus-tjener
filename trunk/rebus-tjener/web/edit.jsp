@@ -12,16 +12,27 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
-    int gameId = Integer.valueOf(request.getParameter("gameid")); // id the game to editing 
+
+    if(request.getParameter("gameid")== null) {
+        response.sendRedirect("wrong.jsp?message=\"Game id is not set\"");
+        return;
+    } 
+    long gameId = Long.valueOf(request.getParameter("gameid")); // id the game to editing 
     String userName = (String)session.getAttribute("username"); //username
     //sjekker om bruker er eier og kan redigere det 
     GameDBAdapter gdb = new GameDBAdapter();
     UserDBAdapter udb = new UserDBAdapter();
     Game gm = gdb.getGameById(gameId);
     if(!gm.getAuthorName().equals(userName)){
-        
         response.sendRedirect("wrong.jsp?message=\"You have no right to do it\"");
+        return;
     }
+    if(System.currentTimeMillis() > gm.getStartDate()) {
+        response.sendRedirect("wrong.jsp?message=\"Too late to do it\"");
+        return;
+    }
+
+
 
 %>
 <!DOCTYPE html>
@@ -70,6 +81,7 @@
                     </td>
                 </tr>
             </table>
+                <input type="submit" value="Save" />
         </form>
         </div>
         <%@include file="footer.jsp" %>
