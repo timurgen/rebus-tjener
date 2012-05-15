@@ -1,5 +1,6 @@
 package student.hin.no;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 
 import org.apache.commons.logging.Log;
@@ -46,8 +47,18 @@ public class GamesListActivity extends Activity{
 	private void CreateGames()
 	{
 		
-		games.add(new GameRebus("vs","gameOne", null, 50, true, "05-May-2012 15:15:15"));
-		games.add(new GameRebus("ts","gameTwo", null, 70, true, "05-May-2012 17:17:17"));
+		try {
+			games.add(new GameRebus("vs","gameOne", null, 50, true, "05-May-2012 15:15:15"));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			games.add(new GameRebus("ts","gameTwo", null, 70, true, "05-May-2012 17:17:17"));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		textViewGameName = new TextView[games.size()];
 		textViewVarighet = new TextView[games.size()];
 		textViewDato = new TextView[games.size()];

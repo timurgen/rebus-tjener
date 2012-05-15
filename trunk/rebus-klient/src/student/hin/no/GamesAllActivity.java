@@ -1,10 +1,12 @@
 package student.hin.no;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -17,6 +19,7 @@ public class GamesAllActivity extends ListActivity{
 	private ConnectionHandler connectionhandlerGameList;
 	private String gamesFromServlet;
 	private Thread thread = null;
+	private Handler handler = new Handler(); //Brukes til å oppdatere GUI
 	
 	private Runnable bakgrunnsSjekkingListe = new Runnable() {
 		public void run() {
@@ -24,6 +27,12 @@ public class GamesAllActivity extends ListActivity{
 			thread.interrupt();
 		}
 	};
+	
+	private Runnable doUpdateGUI = new Runnable() {
+		public void run() {
+		updateGUI();
+		}
+		};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState){
@@ -57,14 +66,25 @@ public class GamesAllActivity extends ListActivity{
 		//sjekker hvis det kommer et streng med 6 elementer for hvert spill
 		for ( int i=0; i< gameArray.length;){
 										//gameid	author-name		game-name			varighet						isOpen								date
-			games.add(new GameRebus(gameArray[i],gameArray[i+1], gameArray[i+2], Integer.parseInt(gameArray[i+3]), Boolean.parseBoolean(gameArray[i+4]),  gameArray[i+5]));
+			try {
+				games.add(new GameRebus(gameArray[i], gameArray[i+1], gameArray[i+2], Integer.parseInt(gameArray[i+3]), Boolean.parseBoolean(gameArray[i+4]),  gameArray[i+5]));
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			i = i+6; 
 		}
 		for (int i = 0; i < games.size(); i++)
 			gamesList.add(games.get(i).getName() + " " + games.get(i).getVarighetString() + " " + games.get(i).getStartDateString());
-		adapter.notify();
+		handler.post(doUpdateGUI);
 	}
 	
+	private void updateGUI() {
+		adapter.notifyDataSetChanged();
+	}
 //	private void CreateGames()
 //	{
 //		games.add(new GameRebus("vs","gameOne", 50, true, "05-May-2012 15:15:15"));
