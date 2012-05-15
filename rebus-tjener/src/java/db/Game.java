@@ -169,11 +169,11 @@ public class Game implements Serializable{
      * @param points 
      * @throws Exception 
      */
-    public void setResult(long gameId, String gamerId, long result, long points) throws Exception {
-        if(this.results.contains(new Result(gamerId, result))) {
+    public void setResult(long gameId, long userId, long result, long points) throws Exception {
+        if(this.results.contains(new Result(userId, result,points))) {
             throw new Exception("result exists for this gamer id");
         }
-        this.results.add(new Result(gamerId, result));
+        this.results.add(new Result(userId, result, points));
     }
     
     /**

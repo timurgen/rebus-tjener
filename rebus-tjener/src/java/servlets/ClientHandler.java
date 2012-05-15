@@ -108,10 +108,10 @@ public class ClientHandler extends HttpServlet {
         GameDBAdapter gdb = new GameDBAdapter();
         ServletOutputStream sos = response.getOutputStream();
         ArrayList<Game> gameList = (ArrayList<Game>) gdb.getAllGames();
-        response.setContentLength(9999);
+        //response.setContentLength(9999);
         for(Game g: gameList) {
             response.setContentType("application/octet-stream");
-            sos.write(g.getId().byteValue());
+            sos.write(String.valueOf(g.getId()).getBytes());
             sos.write(",".getBytes());
             sos.write(g.getAuthorName().getBytes());
             sos.write(",".getBytes());
@@ -123,9 +123,10 @@ public class ClientHandler extends HttpServlet {
             sos.write(",".getBytes());
             sos.write(String.valueOf(g.getStartDate()).getBytes());
             sos.write(",".getBytes());
-            sos.flush();
-            sos.close();
+
         }  
+        sos.flush();
+        sos.close();
     }
     
     /**
@@ -210,11 +211,12 @@ public class ClientHandler extends HttpServlet {
             return;            
         }
         
-        String userId = request.getParameter("userid");
+        long userId = Long.valueOf(request.getParameter("userid"));
         long gameId = Long.valueOf(request.getParameter("gameid"));
         long result = Long.valueOf(request.getParameter("result"));
         int points = Integer.valueOf(request.getParameter("quantity"));
         GameDBAdapter gdb = new GameDBAdapter();
+        
         
             
         
@@ -230,11 +232,12 @@ public class ClientHandler extends HttpServlet {
         ServletOutputStream sos = response.getOutputStream();
         Game g = gdb.getGameById(Long.valueOf(request.getParameter("gameid")));
         ArrayList<Result> results = g.getResults();
+        
         for(Result s : results) {
-            sos.write(s.getGamerId().getBytes());
-            sos.write(" ".getBytes());
+            sos.write(Long.toString(s.getGamerId()).getBytes());
+            sos.write(",".getBytes());
             sos.write(Long.toString(s.getResult()).getBytes());
-            sos.write(System.getProperty("line.separator").getBytes());
+            sos.write(System.getProperty(";").getBytes());
         }
         sos.flush();
         sos.close();

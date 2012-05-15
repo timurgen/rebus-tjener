@@ -72,7 +72,7 @@
                         }
                         else if(System.currentTimeMillis() > gameList.get(i).getStartDate() + gameList.get(i).getVarighet()*60000) {
                             out.println("<td>");
-                            out.println("<div class=\"join-button-2\">Game finished</div>");
+                            out.println("<a href=\"results.jsp?gameid="+gameList.get(i).getId()+"\"><div class=\"join-button-2\">Game finished</div></a>");
                             out.println("</td>");
                         }
                         else if(gameList.get(i).isIsOpen() == false & session.getAttribute("username")== null ) {

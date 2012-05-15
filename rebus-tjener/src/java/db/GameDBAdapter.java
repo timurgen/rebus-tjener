@@ -101,8 +101,13 @@ public class GameDBAdapter {
      * @param points - poenger som en bruker fikk
      * @param result - medgått tid 
      */
-    public void addResultToGame(long gameid, String userid, long points, long result) {
-        //TODO
+    public void addResultToGame(long gameid, long userid, long points, long result) throws Exception {
+        Game g = this.getGameById(gameid);
+        em.getTransaction().begin();
+        g.setResult(gameid, userid, result, points);
+        JDOHelper.makeDirty(g, "partisipants");
+        em.getTransaction().commit();
+        em.clear();
     }
     /**
      * 
