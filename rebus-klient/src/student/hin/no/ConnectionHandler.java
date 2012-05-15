@@ -73,7 +73,6 @@ public class ConnectionHandler {
 							//hvis vi vil få informasjon om tilgjengelige spill
 				else{ 
 					while ((enByte = in.read()) != -1){
-						//buf.append((long) enByte);
 						buf.append((char) enByte);
 					}//Char til stringbuffer
 					responseMsg=buf.toString();

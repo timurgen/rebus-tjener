@@ -29,17 +29,13 @@ public class GameRebus implements Serializable
 	private int currentPoint;
 	private String dateString;
 	
-	public GameRebus(String _idGame, String _authorName, String _name, int _varighet, boolean _isOpen, String _start)
+	public GameRebus(String _idGame, String _authorName, String _name, int _varighet, boolean _isOpen, String _start) throws ParseException
 	{
 		DateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
 		Date date;
-		try {
-			date = formatter.parse(_start);
-			startDate = date.getTime();
-		} catch (ParseException e) {
-			Logger.getLogger(GameRebus.class.getName()).log(Level.SEVERE, null, e);
-			e.printStackTrace();
-		}
+		date = new Date(Long.valueOf(_start));
+		//date = formatter.parse(_start);
+		startDate = date.getTime();
 		idGame = Long.getLong(_idGame);
 		authorName = _authorName;
 		name = _name;
