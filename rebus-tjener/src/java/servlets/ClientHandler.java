@@ -108,20 +108,21 @@ public class ClientHandler extends HttpServlet {
         GameDBAdapter gdb = new GameDBAdapter();
         ServletOutputStream sos = response.getOutputStream();
         ArrayList<Game> gameList = (ArrayList<Game>) gdb.getAllGames();
+        response.setContentLength(9999);
         for(Game g: gameList) {
             response.setContentType("application/octet-stream");
             sos.write(g.getId().byteValue());
-            sos.write(" ".getBytes());
+            sos.write(",".getBytes());
             sos.write(g.getAuthorName().getBytes());
-            sos.write(" ".getBytes());
+            sos.write(",".getBytes());
             sos.write(g.getName().getBytes());
-            sos.write(" ".getBytes());
+            sos.write(",".getBytes());
             sos.write(String.valueOf(g.getVarighet()).getBytes());
-            sos.write(" ".getBytes());
+            sos.write(",".getBytes());
             sos.write(g.isIsOpen() ? "true".getBytes() : "false".getBytes());
-            sos.write(" ".getBytes());
+            sos.write(",".getBytes());
             sos.write(String.valueOf(g.getStartDate()).getBytes());
-            sos.write(System.getProperty("line.separator").getBytes());
+            sos.write(",".getBytes());
             sos.flush();
             sos.close();
         }  
@@ -191,7 +192,31 @@ public class ClientHandler extends HttpServlet {
     }
     
     //send result
-    public void sendResults(HttpServletRequest request, HttpServletResponse response) {
+    public void sendResults(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if(request.getParameter("userid") == null) {
+            response.sendError(666, "mangler brukerid");
+            return;
+        }
+        if(request.getParameter("gameid") == null) {
+            response.sendError(666, "mangler gameid");
+            return;            
+        }
+        if(request.getParameter("result") == null) {
+            response.sendError(666, "mangler result time");
+            return;            
+        }
+         if(request.getParameter("quantity") == null) {
+            response.sendError(666, "mangler punktantall");
+            return;            
+        }
+        
+        String userId = request.getParameter("userid");
+        long gameId = Long.valueOf(request.getParameter("gameid"));
+        long result = Long.valueOf(request.getParameter("result"));
+        int points = Integer.valueOf(request.getParameter("quantity"));
+        GameDBAdapter gdb = new GameDBAdapter();
+        
+            
         
     }
     //get results

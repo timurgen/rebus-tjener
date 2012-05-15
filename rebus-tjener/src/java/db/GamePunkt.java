@@ -20,10 +20,13 @@ public class GamePunkt implements Serializable{
     private String name;//punktnavn
     private String rebus;//rebustekst
     @Id @GeneratedValue(strategy=GenerationType.AUTO)
-    private Long idPunkt;
+    private Long idPunkt; // id til punkt 
 
-
+    /**
+     * default empty constructor
+     */
     public GamePunkt() {
+        
     }
     /**
      * 
@@ -40,6 +43,7 @@ public class GamePunkt implements Serializable{
         this.name = name;
         this.rebus = rebus;
     }
+    
     /////////////////////////////////////////////////////////////////////////////
     //Getter&setter
 
@@ -90,9 +94,5 @@ public class GamePunkt implements Serializable{
     public void setIdPunkt(Long idPunkt) {
         this.idPunkt = idPunkt;
     }
-
-    
-    
-    
 
 }
