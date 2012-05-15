@@ -29,7 +29,7 @@ public class GameRebus implements Serializable
 	private int currentPoint;
 	private String dateString;
 	
-	public GameRebus(String _authorName, String _name, int _varighet, boolean _isOpen, String _start)
+	public GameRebus(String _idGame, String _authorName, String _name, int _varighet, boolean _isOpen, String _start)
 	{
 		DateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
 		Date date;
@@ -40,7 +40,7 @@ public class GameRebus implements Serializable
 			Logger.getLogger(GameRebus.class.getName()).log(Level.SEVERE, null, e);
 			e.printStackTrace();
 		}
-        
+		idGame = Long.getLong(_idGame);
 		authorName = _authorName;
 		name = _name;
 		varighet = _varighet;

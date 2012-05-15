@@ -46,8 +46,8 @@ public class GamesListActivity extends Activity{
 	private void CreateGames()
 	{
 		
-		games.add(new GameRebus("vs","gameOne", 50, true, "05-May-2012 15:15:15"));
-		games.add(new GameRebus("ts","gameTwo", 70, true, "05-May-2012 17:17:17"));
+		games.add(new GameRebus("vs","gameOne", null, 50, true, "05-May-2012 15:15:15"));
+		games.add(new GameRebus("ts","gameTwo", null, 70, true, "05-May-2012 17:17:17"));
 		textViewGameName = new TextView[games.size()];
 		textViewVarighet = new TextView[games.size()];
 		textViewDato = new TextView[games.size()];

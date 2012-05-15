@@ -33,7 +33,7 @@ public class ConnectionHandler {
 					break;
 				case 1:
 					data = "client?" + URLEncoder.encode("mode", "UTF-8") + "=" +URLEncoder.encode("gamelist", "UTF-8");
-					data += "&" + URLEncoder.encode("sid", "UTF-8") + "=" +URLEncoder.encode(mSession.substring(11), "UTF-8");
+					//data += "&" + URLEncoder.encode("sid", "UTF-8") + "=" +URLEncoder.encode(mSession.substring(11), "UTF-8");
 					break;
 				case 2:
 					data = "client?" + URLEncoder.encode("mode", "UTF-8") + "=" +URLEncoder.encode("getgame", "UTF-8");
@@ -43,18 +43,19 @@ public class ConnectionHandler {
 			myURL = "http://158.39.124.96:8080/rebus/" + data;
 			url = new URL(myURL);
 			httpConnection = (HttpURLConnection)url.openConnection();
-			httpConnection.setRequestProperty("User-Agent","Mozilla/10.0 ( compatible ) ");
-			httpConnection.setRequestMethod("GET");
-			httpConnection.setDoInput(true);
-			httpConnection.setConnectTimeout(5000);
 				
 			// Sett cookie dersom påfølgende kall:
 			if (mSession != null && details !=0){
-				httpConnection.setRequestProperty("cookie", mSession);}
+//				httpConnection.setDoInput(true);
+//				httpConnection.setConnectTimeout(5000);
+//				httpConnection.setRequestMethod("GET");
+//				httpConnection.setRequestProperty("User-Agent","Mozilla/10.0 ( compatible ) ");
+				httpConnection.setRequestProperty("cookie", mSession);
+				}
 			
 			
 			int contentLength = httpConnection.getContentLength();
-			StringBuffer buf = new StringBuffer(contentLength);
+			StringBuffer buf = new StringBuffer();
 			int enByte;
 			int responseCode = httpConnection.getResponseCode();
 			if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -72,6 +73,7 @@ public class ConnectionHandler {
 							//hvis vi vil få informasjon om tilgjengelige spill
 				else{ 
 					while ((enByte = in.read()) != -1){
+						//buf.append((long) enByte);
 						buf.append((char) enByte);
 					}//Char til stringbuffer
 					responseMsg=buf.toString();
