@@ -28,6 +28,7 @@ public class Result implements Serializable {
     
     private String gamerId; //userid eller gestid
     private long result; // medgått tid i millisekunder
+    private long points; //
 
     public String getGamerId() {
         return gamerId;
@@ -51,6 +52,14 @@ public class Result implements Serializable {
     public Result(String gamerId, long result) {
         this.gamerId = gamerId;
         this.result = result;
+    }
+
+    public long getPoints() {
+        return points;
+    }
+
+    public void setPoints(long points) {
+        this.points = points;
     }
     
     

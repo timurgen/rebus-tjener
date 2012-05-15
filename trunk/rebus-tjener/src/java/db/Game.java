@@ -25,24 +25,24 @@ public class Game implements Serializable{
     private boolean isOpen; //true om løp åpent for alle ellers false
     private long startDate; //klokkeslett for oppstart
     @OneToMany(cascade=CascadeType.PERSIST)
-    private ArrayList<GamePunkt> pointList;
+    private ArrayList<GamePunkt> pointList; //list som holder rede på punkter i et løp
     private ArrayList<Long> partisipants; //idier til påmeldte
-    private int currentPoint;
-    private String authorName;
+    private int currentPoint; //nummer på nåværende punkt
+    private String authorName; //navn av bruker som skapte løp
     @OneToMany(cascade=CascadeType.PERSIST)
-    private ArrayList<Result> results;
+    private ArrayList<Result> results; //list som holder rede på resultater som tilhører løp
 
     public Game() {
     }
     /**
      * constructor
-     * @param name
-     * @param varighet
-     * @param isOpen
-     * @param startDate 
+     * @param name - Hvem som skapte løp
+     * @param varighet av løp gitt i minutter
+     * @param isOpen - true om det er mulig å delta uten registrasjon
+     * @param startDate  - klokkeslett
      */
     public Game(String authorName, String name, int varighet, boolean isOpen, String start) {
-        
+        //parser dato fra String
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         System.out.print(start);
         try {
@@ -51,6 +51,7 @@ public class Game implements Serializable{
         } catch (ParseException ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
+        //
         this.authorName = authorName;
         this.name = name;
         this.varighet = varighet;
@@ -109,17 +110,18 @@ public class Game implements Serializable{
     ////////////////////////////////////////////////////////////////////////////
     /**
      * 
-     * @param gp 
+     * @param gp adderer nytt punkt som skal tilhøre løp
      */
     public void addPoint(GamePunkt gp) {
         if(gp == null)
             return;
         this.pointList.add(gp);
     }
+    
     /**
      * 
-     * @return
-     * @throws Exception 
+     * @return returnerer neste punkt etter at foregående var gjennomført
+     * @throws Exception dersom det finnes ikke neste punkt
      */
     public GamePunkt getNextPunkt() throws Exception {
         if(this.currentPoint < this.pointList.size()) {   
@@ -130,7 +132,7 @@ public class Game implements Serializable{
         }
     }
     /**
-     * 
+     * Adderer registrert bruker til deltakere
      * @param id til deltaker
      * @throws Exception 
      */
@@ -150,6 +152,7 @@ public class Game implements Serializable{
     public ArrayList<Long> getAllPartisipants() {
         return this.partisipants;
     }
+    
     /**
      * 
      * @param id til deltaker
@@ -162,15 +165,21 @@ public class Game implements Serializable{
      * lagrer resultater i database
      * @param gamerId
      * @param result
+     * @param gameId 
+     * @param points 
      * @throws Exception 
      */
-    public void setResult(String gamerId, long result) throws Exception {
+    public void setResult(long gameId, String gamerId, long result, long points) throws Exception {
         if(this.results.contains(new Result(gamerId, result))) {
             throw new Exception("result exists for this gamer id");
         }
         this.results.add(new Result(gamerId, result));
     }
     
+    /**
+     * 
+     * @return returnerer list med resultater
+     */
     public ArrayList<Result> getResults() {
         return this.results;
     }
