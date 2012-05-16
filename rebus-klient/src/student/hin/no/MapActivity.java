@@ -76,6 +76,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		time = game.getStartDate() + game.getVarighet() * 60000; //*60000 til å konvertere minutter i millisekunder
 		Intent timeIntent = new Intent(this, TimeReceiver.class);		
 		PendingIntent pendingTimeIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 1253, timeIntent, PendingIntent.FLAG_UPDATE_CURRENT|  Intent.FILL_IN_DATA);		
+	
 		alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingTimeIntent);
 	
 		
@@ -254,6 +255,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		public void onStatusChanged(String provider, int status, Bundle extras) {}
 		
 	}//end of myLocationListener
+	
 	
 	/**
 	 * Tegner posisjon og kompas
