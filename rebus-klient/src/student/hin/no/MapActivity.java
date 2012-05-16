@@ -5,6 +5,7 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.AlarmClock;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -51,19 +53,31 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 	
 	private LocationManager locationManager;
 	
+	
+	
+	private Long time;
+	
+	
 	@Override
 	protected void onCreate(Bundle arg0) {
 		// TODO Auto-generated method stub
 		super.onCreate(arg0);
 		setContentView(R.layout.map);
 		
-		
+		AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
 		
 		
 		//CHANGES <-- 10.05 
 		
 		game = (Game) getIntent().getExtras().getSerializable("game");
 		game.getClass();
+		
+		
+		time = game.getStartDate() + game.getVarighet() * 60000; //*60000 til å konvertere minutter i millisekunder
+		Intent timeIntent = new Intent(this, TimeReceiver.class);		
+		PendingIntent pendingTimeIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 1253, timeIntent, PendingIntent.FLAG_UPDATE_CURRENT|  Intent.FILL_IN_DATA);		
+		alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingTimeIntent);
+	
 		
 		//CHANGES 11.05 - poluchaem pervuu poziciu i naznachaem ee tochke v dal'neyshem budem meniat' poziciu pri dostizenii!!!
 		
@@ -90,16 +104,10 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		mapView.displayZoomControls(true);
 		mapView.setBuiltInZoomControls(true);
 		
-		//double lat = 68.44;
-		//double longi = 17.41;
-		
-		
-		
-		//Changes <--
 		populateCoordinatesFromLastKnownLocation();
 		//Toast.makeText(MapActivity.this,"Latitude: " + latitude + " Longitude: "+ longitude,Toast.LENGTH_LONG).show();	
 		
-		//Changes -->
+	
 		
 		//double lat = game.getFirstPoint().getLat();
 		//double lng = game.getFirstPoint().getLng();
@@ -146,6 +154,9 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 	
 	//CHANGES <-- 10.05 
 	
+	/**
+	 * Bruker koordinates
+	 */
 	private void populateCoordinatesFromLastKnownLocation()
 	{
 		Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -190,6 +201,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		return location;
 	}//end of retriveLocation
 	
+	/*
 	private Location retrieveNextLocationFromPreferences() throws Exception
 	{
 		Location location = new Location("POINT_LOCATION");
@@ -198,7 +210,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		return location;
 	}
 	
-	
+	*/
 	
 	public class MyLocationListener implements LocationListener 
 	{
@@ -292,6 +304,11 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 			e.printStackTrace();
 			Toast.makeText(MapActivity.this,"FERDIG", Toast.LENGTH_LONG).show();
 		}
+	}
+	
+	private void endGame()
+	{
+		
 	}
 	
 	
