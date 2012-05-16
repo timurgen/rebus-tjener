@@ -1,7 +1,10 @@
 package student.hin.no;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -13,11 +16,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import db.Game;
+
 public class GamesAllActivity extends ListActivity{
 
-	private ArrayList<GameRebus> games = new ArrayList<GameRebus>();
+	private ArrayList<db.Game> games = new ArrayList<db.Game>();
 	
-	private GameRebus gameRebus;
+	private db.Game gameRebus;
 	private String gameIdToSend;
 	private ArrayList<String> gamesList = new ArrayList<String>();
 	ArrayAdapter<String> adapter;
@@ -85,7 +90,7 @@ public class GamesAllActivity extends ListActivity{
 		gameIdToSend = gameRebus.getId().toString();
 		thread2 = new Thread(null, bakgrunnsGetGame, "logging inn");
 		thread2.start();
-	}
+	}//end of onListItemClick
 	
 	/* Funksjonen fyller på liste med alle spillene som finnes på tjeneren 
 	 * og oppdaterer deretter "gamesList" som vises til brukeren
@@ -99,18 +104,18 @@ public class GamesAllActivity extends ListActivity{
 			for ( int i=0; i< gameArray.length;){
 											//gameid	author-name		game-name			varighet						isOpen								date
 				try {
-					games.add(new GameRebus(gameArray[i], gameArray[i+1], gameArray[i+2], Integer.parseInt(gameArray[i+3]), Boolean.parseBoolean(gameArray[i+4]),  gameArray[i+5]));
+					games.add(new db.Game(gameArray[i+1], gameArray[i+2], Integer.parseInt(gameArray[i+3]), Boolean.parseBoolean(gameArray[i+4]),  gameArray[i+5]));
 				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch (ParseException e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				i = i+6; 
 			}
 			for (int i = 0; i < games.size(); i++)
-				gamesList.add(games.get(i).getName() + " " + games.get(i).getVarighetString() + " " + games.get(i).getStartDateString());
+				gamesList.add(games.get(i).getName());
 			handler.post(doUpdateGUI);
 		}
 		else
@@ -134,6 +139,10 @@ public class GamesAllActivity extends ListActivity{
 	private void updateGUI() {
 		adapter.notifyDataSetChanged();
 	}
+	
+
+
+	
 //	private void CreateGames()
 //	{
 //		games.add(new GameRebus("vs","gameOne", 50, true, "05-May-2012 15:15:15"));
@@ -146,6 +155,6 @@ public class GamesAllActivity extends ListActivity{
 //		games.get(1).addPoint(new GamePunktRebus(68.439553, 17.44593, 100, "Second point in game 1","HiN"));
 //		
 //		for (int i = 0; i < games.size(); i++)
-//			gamesList.add(games.get(i).getName() + " " + games.get(i).getVarighetString() + " " + games.get(i).getStartDateString());
+//		gamesList.add(games.get(i).getName() + " " + games.get(i).getVarighetString() + " " + games.get(i).getStartDateString());
 //	}
 }//end of GamesAllActivity
