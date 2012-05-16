@@ -100,6 +100,11 @@ public class Game implements Serializable{
         return authorName;
     }
     
+    public void setIdGame(Long idGame)
+    {
+    	this.idGame = idGame;
+    }
+    
     
     
     ////////////////////////////////////////////////////////////////////////////

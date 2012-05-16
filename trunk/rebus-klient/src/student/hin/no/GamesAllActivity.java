@@ -100,11 +100,13 @@ public class GamesAllActivity extends ListActivity{
 		gamesFromServlet = connectionhandlerGameList.GetDataFromServlet(getApplicationContext(), 1, "", "");
 		if (!gamesFromServlet.contains("Error:")){
 			gamesFromServlet = gamesFromServlet.trim();
-			String [] gameArray = gamesFromServlet.split(",");				
+			String [] gameArray = gamesFromServlet.split(",");
+			int j = 0;
 			for ( int i=0; i< gameArray.length;){
 											//gameid	author-name		game-name			varighet						isOpen								date
 				try {
 					games.add(new db.Game(gameArray[i+1], gameArray[i+2], Integer.parseInt(gameArray[i+3]), Boolean.parseBoolean(gameArray[i+4]),  gameArray[i+5]));
+					games.get(j).setIdGame(Long.parseLong(gameArray[i]));
 				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -113,7 +115,8 @@ public class GamesAllActivity extends ListActivity{
 					e.printStackTrace();
 				}
 				i = i+6; 
-			}
+				j++;
+			}//end of for
 			for (int i = 0; i < games.size(); i++)
 				gamesList.add(games.get(i).getName());
 			handler.post(doUpdateGUI);
