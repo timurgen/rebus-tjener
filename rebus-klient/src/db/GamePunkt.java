@@ -1,44 +1,45 @@
-package student.hin.no;
+package db;
 
 import java.io.Serializable;
 
-public class GamePunktRebus implements Serializable{
+/**
+ * Denne klassen representerer ett punkt i spill
+ * @author 490501
+ * @version 1.0.0
+ */
+public class GamePunkt implements Serializable{
+    private double lat; //lattitude
+    private double lng; //longitude
+    private int radius; //radius for proksimity alarm
+    private String name;//punktnavn
+    private String rebus;//rebustekst
+    private Long idPunkt; // id til punkt
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private double lat; 	//lattitude
-    private double lng; 	//longitude
-    private int radius; 	//radius for proksimity alarm
-    private String name;	//punktnavn
-    private String rebus;	//rebustekst
-    private Long idPunkt;
-	
-    public GamePunktRebus() {
-    }
-    
     /**
-     * 
+     * default empty constructor
+     */
+    public GamePunkt() {
+       
+    }
+    /**
+     *
      * @param lat lattitude
      * @param lng longitude
      * @param radius proximity alarm radius
      * @param name name of point
      * @param rebus text of rebus
      */
-    public GamePunktRebus(double _lat, double _lng, int _radius, String _name, String _rebus) {
-        lat = _lat;
-        lng = _lng;
-        radius = _radius;
-        name = _name;
-        rebus = _rebus;
-    }//end of constructor
-    
-    /**
-     * GET or SET methods
-     * ****************************************************************************************
-     */
-    
+    public GamePunkt(double lat, double lng, int radius, String name, String rebus) {
+        this.lat = lat;
+        this.lng = lng;
+        this.radius = radius;
+        this.name = name;
+        this.rebus = rebus;
+    }
+   
+    /////////////////////////////////////////////////////////////////////////////
+    //Getter&setter
+
     public double getLat() {
         return lat;
     }
@@ -66,11 +67,6 @@ public class GamePunktRebus implements Serializable{
     public int getRadius() {
         return radius;
     }
-    
-    public float getRadiusFloat()
-    {
-    	return Float.parseFloat(String.valueOf(radius));  	
-    }
 
     public void setRadius(int radius) {
         this.radius = radius;
@@ -91,9 +87,5 @@ public class GamePunktRebus implements Serializable{
     public void setIdPunkt(Long idPunkt) {
         this.idPunkt = idPunkt;
     }
-    
-    /**
-     * End of Get or SET metodes
-     */
-    
-}//end of GamePunkRebus class
+
+}

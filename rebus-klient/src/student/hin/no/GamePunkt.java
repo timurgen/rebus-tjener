@@ -1,49 +1,45 @@
 package student.hin.no;
-/*
 import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-*/
 
 /**
  * Denne klassen representerer ett punkt i spill
  * @author 490501
  * @version 1.0.0
  */
-/*
-@Entity
+
 public class GamePunkt implements Serializable{
     private double lat; //lattitude
     private double lng; //longitude
     private int radius; //radius for proksimity alarm
     private String name;//punktnavn
     private String rebus;//rebustekst
-    @Id @GeneratedValue(strategy=GenerationType.AUTO)
-    private Long idPunkt;
+    private Long idPunkt; // id til punkt
 
-
+    /**
+     * default empty constructor
+     */
     public GamePunkt() {
+       
     }
     /**
-     * 
+     *
      * @param lat lattitude
      * @param lng longitude
      * @param radius proximity alarm radius
      * @param name name of point
      * @param rebus text of rebus
-     *//*
+     */
     public GamePunkt(double lat, double lng, int radius, String name, String rebus) {
         this.lat = lat;
         this.lng = lng;
         this.radius = radius;
         this.name = name;
         this.rebus = rebus;
-    }*/
+    }
+   
     /////////////////////////////////////////////////////////////////////////////
     //Getter&setter
-/*
+
     public double getLat() {
         return lat;
     }
@@ -92,9 +88,5 @@ public class GamePunkt implements Serializable{
         this.idPunkt = idPunkt;
     }
 
-   
-    
-    
-
 }
-*/
+

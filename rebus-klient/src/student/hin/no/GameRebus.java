@@ -1,8 +1,11 @@
 package student.hin.no;
 
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -44,7 +47,7 @@ public class GameRebus implements Serializable
 	}//end of constructor
 	
 	/**
-	 * GET or SET metodes
+	 * GET or SET methods
 	 * *************************************************************************************************
 	 */
 	
@@ -80,6 +83,24 @@ public class GameRebus implements Serializable
 	    	//String startDateString = Long.toString(startDate);
 	    	return dateString;
 	    }
+	    
+		/**
+		 * 
+		 * @param milliSeconds tid i milliseconds
+		 * @return returnerer Date i String format "dd/MM/yyyy hh:mm:ss"
+		 */
+		public String getConvertedDate()
+		{
+			long milliSeconds = Long.valueOf(dateString);
+			String dateFormat = "dd/MM/yyyy hh:mm:ss";
+			// Create a DateFormatter object for displaying date in specified format.
+		    DateFormat formatter = new SimpleDateFormat(dateFormat);
+
+		    // Create a calendar object that will convert the date and time value in milliseconds to date. 
+		     Calendar calendar = Calendar.getInstance();
+		     calendar.setTimeInMillis(milliSeconds);
+		     return formatter.format(calendar.getTime());
+		}
 
 	    public void setStartDate(long startDate) {
 	        this.startDate = startDate;

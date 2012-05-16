@@ -16,6 +16,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import db.Game;
+
 public class MapActivity extends com.google.android.maps.MapActivity{
 	
 	MapController mapController;
@@ -23,15 +25,17 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 	MapView mapView;
 	MyLocationOverlay compass;
 	
-	GameRebus game;
+	//GameRebus game;
+	Game game;
+	
 	
 	public static String TREASURE_PROXIMITY_ALERT = "studetn.hin.no.ALERT";
 	
 	//New changes
-	private static final long MINIMUM_DISTANCECHANGE_FOR_UPDATE = 1;		//Metri
-	private static final long MINIMUM_TIME_BETWEEN_UPDATE = 1000;	//In Milliseconds
+	private static final long MINIMUM_DISTANCECHANGE_FOR_UPDATE = 1;		//I meter
+	private static final long MINIMUM_TIME_BETWEEN_UPDATE = 1000;	//I Milliseconds
 	
-	private static final long POINT_RADIUS = 1000; // in Meters
+	private static final long POINT_RADIUS = 1000; // I Meter
 	private static final long PROX_ALERT_EXPIRATION = -1;	//NET VREMENI ISTECHENIYA
 
 	private double latitude;
@@ -41,7 +45,8 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 	
 	//CHANGES 11.05
 	private static final String PROX_ALER_INTENT = "student.hin.no.PBR";
-	private GamePunktRebus gamePunkt;
+	//private GamePunktRebus gamePunkt;
+	private db.GamePunkt gamePunkt;
 	
 	
 	private LocationManager locationManager;
@@ -57,12 +62,8 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		
 		//CHANGES <-- 10.05 
 		
-		game = (GameRebus) getIntent().getExtras().getSerializable("game");
+		game = (Game) getIntent().getExtras().getSerializable("game");
 		game.getClass();
-		
-		//Poluchaem koordinati pervoy tochki!!!
-		
-		//rebusLocation.setLatitude(game.getNextPunkt().getLat());
 		
 		//CHANGES 11.05 - poluchaem pervuu poziciu i naznachaem ee tochke v dal'neyshem budem meniat' poziciu pri dostizenii!!!
 		
@@ -157,6 +158,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		
 	}//end of populateCoordinatesFromLastKnownLocation
 	
+	/*
 	private Location retrievelocationFromPreferences()
 	{
 		Location location = new Location("POINT_LOCATION");
@@ -167,6 +169,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		location.setLongitude(game.getFirstPoint().getLng());
 		return location;
 	}
+	*/
 	
 	private Location retriveLocation()
 	{
@@ -195,6 +198,8 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		return location;
 	}
 	
+	
+	
 	public class MyLocationListener implements LocationListener 
 	{
 		@Override
@@ -214,7 +219,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 			Toast.makeText(MapActivity.this,"Lat: "+ pointLocation.getLatitude() + " long: " + pointLocation.getLongitude(), Toast.LENGTH_LONG).show();
 			
 			//Proveriem poziciu
-			if(distance < game.getFirstPoint().getRadiusFloat())
+			if(distance < gamePunkt.getRadius())
 			{
 				Toast.makeText(MapActivity.this, "VOT mi I v TOCHKE", Toast.LENGTH_LONG).show();
 				changeGamePunkt();
@@ -239,7 +244,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 	}//end of myLocationListener
 	
 	/**
-	 * Risuet poziciu na karte i kompas =)
+	 * Tegner posisjon og kompas
 	 */
 	private void initMyLocation() {
 		compass = new MyLocationOverlay(this, mapView);//set compass
@@ -253,21 +258,17 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 	
 	//CHANGES 11.05
 	
+	/**
+	 * Set proximity alarm (Fungerer)
+	 */
 	private void setProximityAlert()
 	{
 		String serviceString = Context.LOCATION_SERVICE;
 		locationManager = (LocationManager)getSystemService(serviceString);
-		
-		/*
-		double lat = game.getFirstPoint().getLat();
-		double lng = game.getFirstPoint().getLng();
-		float radius = game.getFirstPoint().getRadiusFloat();
-		long expiration = -1;
-		*/
-		
+			
 		double lat = gamePunkt.getLat();
 		double lng = gamePunkt.getLng();
-		float radius = gamePunkt.getRadiusFloat();
+		float radius = gamePunkt.getRadius();
 		long expiration = -1;
 		
 		Intent intent = new Intent(TREASURE_PROXIMITY_ALERT);
@@ -276,6 +277,9 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		
 	}//end of setProximityAlert
 	
+	/**
+	 * Hente neste punkt fra spill, hvis det finnes ikke noe punkter gjører noe (NADO IZMENIT')
+	 */
 	private void changeGamePunkt()
 	{
 		try {

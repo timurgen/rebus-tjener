@@ -7,14 +7,16 @@ import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLEncoder;
+import db.Game;
 
 import android.content.Context;
+import android.util.Log;
 
 public class ConnectionHandler {
 	private String responseMsg = "";
 	private String data, mSession = null;
 	private FileHandler filehandler;
-	public GameRebus gameRebus;
+	public db.Game gameRebus;
 	
 	/*
 	 * Funksjonen brukes for innlogging og for få spill-liste fra tjeneren
@@ -114,7 +116,7 @@ public class ConnectionHandler {
 	 * Brukes for å få tak i et enkelt spill-objekt,
 	 *  når man velger det i "GamesAllActivity"
 	 */
-	public GameRebus getGameData(Context context, String gameIdToSend){
+	public db.Game getGameData(Context context, String gameIdToSend){
 		String myURL = "";
 		URL url = null;
 		HttpURLConnection httpConnection = null;
@@ -122,9 +124,14 @@ public class ConnectionHandler {
 		filehandler = new FileHandler();
 		mSession = filehandler.ReadLogs(1, context);
 		try {
+			Log.d("Testiruem", "Nachalo try");
+			
 			data = "client?" + URLEncoder.encode("mode", "UTF-8") + "=" +URLEncoder.encode("getgame", "UTF-8");
 			data += "&" + URLEncoder.encode("gameid", "UTF-8") + "=" +URLEncoder.encode(gameIdToSend, "UTF-8");
 			myURL = "http://158.39.124.96:8080/rebus/" + data;
+			
+			Log.d("URL", myURL);
+			
 			url = new URL(myURL);
 			httpConnection = (HttpURLConnection)url.openConnection();
 				
@@ -140,16 +147,40 @@ public class ConnectionHandler {
 					filehandler.WriteLog(mSession, context);
 				}
 			}
+			
+			Log.d("Testiruem", "Uchastok 1");
+			
 			//StringBuffer buf = new StringBuffer();
 			//int enByte;
 			int responseCode = httpConnection.getResponseCode();
-			if (responseCode == HttpURLConnection.HTTP_OK) {
+			
+			Log.d("Testiruem", "Uchastok 2 do if posle responseCode");
+			
+			if (responseCode == HttpURLConnection.HTTP_OK) 
+			{
+				
+					Log.d("Testiruem", "Voshli v if");
+				
 				in = httpConnection.getInputStream();
+				
+					Log.d("Testiruem", "otkrili input string");
+				
 				ObjectInputStream ois = new ObjectInputStream(in);
-				gameRebus = (GameRebus) ois.readObject();
-				System.out.println(gameRebus.getName());
+				
+					Log.d("Testiruem", "otkrili ObjectInputStream");//Rabotaet do suda!!!!!
+					
+				gameRebus = (Game) ois.readObject();
+				
+					Log.d("Testiruem", "Popitalis' priravniat' obekt");
+				
+				//System.out.println(gameRebus.getName());
+				
+					Log.d("Testiruem", "Esio odna tochka");
+				
 				//String gameId = (String) ois.readObject();
 				ois.close();
+				
+				Log.d("Testiruem", "Zakrili OIS");
 			} // end if (responseCode == HttpURLConnection.HTTP_OK) {
 			else // hvis HTTP responseCode ikke er OK (200) 
 			{
@@ -180,5 +211,12 @@ public class ConnectionHandler {
 			httpConnection.disconnect();
 		}
 		return gameRebus;
-	}
+	}//end of getGameData
+	
+	public void endGame()
+	{
+		
+	}//end of endGame
+	
+	
 }
