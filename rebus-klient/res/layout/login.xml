@@ -21,7 +21,8 @@
     <EditText
         android:id="@+id/editTextUserName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="100dp"
+        android:textSize="40dp" >
 
         <requestFocus />
     </EditText>
@@ -36,22 +37,32 @@
     <EditText
         android:id="@+id/editTextPassword"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
+        android:textSize="40dp"
         android:inputType="textPassword" />
 
     <Button
         android:id="@+id/buttonSubmit"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
+        android:textSize="40dp"
         android:text="@string/textButtonSubmit" />
-     
-     <TextView
-         android:id="@+id/statusview"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_marginTop="100dp"
-		 android:layout_gravity="center"
-         android:textAppearance="?android:attr/textAppearanceMedium"
-         android:textStyle="italic" />
 
+     <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+
+
+        <ImageView
+            android:id="@+id/android_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:contentDescription="@string/exit"
+            android:gravity="bottom"
+            android:src="@drawable/androidnom" />
+
+    </RelativeLayout>
 </LinearLayout>

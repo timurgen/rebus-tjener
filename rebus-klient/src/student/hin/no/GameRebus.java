@@ -1,15 +1,10 @@
 package student.hin.no;
 
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import android.text.format.Time;
 
 public class GameRebus implements Serializable
 {
@@ -31,12 +26,12 @@ public class GameRebus implements Serializable
 	
 	public GameRebus(String _idGame, String _authorName, String _name, int _varighet, boolean _isOpen, String _start) throws ParseException
 	{
-		DateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+		//DateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
 		Date date;
 		date = new Date(Long.valueOf(_start));
 		//date = formatter.parse(_start);
 		startDate = date.getTime();
-		idGame = Long.getLong(_idGame);
+		idGame = Long.parseLong(_idGame);
 		authorName = _authorName;
 		name = _name;
 		varighet = _varighet;

@@ -2,6 +2,7 @@ package student.hin.no;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -13,7 +14,12 @@ public class ConnectionHandler {
 	private String responseMsg = "";
 	private String data, mSession = null;
 	private FileHandler filehandler;
+	public GameRebus gameRebus;
 	
+	/*
+	 * Funksjonen brukes for innlogging og for få spill-liste fra tjeneren
+	 * returnerer feil hvis noe går galt med tilkobling mot tjeneren
+	 */
 	public String GetDataFromServlet(Context context, int details, String name, String pass){
 		String myURL = "";
 		URL url = null;
@@ -43,18 +49,16 @@ public class ConnectionHandler {
 			myURL = "http://158.39.124.96:8080/rebus/" + data;
 			url = new URL(myURL);
 			httpConnection = (HttpURLConnection)url.openConnection();
-				
+			httpConnection.setConnectTimeout(2000);
 			// Sett cookie dersom påfølgende kall:
 			if (mSession != null && details !=0){
-//				httpConnection.setDoInput(true);
-//				httpConnection.setConnectTimeout(5000);
-//				httpConnection.setRequestMethod("GET");
-//				httpConnection.setRequestProperty("User-Agent","Mozilla/10.0 ( compatible ) ");
 				httpConnection.setRequestProperty("cookie", mSession);
 				}
+			else{
+				httpConnection.addRequestProperty("name", name);
+				httpConnection.addRequestProperty("pass", pass);
+			}
 			
-			
-			int contentLength = httpConnection.getContentLength();
 			StringBuffer buf = new StringBuffer();
 			int enByte;
 			int responseCode = httpConnection.getResponseCode();
@@ -105,4 +109,76 @@ public class ConnectionHandler {
 		}
 		return responseMsg;
 	}//end of public String GetDataFromServlet(..
+	
+	/*
+	 * Brukes for å få tak i et enkelt spill-objekt,
+	 *  når man velger det i "GamesAllActivity"
+	 */
+	public GameRebus getGameData(Context context, String gameIdToSend){
+		String myURL = "";
+		URL url = null;
+		HttpURLConnection httpConnection = null;
+		InputStream in = null;
+		filehandler = new FileHandler();
+		mSession = filehandler.ReadLogs(1, context);
+		try {
+			data = "client?" + URLEncoder.encode("mode", "UTF-8") + "=" +URLEncoder.encode("getgame", "UTF-8");
+			data += "&" + URLEncoder.encode("gameid", "UTF-8") + "=" +URLEncoder.encode(gameIdToSend, "UTF-8");
+			myURL = "http://158.39.124.96:8080/rebus/" + data;
+			url = new URL(myURL);
+			httpConnection = (HttpURLConnection)url.openConnection();
+				
+			// Sett cookie dersom påfølgende kall:
+			if (mSession != null){
+				httpConnection.setRequestProperty("cookie", mSession);
+				}
+			else{
+				mSession = httpConnection.getHeaderField("Set-cookie");
+				if (mSession != null) {
+					int semicolon = mSession.indexOf(';');
+					mSession = mSession.substring(0, semicolon);
+					filehandler.WriteLog(mSession, context);
+				}
+			}
+			//StringBuffer buf = new StringBuffer();
+			//int enByte;
+			int responseCode = httpConnection.getResponseCode();
+			if (responseCode == HttpURLConnection.HTTP_OK) {
+				in = httpConnection.getInputStream();
+				ObjectInputStream ois = new ObjectInputStream(in);
+				gameRebus = (GameRebus) ois.readObject();
+				System.out.println(gameRebus.getName());
+				//String gameId = (String) ois.readObject();
+				ois.close();
+			} // end if (responseCode == HttpURLConnection.HTTP_OK) {
+			else // hvis HTTP responseCode ikke er OK (200) 
+			{
+				responseMsg = "Error: HTTP status " + responseCode;
+			}
+		}
+		catch (SocketTimeoutException e){
+			e.printStackTrace();
+			responseMsg="Error: server is unavailable";
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally{
+			try {
+				in.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (NullPointerException e){
+				e.printStackTrace();
+			}
+			httpConnection.disconnect();
+		}
+		return gameRebus;
+	}
 }

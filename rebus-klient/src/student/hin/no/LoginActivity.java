@@ -1,21 +1,20 @@
 package student.hin.no;
 
-//import java.io.IOException;
-//import java.io.InputStream;
-//import java.net.HttpURLConnection;
-//import java.net.SocketTimeoutException;
-//import java.net.URL;
-//import java.net.URLEncoder;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class LoginActivity extends Activity{
 
@@ -24,25 +23,29 @@ public class LoginActivity extends Activity{
 	private EditText EditTextUserName, EditTextPassword;
 	public String cookie = ""; 
 	private Handler handler = new Handler(); //Brukes til å oppdatere GUI
-	private TextView statusView;
 	private Thread thread = null;
 	private ConnectionHandler connectionhandler;
+	private Toast toast;
+	private int duration = Toast.LENGTH_LONG;;
 
-	// Runnable som inneholder metoden som servlet-tråden starter:
+	/* Runnable kaller metoden som startes i bakgrunnstråden 
+	 */
 	private Runnable bakgrunnsProssesering = new Runnable() {
 		public void run() {
 		kontaktServlet();
 		}
 	};
 	
-	// Runnable som oppdaterer GUI
+	/* Runnable som oppdaterer GUI
+	 */
 	private Runnable doUpdateGUI = new Runnable() {
 		public void run() {
 		updateGUI();
 		}
 		};
 	
-	//Runnable som lukker bakgrunstrad og starter GamesAllActivity
+	/* Runnable som lukker bakgrunstrad og starter GamesAllActivity
+	 */
 	private Runnable startGameList = new Runnable() {
 		public void run() {
 			thread.interrupt();
@@ -56,7 +59,6 @@ public class LoginActivity extends Activity{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
-		statusView = (TextView) findViewById(R.id.statusview);
 		
 		EditTextUserName=(EditText)findViewById(R.id.editTextUserName);
 		EditTextUserName.addTextChangedListener(new TextWatcher(){
@@ -91,12 +93,29 @@ public class LoginActivity extends Activity{
 				thread = new Thread(null, bakgrunnsProssesering, "logging inn");
 				thread.start();
 			}
-			else
-				statusView.setText("fill out BOTH fields");
-			}	
+			else{
+				toast = Toast.makeText(getApplicationContext(), "fill out BOTH fields!", duration);
+				toast.setGravity(Gravity.BOTTOM|Gravity.RIGHT, 100, 0);
+				toast.show();
+			}
+		}	
 		});//end of buttonSubmit.setOnClickListener
+		
+		ImageView fotka = (ImageView)findViewById(R.id.android_icon);
+        fotka.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				LoginActivity.this.finish();
+				return false;
+			}
+        });
+		
 	}//end of onCreate
 	
+	/*Funksjonen brukes for innlogging på systemet
+	 * og starting "GamesAllActivity" hvis innlogging er vellykket
+	 * Viser feil til brukeren hvis noe går galt
+	 */
 	private void kontaktServlet() {
 		responseMsg="Contacting server ...";
 		handler.post(doUpdateGUI);
@@ -113,6 +132,8 @@ public class LoginActivity extends Activity{
 
 	//skriver ut til brukeren statusmeldinger
 	private void updateGUI() {
-		statusView.setText(responseMsg);
+		toast = Toast.makeText(getApplicationContext(), responseMsg, duration);
+		toast.setGravity(Gravity.BOTTOM|Gravity.RIGHT, 100, 0);
+		toast.show();
 		}
 }//end of LoginActivity
