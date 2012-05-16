@@ -20,7 +20,9 @@ public class FileHandler {
 
 	public FileHandler(){}
 	
-	//skriver en ny linje til filen
+	/*
+	 * Skriver sesjons-id til filen
+	 */
 	public void WriteLog(String newEntry, Context context){
 		res = context.getResources();
 		logsFile = res.getString(R.string.logsFile);
