@@ -72,6 +72,13 @@
         		<action android:name="student.hin.no.PBR" />        
             </intent-filter>
         </receiver>
+        
+        <receiver
+            android:name=".TimeReceiver">
+            <intent-filter >
+        		<action android:name="student.hin.no.TR" />        
+            </intent-filter>
+        </receiver>
             
             
         
