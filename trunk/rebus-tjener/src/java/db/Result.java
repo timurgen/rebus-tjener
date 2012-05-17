@@ -64,6 +64,12 @@ public class Result implements Serializable {
     public void setPoints(int points) {
         this.points = points;
     }
+
+    public String getUserName() {
+        return userName;
+    }
+    
+    
     
     
 }

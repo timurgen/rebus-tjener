@@ -32,15 +32,15 @@ ArrayList<Result> results = gdb.getGameById(gameId).getResults();
     </head>
     <body>
         <%@include file='menu.jsp'%>
-        <table>
+        <table class="gamelist">
         <%
             for(Result s : results) {
                 out.println("<tr>");
                     out.println("<td>");
-                        out.println(s.getGamerId());
+                        out.println(s.getUserName());
                     out.println("</td>");
                     out.println("<td>");
-                        out.println(s.getPoints());
+                        out.println(s.getResult() / s.getPoints());
                     out.println("</td>");
                 out.println("</tr>");
             }
@@ -51,3 +51,4 @@ ArrayList<Result> results = gdb.getGameById(gameId).getResults();
         
     </body>
 </html>
+
