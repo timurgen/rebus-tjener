@@ -32,6 +32,7 @@ public class FileHandler {
 			osw.write(newEntry + "\n");
 			osw.close();
     		fOut.close();
+    		
 		}
 		catch (FileNotFoundException e) {
 	        // TODO Auto-generated catch block

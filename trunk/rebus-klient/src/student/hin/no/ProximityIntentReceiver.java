@@ -15,7 +15,7 @@ public class ProximityIntentReceiver extends BroadcastReceiver {
 
 		String key = LocationManager.KEY_PROXIMITY_ENTERING;
 		
-		if(intent.getAction() == MapActivity.TREASURE_PROXIMITY_ALERT)
+		if(intent.getAction() == MapActivity.PROX_ALER_INTENT)
 		{
 			boolean entering = intent.getBooleanExtra(key, false);
 			//går inn i angitt område

@@ -31,7 +31,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 	Game game;
 	
 	
-	public static String TREASURE_PROXIMITY_ALERT = "studetn.hin.no.ALERT";
+	public static String TREASURE_PROXIMITY_ALERT = "student.hin.no.ALERT";
 	
 	//New changes
 	private static final long MINIMUM_DISTANCECHANGE_FOR_UPDATE = 1;		//I meter
@@ -46,7 +46,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 	private Location rebusLocation;
 	
 	//CHANGES 11.05
-	private static final String PROX_ALER_INTENT = "student.hin.no.PBR";
+	static final String PROX_ALER_INTENT = "student.hin.no.PBR";
 	//private GamePunktRebus gamePunkt;
 	private db.GamePunkt gamePunkt;
 	
@@ -133,7 +133,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		initMyLocation();
 		
 		//CHANGES 11.05
-		IntentFilter filter = new IntentFilter(TREASURE_PROXIMITY_ALERT);
+		IntentFilter filter = new IntentFilter(PROX_ALER_INTENT);
 		this.registerReceiver(new ProximityIntentReceiver(), filter);
 		this.setProximityAlert();
 		
@@ -292,7 +292,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		float radius = gamePunkt.getRadius();
 		long expiration = -1;
 		
-		Intent intent = new Intent(TREASURE_PROXIMITY_ALERT);
+		Intent intent = new Intent(PROX_ALER_INTENT);
 		PendingIntent proximityIntent = PendingIntent.getBroadcast(this, -1, intent, 0);
 		locationManager.addProximityAlert(lat, lng, radius, expiration, proximityIntent);
 		
@@ -315,10 +315,11 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 			
 			thread = new Thread(null, bakgrunnsSendResult, "logging inn");
 			thread.start();
-			//kontaktServlet();
+			
 			Intent resultIntent = new Intent(MapActivity.this, ResultActivity.class);
 			resultIntent.putExtra("game", game);
 			startActivity(resultIntent);
+			
 		}
 	}
 	

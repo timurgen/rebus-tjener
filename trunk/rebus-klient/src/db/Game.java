@@ -10,13 +10,11 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  *Denne klassen representerer ett spill
  * @author 490501
  * @version 1.0.0
  */
-
 public class Game implements Serializable{
     /**
      * pribamry key
