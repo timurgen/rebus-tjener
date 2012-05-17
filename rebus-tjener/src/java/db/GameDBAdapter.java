@@ -26,14 +26,8 @@ public class GameDBAdapter {
      */
     public GameDBAdapter() {
         emf = Persistence.createEntityManagerFactory("$objectdb/db/game.odb");
-        try {
-            em = emf.createEntityManager();
-        }
-        catch(PersistenceException e) {
-            emf.close();
-            System.out.println(e.getMessage());
-        }
-        
+        em = emf.createEntityManager();
+
     }
     
     /**
@@ -151,6 +145,4 @@ public class GameDBAdapter {
         em.close();
         emf.close();
     }
-    
-
 }

@@ -4,6 +4,7 @@
     Author     : 490501
 --%>
 
+<%@page import="com.objectdb.o.HST.A"%>
 <%@page import="db.Guest"%>
 <%@page import="db.GuestDBAdapter"%>
 <%@page import="java.util.Date"%>
@@ -13,19 +14,20 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     /**
-     *
+     *j
      */
     String wrongMessage = null;
     String name = null;
     long gameId = 0;
     String guestId = null;
-    GameDBAdapter gdb = null;
+    GameDBAdapter gdb = new GameDBAdapter();
     UserDBAdapter udb = null;
     GuestDBAdapter guestdb = null;
     
     if(session.getAttribute("username") != null) {
         name = (String)session.getAttribute("username");
-        gdb = new GameDBAdapter();
+        udb = new UserDBAdapter();
+        
     }
     else if(session.getAttribute("guestid")!= null) {
         guestId = (String)session.getAttribute("guestid");
@@ -41,6 +43,7 @@
     try {
         //add as guest om det er lov
         if(name == null & guestId == null) {
+            
             String id = session.getId();
             wrongMessage = "your id is:<font color=\"red\"> " + id.substring(0, 8) + "</font> use it to begin game on your mobile phone";
             //lagrer ny gjest
@@ -93,7 +96,9 @@
                 out.println(i+1);
                 out.println("</td>");
                 out.println("<td>");
-                out.println(udb.getUserById(list.get(i)).getName());
+                if(udb != null)
+                    out.println(udb.getUserById(list.get(i)).getName());
+                out.println("<td>");
                 out.println("</tr>");
             }
         out.println("</table>");
