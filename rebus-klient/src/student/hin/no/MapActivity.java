@@ -316,9 +316,15 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 			thread = new Thread(null, bakgrunnsSendResult, "logging inn");
 			thread.start();
 			//kontaktServlet();
+			Intent resultIntent = new Intent(MapActivity.this, ResultActivity.class);
+			resultIntent.putExtra("game", game);
+			startActivity(resultIntent);
 		}
 	}
 	
+	/**
+	 * Sender informasjon til tjenester
+	 */
 	private void kontaktServlet() {
 		
 		connectionhandler = new ConnectionHandler();

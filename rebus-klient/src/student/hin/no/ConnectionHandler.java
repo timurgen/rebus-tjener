@@ -263,5 +263,73 @@ public class ConnectionHandler {
 		}//end of finally
 	}//end of endGame
 	
+	/**
+	 * 
+	 * @param context
+	 * @param gameIdToSend
+	 * @return 
+	 */
+	public String GetGameResults(Context context, String gameIdToSend)
+	{
+		String myURL = "";
+		URL url = null;
+		HttpURLConnection httpConnection = null;
+		InputStream in = null;
+		filehandler = new FileHandler();
+		mSession = filehandler.ReadLogs(1, context);
+		
+		try 
+		{
+			data = "client?" + URLEncoder.encode("mode", "UTF-8") + "=" +URLEncoder.encode("getresult", "UTF-8");
+			data += "&" + URLEncoder.encode("gameid", "UTF-8") + "=" +URLEncoder.encode(gameIdToSend, "UTF-8");
+			
+			myURL = "http://158.39.124.96:8080/rebus/" + data;
+			
+			Log.d("URL", myURL);
+			
+			url = new URL(myURL);
+			//Coble mot tjenester
+			httpConnection = (HttpURLConnection)url.openConnection();
+			httpConnection.setConnectTimeout(2000);
+			
+			
+			StringBuffer buf = new StringBuffer();
+			int enByte;
+			int responseCode = httpConnection.getResponseCode();
+			if (responseCode == HttpURLConnection.HTTP_OK) {
+				in = httpConnection.getInputStream();
+							
+				while ((enByte = in.read()) != -1)
+				{
+					buf.append((char) enByte);
+				}//Char til stringbuffer
+					responseMsg=buf.toString();	
+			} // end if (responseCode == HttpURLConnection.HTTP_OK) {
+			else // hvis HTTP responseCode ikke er OK (200) 
+			{
+				responseMsg = "Error: HTTP status " + responseCode;
+			}	
+		}//end of try
+		
+		catch(Exception e)
+		{
+			
+		}//end of catch
+		
+		finally
+		{
+			try 
+			{
+				in.close();
+			} 
+			catch (IOException e) 
+			{
+				e.printStackTrace();
+			}
+		}//end of finally
+		
+		return responseMsg;
+	}//end of GetGameResults
+	
 	
 }
