@@ -30,8 +30,8 @@ public class AutentificateClient extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getSession().setMaxInactiveInterval(3600*3);
         response.setContentType("text/plain");
         PrintWriter out = null;
         try {

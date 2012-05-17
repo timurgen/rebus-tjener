@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package servlets;
 
 import db.*;
@@ -21,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *
+ * Servlet som håndterer alle forespørsler fra android applikasjon
  * @author 490501
  * @version 1.0.1
  */
@@ -115,7 +112,12 @@ public class ClientHandler extends HttpServlet {
         return "Short description";
     }// </editor-fold>
     
-    
+    /**
+     * Returnerer løplist
+     * @param request
+     * @param response
+     * @throws IOException 
+     */
     public void getGameList(HttpServletRequest request, HttpServletResponse response) throws IOException {   
         GameDBAdapter gdb = new GameDBAdapter();
         ServletOutputStream sos = response.getOutputStream();
@@ -135,15 +137,13 @@ public class ClientHandler extends HttpServlet {
             sos.write(",".getBytes());
             sos.write(String.valueOf(g.getStartDate()).getBytes());
             sos.write(",".getBytes());
-            
-
         }  
         sos.flush();
         sos.close();
     }
     
     /**
-     * 
+     * Returnerer løp objekt med gitt id
      * @param request
      * @param response
      * @throws IOException 
@@ -218,6 +218,10 @@ public class ClientHandler extends HttpServlet {
         if(request.getSession().getAttribute("userid") == null & request.getSession().getAttribute("guest") == null) {
             response.sendError(666, "mangler brukerid");
             System.out.println("mangler brukerid");
+            while(request.getSession().getAttributeNames().hasMoreElements()) {
+                System.out.println(request.getSession().getAttributeNames().nextElement());
+            }
+            
             return;
         }
         if(request.getSession().getAttribute("userid") != null & request.getSession().getAttribute("guest") != null) {
@@ -246,7 +250,7 @@ public class ClientHandler extends HttpServlet {
             //PrintWriter out = response.getWriter();
             ServletOutputStream sos = response.getOutputStream();
             try {
-                System.out.println("prøver å lagre resultat"); //debugg
+                System.out.println("prøver å lagre resultat for id " + gameId); //debugg
                 //sjekker om resultat allerede lagret
                 GameDBAdapter gdb = new GameDBAdapter();
                 ArrayList<Result> r = gdb.getGameById(gameId).getResults();
@@ -260,6 +264,7 @@ public class ClientHandler extends HttpServlet {
 
                 //gdb.addResultToGame(gameId, userId, points, result);
                 gdb.addResultToGame(gameId, userName, points, result);
+                System.out.println("lagret ok");//debugg
                 response.setContentType("text/html");
                 response.setContentLength("results saved successfully".length());
                 //out.write("results saved successfully");
