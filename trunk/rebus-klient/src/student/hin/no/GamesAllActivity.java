@@ -1,6 +1,11 @@
 package student.hin.no;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -35,6 +40,9 @@ public class GamesAllActivity extends ListActivity{
 	final private static int PIN_DIALOG = 1;
 	private Toast toast;
 	private int duration = Toast.LENGTH_LONG;
+	private String status;
+	private Date date = new Date();
+	
 	
 	
 	private Runnable bakgrunnsSjekkingListe = new Runnable() {
@@ -50,19 +58,30 @@ public class GamesAllActivity extends ListActivity{
 	 */
 	private Runnable bakgrunnsGetGame = new Runnable() {
 		public void run() {
+			
 			getGameFromServlet();
 			thread.interrupt();
-			if (gameRebus != null){
-				Intent mapIntent = new Intent(GamesAllActivity.this, MapActivity.class);
-				mapIntent.putExtra("game", gameRebus);
-				startActivity(mapIntent);
+			
+			if (gameRebus != null)
+			{
+				Log.d("Status", getStatus(gameRebus));
+				if(getStatus(gameRebus).equals("Join"))
+				{
+					Intent mapIntent = new Intent(GamesAllActivity.this, MapActivity.class);
+					mapIntent.putExtra("game", gameRebus);
+					startActivity(mapIntent);
+				}
+				else
+				{
+					Intent resultIntent = new Intent(GamesAllActivity.this, ResultActivity.class);
+					resultIntent.putExtra("game", gameRebus);
+					startActivity(resultIntent);
+				}
 			}
-			else{
-				//toast = Toast.makeText(getApplicationContext(), "Please, check your pin\nand try again, gameRebus=null :(", duration);
-				//toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-				//toast.show();
-			}
-		}
+			
+			
+			
+		}//end of run
 	};
 	
 	private Runnable doUpdateGUI = new Runnable() {
@@ -147,7 +166,7 @@ public class GamesAllActivity extends ListActivity{
 				Log.d("GameList", "List from servlet");
 			}//end of for
 			for (int i = 0; i < games.size(); i++)
-				gamesList.add("Id " + games.get(i).getId() + " " + games.get(i).getName() + " " + games.get(i).getStartDate());
+				gamesList.add("Id " + games.get(i).getId() + " " + games.get(i).getName() + " " + getDate(games.get(i).getStartDate()) + " " + getStatus(games.get(i)));
 			handler.post(doUpdateGUI);
 		}
 		else
@@ -199,5 +218,33 @@ public class GamesAllActivity extends ListActivity{
 	 }
 	return null;
 	}
+	
+	public String getDate(long milliSeconds)
+	{
+	    // Create a DateFormatter object for displaying date in specified format.
+	     DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+	     Calendar calendar = Calendar.getInstance();
+	     calendar.setTimeInMillis(milliSeconds);
+	     return formatter.format(calendar.getTime());
+	}
+	
+	public String getStatus(Game game)
+	{
+		if(game.getStartDate() > date.getTime())
+		{
+			status = "Wait for start";
+		}
+		else if (game.getStartDate() + game.getVarighet() * 60000 < date.getTime())
+		{
+			status = "End";
+		}
+		else
+		{
+			status = "Join";
+		}
+		
+		return status;
+	}
+
 	
 }//end of GamesAllActivity
