@@ -214,8 +214,10 @@ public class ClientHandler extends HttpServlet {
      * @throws Exception 
      */
     public void sendResults(HttpServletRequest request, HttpServletResponse response) throws IOException, Exception {
+        System.out.println("methode sendResult from " +request.getRemoteAddr());
         if(request.getSession().getAttribute("userid") == null & request.getSession().getAttribute("guest") == null) {
             response.sendError(666, "mangler brukerid");
+            System.out.println("mangler brukerid");
             return;
         }
         if(request.getSession().getAttribute("userid") != null & request.getSession().getAttribute("guest") != null) {
@@ -241,8 +243,10 @@ public class ClientHandler extends HttpServlet {
             long gameId = Long.valueOf(request.getParameter("gameid"));
             long result = Long.valueOf(request.getParameter("result"));
             int points = Integer.valueOf(request.getParameter("quantity"));
-            PrintWriter out = response.getWriter();
+            //PrintWriter out = response.getWriter();
+            ServletOutputStream sos = response.getOutputStream();
             try {
+                System.out.println("prøver å lagre resultat"); //debugg
                 //sjekker om resultat allerede lagret
                 GameDBAdapter gdb = new GameDBAdapter();
                 ArrayList<Result> r = gdb.getGameById(gameId).getResults();
@@ -257,14 +261,19 @@ public class ClientHandler extends HttpServlet {
                 //gdb.addResultToGame(gameId, userId, points, result);
                 gdb.addResultToGame(gameId, userName, points, result);
                 response.setContentType("text/html");
-                out.write("results saved successfully");
+                response.setContentLength("results saved successfully".length());
+                //out.write("results saved successfully");
+                sos.write("Hui pizda!".getBytes());
             }
             catch(Exception e) {
-                out.write(e.getMessage());
+                //out.write(e.getMessage());
+                sos.write(e.getMessage().getBytes());
             }
             finally {
-                out.flush();
-                out.close();                
+                //out.flush();
+                //out.close();
+                sos.flush();
+                sos.close();
             }
         }
         else if(request.getSession().getAttribute("guest") != null) {
@@ -283,18 +292,15 @@ public class ClientHandler extends HttpServlet {
             }
             catch(Exception e) {
                 out.write(e.getMessage());
+                Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, e);
             }
             finally {
                 out.flush();
                 out.close();                
             }
-        }
-
-        
-        
-            
-        
+        } 
     }
+    
     /**
      * 
      * @param request
