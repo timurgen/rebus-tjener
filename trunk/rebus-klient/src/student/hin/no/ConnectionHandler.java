@@ -116,7 +116,7 @@ public class ConnectionHandler {
 	 * Brukes for å få tak i et enkelt spill-objekt,
 	 *  når man velger det i "GamesAllActivity"
 	 */
-	public db.Game getGameData(Context context, String gameIdToSend){
+	public db.Game getGameData(Context context, String gameIdToSend, String pinCode){
 		String myURL = "";
 		URL url = null;
 		HttpURLConnection httpConnection = null;
@@ -128,26 +128,29 @@ public class ConnectionHandler {
 			
 			data = "client?" + URLEncoder.encode("mode", "UTF-8") + "=" +URLEncoder.encode("getgame", "UTF-8");
 			data += "&" + URLEncoder.encode("gameid", "UTF-8") + "=" +URLEncoder.encode(gameIdToSend, "UTF-8");
+			
+			if (pinCode != null){
+				data += "&" + URLEncoder.encode("guestid", "UTF-8") + "=" +URLEncoder.encode(pinCode, "UTF-8");
+			}
 			myURL = "http://158.39.124.96:8080/rebus/" + data;
 			
 			Log.d("URL", myURL);
 			
 			url = new URL(myURL);
 			httpConnection = (HttpURLConnection)url.openConnection();
-				
-			// Sett cookie dersom påfølgende kall:
-			if (mSession != null){
+			
+			if (pinCode == null && mSession != null){		//hvis det ikke er gjest og session-id ikke er tom i filen
+				// Sett cookie dersom påfølgende kall:
 				httpConnection.setRequestProperty("cookie", mSession);
 				}
-			else{
+			else{										//setter session id , hvis det er gjest eller session er tom
 				mSession = httpConnection.getHeaderField("Set-cookie");
-				if (mSession != null) {
+				if (mSession != null) {	//sjekker at set finnes property "Set-cookie"
 					int semicolon = mSession.indexOf(';');
 					mSession = mSession.substring(0, semicolon);
 					filehandler.WriteLog(mSession, context);
 				}
 			}
-			
 			Log.d("Testiruem", "Uchastok 1");
 			
 			//StringBuffer buf = new StringBuffer();
@@ -215,7 +218,7 @@ public class ConnectionHandler {
 	
 	public void endGame()
 	{
-		
+	
 	}//end of endGame
 	
 	
