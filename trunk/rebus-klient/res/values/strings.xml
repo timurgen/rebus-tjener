@@ -11,5 +11,8 @@
     <string name="textButtonRun">Run this Rebus</string>
     <string name="logsFile">logsFile</string>
     <string name="exit"> android vs apple </string>
+    <string name="enterpin">picture pin</string>
+    <string name="textpositiveButton">OK</string>
+    <string name="textnegativeButton">Cancel</string>
 
 </resources>
