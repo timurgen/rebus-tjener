@@ -57,9 +57,9 @@ public class GamesAllActivity extends ListActivity{
 				startActivity(mapIntent);
 			}
 			else{
-				toast = Toast.makeText(getApplicationContext(), "Please, check your pin\nand try again, gameRebus=null :(", duration);
-				toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-				toast.show();
+				//toast = Toast.makeText(getApplicationContext(), "Please, check your pin\nand try again, gameRebus=null :(", duration);
+				//toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+				//toast.show();
 			}
 		}
 	};
@@ -128,10 +128,11 @@ public class GamesAllActivity extends ListActivity{
 			String [] gameArray = gamesFromServlet.split(",");
 			int j = 0;
 			for ( int i=0; i< gameArray.length;){
-											//gameid	author-name		game-name			varighet						isOpen								date
+											//gameid	author-name		game-name			varighet						isOpen								
 				try {
-					games.add(new db.Game(gameArray[i+1], gameArray[i+2], Integer.parseInt(gameArray[i+3]), Boolean.parseBoolean(gameArray[i+4]),  gameArray[i+5]));
+					games.add(new db.Game(gameArray[i+1], gameArray[i+2], Integer.parseInt(gameArray[i+3]), Boolean.parseBoolean(gameArray[i+4]),  "15-05-2012 15:15:15"));
 					games.get(j).setIdGame(Long.parseLong(gameArray[i]));
+					games.get(j).setStartDate(Long.parseLong(gameArray[i+5]));
 				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -143,7 +144,7 @@ public class GamesAllActivity extends ListActivity{
 				j++;
 			}//end of for
 			for (int i = 0; i < games.size(); i++)
-				gamesList.add(games.get(i).getName());
+				gamesList.add("Id " + games.get(i).getId() + " " + games.get(i).getName() + " " + games.get(i).getStartDate());
 			handler.post(doUpdateGUI);
 		}
 		else

@@ -53,7 +53,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 	
 	private LocationManager locationManager;
 	
-	
+	private ConnectionHandler connectionhandler;
 	
 	private Long time;
 	
@@ -305,13 +305,16 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			Toast.makeText(MapActivity.this,"FERDIG", Toast.LENGTH_LONG).show();
+			kontaktServlet();
 		}
 	}
 	
-	private void endGame()
-	{
+	private void kontaktServlet() {
 		
-	}
+		connectionhandler = new ConnectionHandler();
+		connectionhandler.endGame(getApplicationContext(), game.getId().toString(), Long.toString(System.currentTimeMillis() - game.getStartDate()), Integer.toString(game.getCurrentPoint()));
+		
+	}//end of kontaktServlet()
 	
 	
 

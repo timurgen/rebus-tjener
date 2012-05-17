@@ -1,10 +1,6 @@
 package db;
 
 import java.io.Serializable;
-/*import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;*/
 
 /**
  *
@@ -13,7 +9,6 @@ import javax.persistence.Id;*/
  */
 
 public class Result implements Serializable {
-    
     private Long id; //
     
 
@@ -27,7 +22,8 @@ public class Result implements Serializable {
     
     private long gamerId; //userid
     private long result; // medgått tid i millisekunder
-    private long points; //
+    private int points; //hvor mange rebuspunkter ble tatt
+    private String userName;
 
     public long getGamerId() {
         return gamerId;
@@ -48,17 +44,18 @@ public class Result implements Serializable {
     public Result() {
     }
 
-    public Result(long gamerId, long result, long points) {
+    public Result(String userName, long result, int points) {
         this.gamerId = gamerId;
         this.result = result;
         this.points = points;
+        this.userName = userName;
     }
 
     public long getPoints() {
         return points;
     }
 
-    public void setPoints(long points) {
+    public void setPoints(int points) {
         this.points = points;
     }
     

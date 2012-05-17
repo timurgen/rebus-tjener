@@ -1,5 +1,8 @@
 package student.hin.no;
 
-public class ResultActivity {
+import android.app.Activity;
+
+public class ResultActivity extends Activity 
+{
 
 }
