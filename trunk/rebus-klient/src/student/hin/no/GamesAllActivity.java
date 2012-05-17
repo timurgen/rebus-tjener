@@ -1,18 +1,20 @@
 package student.hin.no;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -21,15 +23,17 @@ import db.Game;
 public class GamesAllActivity extends ListActivity{
 
 	private ArrayList<db.Game> games = new ArrayList<db.Game>();
-	
 	private db.Game gameRebus;
-	private String gameIdToSend;
+	private String gameIdToSend, pinCode = null;
 	private ArrayList<String> gamesList = new ArrayList<String>();
 	ArrayAdapter<String> adapter;
 	private ConnectionHandler connectionhandlerGameList, connectionhandlerGameId;
 	private String gamesFromServlet;
 	private Thread thread = null, thread2 = null;
 	private Handler handler = new Handler(); //Brukes til å oppdatere GUI
+	final private static int PIN_DIALOG = 1;
+	private Toast toast;
+	private int duration = Toast.LENGTH_LONG;
 	
 	
 	private Runnable bakgrunnsSjekkingListe = new Runnable() {
@@ -47,9 +51,16 @@ public class GamesAllActivity extends ListActivity{
 		public void run() {
 			getGameFromServlet();
 			thread.interrupt();
-			Intent mapIntent = new Intent(GamesAllActivity.this, MapActivity.class);
-			mapIntent.putExtra("game", gameRebus);
-			startActivity(mapIntent);
+			if (gameRebus != null){
+				Intent mapIntent = new Intent(GamesAllActivity.this, MapActivity.class);
+				mapIntent.putExtra("game", gameRebus);
+				startActivity(mapIntent);
+			}
+			else{
+				toast = Toast.makeText(getApplicationContext(), "Please, check your pin\nand try again, gameRebus=null :(", duration);
+				toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+				toast.show();
+			}
 		}
 	};
 	
@@ -63,8 +74,7 @@ public class GamesAllActivity extends ListActivity{
 	 */
 	private Runnable ToastFraTjenester = new Runnable() {
 		public void run() {
-			int duration = Toast.LENGTH_LONG;
-			Toast toast = Toast.makeText(getApplicationContext(), "Server is unavailable\nplease, try again later", duration);
+			toast = Toast.makeText(getApplicationContext(), "Server is unavailable\nplease, try again later", duration);
 			toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 			toast.show();
 		}
@@ -88,8 +98,23 @@ public class GamesAllActivity extends ListActivity{
 	{
 		gameRebus = games.get(position);
 		gameIdToSend = gameRebus.getId().toString();
-		thread2 = new Thread(null, bakgrunnsGetGame, "logging inn");
-		thread2.start();
+		
+		if (GamesAllActivity.this.getCallingActivity() == null){		//hvis GamesAllActivity ble started fra LoginActivity -
+			thread2 = new Thread(null, bakgrunnsGetGame, "logging inn");	//man laster spillet ned og begynner
+    		thread2.start();
+		}
+		else{															//hvis det ble started med "Free Play"
+			if  (gameRebus.isIsOpen()){									//da sjekker vi om det er et "åpent" spill
+					showDialog(PIN_DIALOG);								//brukeren får dialog-vindu og taster pin-koden sin
+			}
+			else{														//ellers kommer han tilbake til spill-listet
+				int duration = Toast.LENGTH_LONG;
+				Toast toast = Toast.makeText(getApplicationContext(), "you are not registered for this game", duration);
+				toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+				toast.show();
+				return;
+			}
+		}		
 	}//end of onListItemClick
 	
 	/* Funksjonen fyller på liste med alle spillene som finnes på tjeneren 
@@ -133,7 +158,7 @@ public class GamesAllActivity extends ListActivity{
 	 */
 	private void getGameFromServlet(){
 		connectionhandlerGameId = new ConnectionHandler();
-		gameRebus = connectionhandlerGameId.getGameData(getApplicationContext(), gameIdToSend);
+		gameRebus = connectionhandlerGameId.getGameData(getApplicationContext(), gameIdToSend, pinCode);
 	}
 	
 	/*
@@ -143,21 +168,32 @@ public class GamesAllActivity extends ListActivity{
 		adapter.notifyDataSetChanged();
 	}
 	
-
-
+	protected Dialog onCreateDialog(int id) {
+		switch(id) {
+		case (PIN_DIALOG) :
+			LayoutInflater factory = LayoutInflater.from(this);
+			final View PinEntryView = factory.inflate(R.layout.alert_dialog, null);
+	    	final EditText EditPinCode = (EditText)PinEntryView.findViewById(R.id.editPinCode);
+	    	Resources res = getResources();
+	    	Drawable drawablePin = res.getDrawable(R.drawable.enterpin);
+	    	EditPinCode.setBackgroundDrawable(drawablePin);
+			return new AlertDialog.Builder(GamesAllActivity.this)
+			
+			.setView(PinEntryView)
+			.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                	pinCode = EditPinCode.getText().toString();
+                	thread2 = new Thread(null, bakgrunnsGetGame, "logging inn");
+            		thread2.start();
+                }
+        })
+        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+            }
+        })
+        .create();
+	 }
+	return null;
+	}
 	
-//	private void CreateGames()
-//	{
-//		games.add(new GameRebus("vs","gameOne", 50, true, "05-May-2012 15:15:15"));
-//		games.add(new GameRebus("ts","gameTwo", 70, true, "05-May-2012 17:17:17"));
-//		
-//		games.get(0).addPoint(new GamePunktRebus(68.435299, 17.437899, 50, "First point in game 1","HiN"));
-//		games.get(0).addPoint(new GamePunktRebus(68.439553, 17.44593, 100, "Second point in game 1","HiN"));
-//		
-//		games.get(1).addPoint(new GamePunktRebus(68.437909, 17.422493, 70, "Point in game 2", "AMFi"));
-//		games.get(1).addPoint(new GamePunktRebus(68.439553, 17.44593, 100, "Second point in game 1","HiN"));
-//		
-//		for (int i = 0; i < games.size(); i++)
-//		gamesList.add(games.get(i).getName() + " " + games.get(i).getVarighetString() + " " + games.get(i).getStartDateString());
-//	}
 }//end of GamesAllActivity
