@@ -6,6 +6,7 @@ import db.Game;
 
 import android.app.ListActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 
 public class ResultActivity extends ListActivity 
@@ -56,10 +57,10 @@ public class ResultActivity extends ListActivity
 		
 		for (int i = 0; i < gameResultArray.length;)
 		{
-			
+			Log.d("Poluchaemaya dlina", Integer.toString(gameResultArray.length));
 			try 
 			{
-				resultList.add(gameResultArray[0] + " " + gameResultArray[1]);	
+				resultList.add(gameResultArray[i] + " " + gameResultArray[i+1]);	
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -68,7 +69,7 @@ public class ResultActivity extends ListActivity
 				e.printStackTrace();
 			}
 			i = i+2; 
-			
+
 		}//end of for
 		
 	}
