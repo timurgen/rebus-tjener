@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -205,7 +206,13 @@ public class ClientHandler extends HttpServlet {
         sos.close();
     }
     
-    //send result
+    /**
+     * 
+     * @param request
+     * @param response
+     * @throws IOException
+     * @throws Exception 
+     */
     public void sendResults(HttpServletRequest request, HttpServletResponse response) throws IOException, Exception {
         if(request.getSession().getAttribute("userid") == null & request.getSession().getAttribute("guest") == null) {
             response.sendError(666, "mangler brukerid");
@@ -236,7 +243,17 @@ public class ClientHandler extends HttpServlet {
             int points = Integer.valueOf(request.getParameter("quantity"));
             PrintWriter out = response.getWriter();
             try {
+                //sjekker om resultat allerede lagret
                 GameDBAdapter gdb = new GameDBAdapter();
+                ArrayList<Result> r = gdb.getGameById(gameId).getResults();
+                Iterator<Result>  it = r.iterator();
+                while(it.hasNext()) {
+                    if(it.next().getUserName().equals(userName)) {
+                        response.sendError(666, "Result exists");
+                        return;
+                    }
+                }
+
                 //gdb.addResultToGame(gameId, userId, points, result);
                 gdb.addResultToGame(gameId, userName, points, result);
                 response.setContentType("text/html");
@@ -252,6 +269,25 @@ public class ClientHandler extends HttpServlet {
         }
         else if(request.getSession().getAttribute("guest") != null) {
             //ellers håndterer gest
+            String userName = (String)request.getSession().getAttribute("guest");
+            long gameId = Long.valueOf(request.getParameter("gameid"));
+            long result = Long.valueOf(request.getParameter("result"));
+            int points = Integer.valueOf(request.getParameter("quantity"));
+            PrintWriter out = response.getWriter();
+            try {
+                GameDBAdapter gdb = new GameDBAdapter();
+                //gdb.addResultToGame(gameId, userId, points, result);
+                gdb.addResultToGame(gameId, userName, points, result);
+                response.setContentType("text/html");
+                out.write("results saved successfully");
+            }
+            catch(Exception e) {
+                out.write(e.getMessage());
+            }
+            finally {
+                out.flush();
+                out.close();                
+            }
         }
 
         
@@ -259,7 +295,12 @@ public class ClientHandler extends HttpServlet {
             
         
     }
-    //get results
+    /**
+     * 
+     * @param request
+     * @param response
+     * @throws IOException 
+     */
     public void getResults(HttpServletRequest request, HttpServletResponse response) throws IOException {
         //sjekker om bruker satt opp game id
         if(request.getParameter("gameid") == null) {
