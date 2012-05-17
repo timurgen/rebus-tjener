@@ -26,7 +26,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 	GeoPoint geoPoint;
 	MapView mapView;
 	MyLocationOverlay compass;
-	
+	private Thread thread = null;
 	//GameRebus game;
 	Game game;
 	
@@ -57,6 +57,13 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 	
 	private Long time;
 	
+	private Runnable bakgrunnsSendResult = new Runnable() {
+		public void run() {
+			kontaktServlet();
+			thread.interrupt();
+			MapActivity.this.finish();
+		}
+	};
 	
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -305,7 +312,10 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			Toast.makeText(MapActivity.this,"FERDIG", Toast.LENGTH_LONG).show();
-			kontaktServlet();
+			
+			thread = new Thread(null, bakgrunnsSendResult, "logging inn");
+			thread.start();
+			//kontaktServlet();
 		}
 	}
 	
