@@ -43,7 +43,7 @@ public class ResultActivity extends ListActivity
 		public void run() 
 		{
 			GetGameResultFromServlet();
-			Thread.interrupted();
+			thread.interrupt();
 		}
 	};
 	
