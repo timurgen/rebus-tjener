@@ -168,6 +168,10 @@ public class ClientHandler extends HttpServlet {
             response.sendError(1043, "Game starts at" + new Date(gameStart).toString());
             return;            
         }
+        if(gameStart + (gdb.getGameById(gameId).getVarighet()*60000) < currentTime) {
+            response.sendError(1048, "Game ended");
+            return;            
+        }
         
         //sjekker om det er bruker eller gest vil laste ned spill
         if(request.getParameter("userid") != null & request.getParameter("guestid") != null){
@@ -180,17 +184,20 @@ public class ClientHandler extends HttpServlet {
             long userId = Long.valueOf(request.getParameter("userid"));
             if(!gdb.getGameById(gameId).getAllPartisipants().contains(userId)) {
                 response.sendError(1047, "You have not been registred in this game");
+                gdb.closeConnection();
                 return;                
             }  
         }
-        //håndterer gester
-        if(request.getParameter("guestid") != null) {
+        //håndterer gjester
+        if(request.getParameter("guestid") != null) {          
             GuestDBAdapter guestDB = new GuestDBAdapter();
             String guestId = request.getParameter("guestid");
-            if(!guestDB.getGuestById(guestId).isRegistred(gameId)) {
+            if(guestDB.getGuestById(guestId) == null) {
                 response.sendError(1047, "You have not been registred in this game");
+                gdb.closeConnection();
                 return;                 
             }
+            request.getSession().setAttribute("guestid", request.getParameter("guestid"));
         }
         //dersom alt er ok, sender løp til stream output
         Game g = gdb.getGameById(gameId);
@@ -217,7 +224,7 @@ public class ClientHandler extends HttpServlet {
         System.out.println("methode sendResult from " +request.getRemoteAddr());
         if(request.getSession().getAttribute("userid") == null & request.getSession().getAttribute("guest") == null) {
             response.sendError(666, "mangler brukerid");
-            System.out.println("mangler brukerid");
+            System.out.println("mangler brukerid");//DEBUGG
             while(request.getSession().getAttributeNames().hasMoreElements()) {
                 System.out.println(request.getSession().getAttributeNames().nextElement());
             }
@@ -268,7 +275,7 @@ public class ClientHandler extends HttpServlet {
                 response.setContentType("text/html");
                 response.setContentLength("results saved successfully".length());
                 //out.write("results saved successfully");
-                sos.write("Hui pizda!".getBytes());
+                sos.write("results saved successfully".getBytes());
             }
             catch(Exception e) {
                 //out.write(e.getMessage());
@@ -321,13 +328,15 @@ public class ClientHandler extends HttpServlet {
         GameDBAdapter gdb = new GameDBAdapter();
         ServletOutputStream sos = response.getOutputStream();
         Game g = gdb.getGameById(Long.valueOf(request.getParameter("gameid")));
+        
         ArrayList<Result> results = g.getResults();
         
         for(Result s : results) {
-            sos.write(Long.toString(s.getGamerId()).getBytes());
+            sos.write(s.getUserName().getBytes());
             sos.write(",".getBytes());
-            sos.write(Long.toString(s.getResult()).getBytes());
-            sos.write(System.getProperty(";").getBytes());
+            Long res = s.getResult() / s.getPoints();
+            sos.write(res.toString().getBytes());
+            sos.write(",".getBytes());
         }
         sos.flush();
         sos.close();
