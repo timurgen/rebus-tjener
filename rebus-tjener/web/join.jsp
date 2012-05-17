@@ -12,12 +12,30 @@
 <%@page import="db.GameDBAdapter"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
+    /**
+     *
+     */
     String wrongMessage = null;
-    String name = (String)session.getAttribute("username");
-    long gameId = Long.valueOf(request.getParameter("gameid"));
-    String guestId = (String)session.getAttribute("guestid");
-    GameDBAdapter gdb = new GameDBAdapter();
-    UserDBAdapter udb = new UserDBAdapter();
+    String name = null;
+    long gameId = 0;
+    String guestId = null;
+    GameDBAdapter gdb = null;
+    UserDBAdapter udb = null;
+    GuestDBAdapter guestdb = null;
+    
+    if(session.getAttribute("username") != null) {
+        name = (String)session.getAttribute("username");
+        gdb = new GameDBAdapter();
+    }
+    else if(session.getAttribute("guestid")!= null) {
+        guestId = (String)session.getAttribute("guestid");
+        udb = new UserDBAdapter();
+    }
+      
+    if(request.getParameter("gameid")!= null) {
+        gameId = Long.valueOf(request.getParameter("gameid"));
+    }
+ 
     
     
     try {
@@ -25,32 +43,27 @@
         if(name == null & guestId == null) {
             String id = session.getId();
             wrongMessage = "your id is:<font color=\"red\"> " + id.substring(0, 8) + "</font> use it to begin game on your mobile phone";
-            GuestDBAdapter guestdb = new GuestDBAdapter();
+            //lagrer ny gjest
+            guestdb = new GuestDBAdapter();
             Guest g = new Guest(id.substring(0, 8));
             g.addGame(gameId);
             guestdb.persistGuest(g);   
-            session.setAttribute("guestid", id.substring(0, 8));
-            
-            
+            session.setAttribute("guestid", id.substring(0, 8)); 
         }
         else if(guestId != null) {
-            GuestDBAdapter guestdb = new GuestDBAdapter();
+            guestdb = new GuestDBAdapter();
             try {
                 guestdb.addGame(gameId, guestId);
                 wrongMessage = "Guest added successfully";   
             }
             catch(Exception e) {
                 wrongMessage = e.getMessage();   
-            }
-            
+            } 
         }
         else {
-            
             gdb.addPartisipantToGame(gameId, udb.getUserByName(name).getId());
             wrongMessage = "User added successfully";           
-        }
-
-        
+        }  
     }
     catch(Exception e) {
         wrongMessage = e.getMessage();
@@ -63,7 +76,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link type="text/css" rel="stylesheet" href="main.css" />
-        <title>JSP Page</title>
+        <title>MegaRebus join game</title>
     </head>
     <body>
         <%@include file='menu.jsp'%>

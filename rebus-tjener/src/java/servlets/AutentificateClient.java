@@ -40,7 +40,7 @@ public class AutentificateClient extends HttpServlet {
                 //out = response.getWriter();
                 //out.println("you will be handled as guest");
                 response.setContentType("application/octet-stream");
-                
+                request.getSession().setAttribute("guestid", request.getParameter("guestid"));
                 byte[] sessionId = request.getSession().getId().getBytes();
                 response.setContentLength(sessionId.length);
                 ServletOutputStream outputStream = response.getOutputStream();
@@ -57,6 +57,8 @@ public class AutentificateClient extends HttpServlet {
                         byte[] userName = udb.getUserByName(name).getName().getBytes();
                         byte[] userId = String.valueOf(udb.getUserByName(name).getId()).getBytes();
                         byte[] sessionId = request.getSession().getId().getBytes();
+                        request.getSession().setAttribute("userid", udb.getUserByName(name).getId());
+                        request.getSession().setAttribute("username", udb.getUserByName(name).getName());
                         response.setContentType("application/octet-stream");
                         response.setContentLength(userName.length+userId.length+sessionId.length+" ".length()+" ".length());
                         outputStream.write(userName);

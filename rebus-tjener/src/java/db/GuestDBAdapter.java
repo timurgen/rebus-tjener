@@ -16,17 +16,28 @@ import javax.persistence.PersistenceException;
  * @version 1.0.0
  */
 public class GuestDBAdapter {
+    /**
+     * 
+     */
     EntityManagerFactory emf;
+    /**
+     * 
+     */
     EntityManager em;    
     
-        //constructor
+    /**
+     * 
+     */
     public GuestDBAdapter() {
         emf = Persistence.createEntityManagerFactory("$objectdb/db/guest.odb");
         //System.out.println("entity manager factory OK"); //debugg
         em = emf.createEntityManager();
         //System.out.println("entity manager OK"); //debugg
     }
-        //destructor
+    
+    /**
+     * 
+     */
     @Override
     protected void finalize(){
        em.close();

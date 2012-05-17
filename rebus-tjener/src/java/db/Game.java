@@ -19,18 +19,48 @@ import javax.persistence.*;
 @Entity
 public class Game implements Serializable{
     @Id  @GeneratedValue(strategy=GenerationType.AUTO)
-    private Long idGame; //primary key 
-    private String name; //navn av spill
-    private int varighet; //varighet av spill
-    private boolean isOpen; //true om løp åpent for alle ellers false
-    private long startDate; //klokkeslett for oppstart
+    /**
+     * pribamry key
+     */
+    private Long idGame;
+    /**
+     * navn av løp
+     */
+    private String name;
+    /**
+     * varighet av løp
+     */
+    private int varighet;
+    /**
+     * true om løp åpent for alle ellers false (kun for registrerte brukere)
+     */
+    private boolean isOpen; 
+    /**
+     * klokkeslett for oppstart
+     */
+    private long startDate; //
     @OneToMany(cascade=CascadeType.PERSIST)
-    private ArrayList<GamePunkt> pointList; //list som holder rede på punkter i et løp
-    private ArrayList<Long> partisipants; //idier til påmeldte
-    private int currentPoint; //nummer på nåværende punkt
-    private String authorName; //navn av bruker som skapte løp
+    /**
+     * list som holder rede på rebuspunkter i et løp
+     */
+    private ArrayList<GamePunkt> pointList;
+    /**
+     * id-verdier til påmeldte deltakere
+     */
+    private ArrayList<Long> partisipants;
+    /**
+     * nummer på nåværende punkt
+     */
+    private int currentPoint;
+    /**
+     * navn av bruker som skapte løp
+     */
+    private String authorName; 
     @OneToMany(cascade=CascadeType.PERSIST)
-    private ArrayList<Result> results; //list som holder rede på resultater som tilhører løp
+    /**
+     * list som holder rede på resultater som tilhører løp
+     */
+    private ArrayList<Result> results; 
 
     public Game() {
     }
@@ -51,7 +81,6 @@ public class Game implements Serializable{
         } catch (ParseException ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //
         this.authorName = authorName;
         this.name = name;
         this.varighet = varighet;
@@ -62,55 +91,101 @@ public class Game implements Serializable{
         this.currentPoint = 0;
     }
     
-////////////////////////////////////////////////////////////////////////////////
-    //Getter&setter block
-
+/******************************************************************************/
+    
+    /**
+     * 
+     * @return id til løp
+     */
     public Long getId() {
         return idGame;
     }
-
+    /**
+     * 
+     * @return true om løp er åpent for alle, false - om kun registrerte brukere kan melde seg på
+     */
     public boolean isIsOpen() {
         return isOpen;
     }
-
+    /**
+     * 
+     * @param isOpen set true dersom løp er åpent for alle ellers false
+     */
     public void setIsOpen(boolean isOpen) {
         this.isOpen = isOpen;
     }
-
+    /**
+     * 
+     * @return navn av spill
+     */
     public String getName() {
         return name;
     }
-
+    /**
+     * 
+     * @param name lagrer nytt navn av spill
+     */
     public void setName(String name) {
         this.name = name;
     }
-
+    /**
+     * 
+     * @return returnerer klokkeslett for oppstart i millisekunder fra 1970 år
+     */
     public long getStartDate() {
         return startDate;
     }
-
+    /**
+     * 
+     * @param startDate setter opp klokkeslett for oppstart i milllisekunder fra 1970 år
+     */
     public void setStartDate(long startDate) {
         this.startDate = startDate;
     }
-
+    /**
+     * 
+     * @return varighet av spill, gitt i minutter
+     */
     public int getVarighet() {
         return varighet;
     }
-
+    /**
+     * 
+     * @param varighet setter opp varighet av spill i minutter
+     */
     public void setVarighet(int varighet) {
         this.varighet = varighet;
     }
-
+    /**
+     * 
+     * @return returnerer navn av author
+     */
     public String getAuthorName() {
         return authorName;
+    }
+    /**
+     * 
+     * @param idGame setter opp id til løp
+     */
+    public void setIdGame(Long idGame) {
+        this.idGame = idGame;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public int getCurrentPoint() {
+        return currentPoint;
     }
     
     
     
-    ////////////////////////////////////////////////////////////////////////////
+    /*************************************************************************/
+    
     /**
-     * 
-     * @param gp adderer nytt punkt som skal tilhøre løp
+     * Lagrer nytt rebuspunkt til løp
+     * @param gp nytt punkt som skal tilhøre løp
      */
     public void addPoint(GamePunkt gp) {
         if(gp == null)
@@ -131,6 +206,7 @@ public class Game implements Serializable{
             throw new GameEndException("max antal reached");
         }
     }
+    
     /**
      * Adderer registrert bruker til deltakere
      * @param id til deltaker
@@ -161,6 +237,7 @@ public class Game implements Serializable{
     public boolean getPartisipant(long id) {
         return (this.partisipants.contains(id));
     }
+    
     /**
      * lagrer resultater i database
      * @param gamerId
@@ -169,16 +246,16 @@ public class Game implements Serializable{
      * @param points 
      * @throws Exception 
      */
-    public void setResult(long gameId, long userId, long result, long points) throws Exception {
-        if(this.results.contains(new Result(userId, result,points))) {
+    public void setResult(long gameId, String userName, long result, int points) throws Exception {
+        if(this.results.contains(new Result(userName, result,points))) {
             throw new Exception("result exists for this gamer id");
         }
-        this.results.add(new Result(userId, result, points));
+        this.results.add(new Result(userName, result, points));
     }
     
     /**
      * 
-     * @return returnerer list med resultater
+     * @return returnerer list med resultater som tilhører løp
      */
     public ArrayList<Result> getResults() {
         return this.results;

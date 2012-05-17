@@ -65,16 +65,19 @@
                         out.println("<td>");
                             out.println(gameList.get(i).getVarighet());
                         out.println("</td>");
+                        //dersom løp satt i gang
                         if(gameList.get(i).getStartDate() < System.currentTimeMillis() & System.currentTimeMillis() < gameList.get(i).getStartDate() + gameList.get(i).getVarighet()*60000) {
                             out.println("<td>");
                             out.println("<div class=\"join-button-2\">Game in progress</div>");
                             out.println("</td>");
                         }
+                        //dersom løp avsluttet
                         else if(System.currentTimeMillis() > gameList.get(i).getStartDate() + gameList.get(i).getVarighet()*60000) {
                             out.println("<td>");
                             out.println("<a href=\"results.jsp?gameid="+gameList.get(i).getId()+"\"><div class=\"join-button-2\">Game finished</div></a>");
                             out.println("</td>");
                         }
+                        //dersom løp kun til registrerte brukere
                         else if(gameList.get(i).isIsOpen() == false & session.getAttribute("username")== null ) {
                         //om brukeren er ikke pålogget og spill bare for de som er registrert so viser tilsvarende melding
                             out.println("<td>");
@@ -85,12 +88,14 @@
                                 out.println("<a href=\"login.jsp\"><div class=\"join-button-2\">Sign in &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to join</div></a>"); 
                             out.println("</td>");      
                         }
+                        //dersom  allerede deltar i løp
                         else if(gameList.get(i).getAllPartisipants() != null && gameList.get(i).getAllPartisipants().contains(session.getAttribute("userid"))) {
                             long gameId = gameList.get(i).getId();
                             out.println("<td>");
                             out.println("<a href=join.jsp?gameid="+gameId+ "><div class=\"join-button-2\">Joined</div></a>");
                             out.println("</td>");
                         }
+                        //dersom eier av løp
                         else if(session.getAttribute("username") != null & gameList.get(i).getAuthorName().equals(session.getAttribute("username"))) {
                             out.println("<td>");
                                 long gameId = gameList.get(i).getId();
@@ -102,6 +107,7 @@
                                 
                             out.println("</td>"); 
                         }
+                        
                         else {
                             out.println("<td>");
                                 long gameId = gameList.get(i).getId();
@@ -110,13 +116,10 @@
                                 //out.print(gameId + ")\" value=\"Join\" />");
                                 //med pure css button
                                 out.println("<a href=join.jsp?gameid="+gameId+ "><div class=\"join-button\">Join</div></a>");
-                                
                             out.println("</td>");                            
-                        }
-                                                                       
+                        }                                               
                     out.println("</tr>");
                 }   
-            
             out.println("</table>");
         }
        else {
@@ -124,11 +127,9 @@
         <div class="no_game_message">
             <h1>No one game created, be first!</h1>
         </div>
-        
         <%
        }
         %>
         <%@include file="footer.jsp" %>
     </body>
-    
 </html>

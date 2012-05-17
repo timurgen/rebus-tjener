@@ -1,4 +1,5 @@
 /* 
+ * Håndterer Google Maps hendelser
  * @author Timur Samkharadze
  * 
  */
