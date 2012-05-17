@@ -2,6 +2,7 @@
     Document   : menu
     Created on : Apr 27, 2012, 9:06:16 PM
     Author     : 490501
+    Description: Hoved menu som vises på alle websider i prosjektet
 --%>
 
 <%

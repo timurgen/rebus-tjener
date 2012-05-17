@@ -10,6 +10,7 @@ import javax.persistence.*;
  * @version 1.0.0
  */
 public class GameDBAdapter {
+    
     /**
      * represents the relevant database
      */
@@ -101,11 +102,27 @@ public class GameDBAdapter {
      * @param points - poenger som en bruker fikk
      * @param result - medgått tid 
      */
-    public void addResultToGame(long gameid, long userid, long points, long result) throws Exception {
+//    public void addResultToGame(long gameid, long userid, int points, long result) throws Exception {
+//        Game g = this.getGameById(gameid);
+//        em.getTransaction().begin();
+//        g.setResult(gameid, userid, result, points);
+//        JDOHelper.makeDirty(g, "partisipants");
+//        em.getTransaction().commit();
+//        em.clear();
+//    }
+    
+        /**
+     * Adderer resultater for en bruker til gitt løp
+     * @param gameid - id til løp 
+     * @param userName - navn til bruker som gjennomførte løp
+     * @param points - poenger som en bruker fikk
+     * @param result - medgått tid 
+     */
+    public void addResultToGame(long gameid, String userName, int points, long result) throws Exception {
         Game g = this.getGameById(gameid);
         em.getTransaction().begin();
-        g.setResult(gameid, userid, result, points);
-        JDOHelper.makeDirty(g, "partisipants");
+        g.setResult(gameid, userName, result, points);
+        JDOHelper.makeDirty(g, "results");
         em.getTransaction().commit();
         em.clear();
     }
@@ -118,6 +135,7 @@ public class GameDBAdapter {
         List<Game> results = q1.getResultList();
         return results;
     }
+    
     /**
      * Stenger forbindelse med database
      */

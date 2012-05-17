@@ -7,8 +7,11 @@ package servlets;
 import db.*;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
@@ -34,7 +37,7 @@ public class ClientHandler extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {      
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, Exception {      
         //dersom mode ikke satt opp returnerer feil
         if(request.getParameter("mode") == null) {
             response.sendError(1045, "mode undefined");
@@ -75,7 +78,11 @@ public class ClientHandler extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -90,7 +97,11 @@ public class ClientHandler extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -123,6 +134,7 @@ public class ClientHandler extends HttpServlet {
             sos.write(",".getBytes());
             sos.write(String.valueOf(g.getStartDate()).getBytes());
             sos.write(",".getBytes());
+            
 
         }  
         sos.flush();
@@ -181,6 +193,7 @@ public class ClientHandler extends HttpServlet {
         }
         //dersom alt er ok, sender løp til stream output
         Game g = gdb.getGameById(gameId);
+        //ToSend g = new ToSend(2, 3, "hui");
         response.setContentType("application/octet-stream");
         ServletOutputStream sos = response.getOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(sos);
@@ -193,9 +206,13 @@ public class ClientHandler extends HttpServlet {
     }
     
     //send result
-    public void sendResults(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if(request.getParameter("userid") == null) {
+    public void sendResults(HttpServletRequest request, HttpServletResponse response) throws IOException, Exception {
+        if(request.getSession().getAttribute("userid") == null & request.getSession().getAttribute("guest") == null) {
             response.sendError(666, "mangler brukerid");
+            return;
+        }
+        if(request.getSession().getAttribute("userid") != null & request.getSession().getAttribute("guest") != null) {
+            response.sendError(666, "you can't be user and guest at the same time");
             return;
         }
         if(request.getParameter("gameid") == null) {
@@ -210,12 +227,33 @@ public class ClientHandler extends HttpServlet {
             response.sendError(666, "mangler punktantall");
             return;            
         }
-        
-        long userId = Long.valueOf(request.getParameter("userid"));
-        long gameId = Long.valueOf(request.getParameter("gameid"));
-        long result = Long.valueOf(request.getParameter("result"));
-        int points = Integer.valueOf(request.getParameter("quantity"));
-        GameDBAdapter gdb = new GameDBAdapter();
+        if(request.getSession().getAttribute("userid") != null) {
+            //håndterer bruker
+            //long userId = Long.valueOf(request.getParameter("userid"));
+            String userName = (String)request.getSession().getAttribute("username");
+            long gameId = Long.valueOf(request.getParameter("gameid"));
+            long result = Long.valueOf(request.getParameter("result"));
+            int points = Integer.valueOf(request.getParameter("quantity"));
+            PrintWriter out = response.getWriter();
+            try {
+                GameDBAdapter gdb = new GameDBAdapter();
+                //gdb.addResultToGame(gameId, userId, points, result);
+                gdb.addResultToGame(gameId, userName, points, result);
+                response.setContentType("text/html");
+                out.write("results saved successfully");
+            }
+            catch(Exception e) {
+                out.write(e.getMessage());
+            }
+            finally {
+                out.flush();
+                out.close();                
+            }
+        }
+        else if(request.getSession().getAttribute("guest") != null) {
+            //ellers håndterer gest
+        }
+
         
         
             
