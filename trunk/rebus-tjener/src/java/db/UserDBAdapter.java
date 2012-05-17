@@ -40,7 +40,7 @@ public class UserDBAdapter {
             return true;
         }
         catch(PersistenceException e){
-            System.out.println(e.getMessage()+"suka");
+            System.out.println(e.getMessage());
             em.clear();
             em.close();
             emf.close();
