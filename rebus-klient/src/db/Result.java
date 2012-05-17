@@ -2,6 +2,7 @@ package db;
 
 import java.io.Serializable;
 
+
 /**
  *
  * @author 490501
@@ -10,7 +11,7 @@ import java.io.Serializable;
 
 public class Result implements Serializable {
     private Long id; //
-    
+   
 
     public Long getId() {
         return id;
@@ -19,7 +20,7 @@ public class Result implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    
+   
     private long gamerId; //userid
     private long result; // medgått tid i millisekunder
     private int points; //hvor mange rebuspunkter ble tatt
@@ -58,6 +59,13 @@ public class Result implements Serializable {
     public void setPoints(int points) {
         this.points = points;
     }
-    
-    
+
+    public String getUserName() {
+        return userName;
+    }
+   
+   
+   
+   
 }
+

@@ -10,6 +10,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -96,6 +97,7 @@ public class GamesAllActivity extends ListActivity{
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id)
 	{
+		Log.d("OnClick", "Test");
 		gameRebus = games.get(position);
 		gameIdToSend = gameRebus.getId().toString();
 		
@@ -142,6 +144,7 @@ public class GamesAllActivity extends ListActivity{
 				}
 				i = i+6; 
 				j++;
+				Log.d("GameList", "List from servlet");
 			}//end of for
 			for (int i = 0; i < games.size(); i++)
 				gamesList.add("Id " + games.get(i).getId() + " " + games.get(i).getName() + " " + games.get(i).getStartDate());
