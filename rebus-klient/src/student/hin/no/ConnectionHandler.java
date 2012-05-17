@@ -3,7 +3,9 @@ package student.hin.no;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -124,7 +126,6 @@ public class ConnectionHandler {
 		filehandler = new FileHandler();
 		mSession = filehandler.ReadLogs(1, context);
 		try {
-			Log.d("Testiruem", "Nachalo try");
 			
 			data = "client?" + URLEncoder.encode("mode", "UTF-8") + "=" +URLEncoder.encode("getgame", "UTF-8");
 			data += "&" + URLEncoder.encode("gameid", "UTF-8") + "=" +URLEncoder.encode(gameIdToSend, "UTF-8");
@@ -151,39 +152,23 @@ public class ConnectionHandler {
 					filehandler.WriteLog(mSession, context);
 				}
 			}
-			Log.d("Testiruem", "Uchastok 1");
 			
 			//StringBuffer buf = new StringBuffer();
 			//int enByte;
 			int responseCode = httpConnection.getResponseCode();
 			
-			Log.d("Testiruem", "Uchastok 2 do if posle responseCode");
-			
 			if (responseCode == HttpURLConnection.HTTP_OK) 
 			{
 				
-					Log.d("Testiruem", "Voshli v if");
-				
+					
 				in = httpConnection.getInputStream();
-				
-					Log.d("Testiruem", "otkrili input string");
-				
+									
 				ObjectInputStream ois = new ObjectInputStream(in);
-				
-					Log.d("Testiruem", "otkrili ObjectInputStream");//Rabotaet do suda!!!!!
 					
 				gameRebus = (Game) ois.readObject();
-				
-					Log.d("Testiruem", "Popitalis' priravniat' obekt");
-				
-				//System.out.println(gameRebus.getName());
-				
-					Log.d("Testiruem", "Esio odna tochka");
-				
-				//String gameId = (String) ois.readObject();
+
 				ois.close();
-				
-				Log.d("Testiruem", "Zakrili OIS");
+
 			} // end if (responseCode == HttpURLConnection.HTTP_OK) {
 			else // hvis HTTP responseCode ikke er OK (200) 
 			{
@@ -216,9 +201,66 @@ public class ConnectionHandler {
 		return gameRebus;
 	}//end of getGameData
 	
-	public void endGame()
-	{
 	
+	/**
+	 * Sender spil result til tjenester
+	 */
+	public void endGame(Context context, String gameid, String result, String quantity)
+	{
+		String myURL = "";
+		URL url = null;
+		HttpURLConnection httpConnection = null;
+		filehandler = new FileHandler();
+		mSession = filehandler.ReadLogs(1, context);
+		try {
+			data = "client?" + URLEncoder.encode("mode", "UTF-8") + "=" +URLEncoder.encode("sendresult", "UTF-8");
+			data += "&" + URLEncoder.encode("gameid", "UTF-8") + "=" +URLEncoder.encode(gameid, "UTF-8");			
+			data += "&" + URLEncoder.encode("result", "UTF-8") + "=" +URLEncoder.encode(result, "UTF-8");
+			data += "&" + URLEncoder.encode("quantity", "UTF-8") + "=" +URLEncoder.encode(quantity, "UTF-8");
+			
+			myURL = "http://158.39.124.96:8080/rebus/" + data;
+			
+			Log.d("URL", myURL);
+			
+			url = new URL(myURL);
+			httpConnection = (HttpURLConnection)url.openConnection();
+			httpConnection.setConnectTimeout(2000);
+			
+			if (mSession != null){		//hvis det ikke er gjest og session-id ikke er tom i filen
+				// Sett cookie dersom påfølgende kall:
+				httpConnection.setRequestProperty("cookie", mSession);
+				//httpConnection.connect();
+				}
+			
+			Integer responseCode = httpConnection.getResponseCode();
+			
+			if (responseCode == HttpURLConnection.HTTP_OK) 
+			{
+				Log.d("URL", responseCode.toString());	
+			}
+			
+		}//end of try
+		catch (SocketTimeoutException e)
+		{
+			e.printStackTrace();
+			//responseMsg="Error: server is unavailable";
+		}//end of cach
+		catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally
+		{
+			httpConnection.disconnect();
+		}//end of finally
 	}//end of endGame
 	
 	
