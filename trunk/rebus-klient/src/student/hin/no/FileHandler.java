@@ -14,7 +14,7 @@ import android.content.res.Resources;
 public class FileHandler {
 	//Variabler
 	private Resources res;
-	private String logsFile, entryFromLogs;
+	private String logsFile, timesFile, entryFromLogs;
 	private FileInputStream fIn;
 	private FileOutputStream fOut;
 	//End of variabler
@@ -85,4 +85,50 @@ public class FileHandler {
 		else
 			return false;
 	}
+	
+	
+	public void WriteTime(long time, Context context){
+		res = context.getResources();
+		timesFile = res.getString(R.string.timesFile);
+		try{
+			fOut = context.openFileOutput("timesFile", 0);
+			OutputStreamWriter osw = new OutputStreamWriter(fOut);
+			osw.write(String.valueOf(time));
+			osw.close();
+    		fOut.close();
+    		
+		}
+		catch (FileNotFoundException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+	        } 
+		catch (IOException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+	        }
+	}
+	
+	public long ReadTimes(Context context){
+		res = context.getResources();
+		timesFile = res.getString(R.string.timesFile);
+		try {
+			fIn = context.openFileInput(timesFile);
+			InputStreamReader isr = new InputStreamReader(fIn);
+    		BufferedReader reader = new BufferedReader(isr);
+	    	entryFromLogs = reader.readLine();
+
+    		isr.close();
+    		reader.close();
+    		fIn.close();
+    		
+    		} 
+		catch (FileNotFoundException e) {
+    			e.printStackTrace();
+    		} 
+		catch (IOException e) {
+    			e.printStackTrace();
+    		}
+		return Long.parseLong(entryFromLogs);
+	}
+	
 }
