@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 public class LoginActivity extends Activity{
 
+	//Variabler
 	private String responseMsg = "";
 	private String name, pass; //mSession = null;
 	private EditText EditTextUserName, EditTextPassword;
@@ -27,8 +28,10 @@ public class LoginActivity extends Activity{
 	private ConnectionHandler connectionhandler;
 	private Toast toast;
 	private int duration = Toast.LENGTH_SHORT;;
-
-	/* Runnable kaller metoden som startes i bakgrunnstråden 
+	//End of variabler
+	
+	/**
+	 * Runnable kaller metoden som startes i bakgrunnstråden
 	 */
 	private Runnable bakgrunnsProssesering = new Runnable() {
 		public void run() {
@@ -36,7 +39,8 @@ public class LoginActivity extends Activity{
 		}
 	};
 	
-	/* Runnable som oppdaterer GUI
+	/**
+	 * Runnable som oppdaterer GUI
 	 */
 	private Runnable doUpdateGUI = new Runnable() {
 		public void run() {
@@ -44,8 +48,9 @@ public class LoginActivity extends Activity{
 		}
 		};
 	
-	/* Runnable som lukker bakgrunstrad og starter GamesAllActivity
-	 */
+	/**
+	* Runnable som lukker bakgrunstrad og starter GamesAllActivity
+	*/
 	private Runnable startGameList = new Runnable() {
 		public void run() {
 			thread.interrupt();
@@ -112,7 +117,8 @@ public class LoginActivity extends Activity{
 		
 	}//end of onCreate
 	
-	/*Funksjonen brukes for innlogging på systemet
+	/**
+	 * Funksjonen brukes for innlogging på systemet
 	 * og starting "GamesAllActivity" hvis innlogging er vellykket
 	 * Viser feil til brukeren hvis noe går galt
 	 */
@@ -130,7 +136,9 @@ public class LoginActivity extends Activity{
 		}
 	}//end of kontaktServlet()
 
-	//skriver ut til brukeren statusmeldinger
+	/**
+	 * updateGUI skriver ut til brukeren statusmeldinger
+	 */
 	private void updateGUI() {
 		if (responseMsg.contains("403")){
 			responseMsg = "Error: wrong username or pass";

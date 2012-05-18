@@ -15,12 +15,14 @@ import android.content.Context;
 import android.util.Log;
 
 public class ConnectionHandler {
+	//Variabler
 	private String responseMsg = "";
 	private String data, mSession = null;
 	private FileHandler filehandler;
 	public db.Game gameRebus;
+	//End of variabler
 	
-	/*
+	/**
 	 * Funksjonen brukes for innlogging og for få spill-liste fra tjeneren
 	 * returnerer feil hvis noe går galt med tilkobling mot tjeneren
 	 */
@@ -117,9 +119,9 @@ public class ConnectionHandler {
 		return responseMsg;
 	}//end of public String GetDataFromServlet(..
 	
-	/*
+	/**
 	 * Brukes for å få tak i et enkelt spill-objekt,
-	 *  når man velger det i "GamesAllActivity"
+	 * når man velger det i "GamesAllActivity"
 	 */
 	public db.Game getGameData(Context context, String gameIdToSend, String pinCode){
 		String myURL = "";
@@ -270,10 +272,10 @@ public class ConnectionHandler {
 	}//end of endGame
 	
 	/**
-	 * 
+	 * Henter spill result fra tjenester
 	 * @param context
-	 * @param gameIdToSend
-	 * @return 
+	 * @param gameIdToSend - spill number
+	 * @return Stiring som innholder spill resultater
 	 */
 	public String GetGameResults(Context context, String gameIdToSend)
 	{

@@ -18,14 +18,14 @@ public class ProximityIntentReceiver extends BroadcastReceiver {
 		if(intent.getAction() == MapActivity.PROX_ALER_INTENT)
 		{
 			boolean entering = intent.getBooleanExtra(key, false);
-			//går inn i angitt område
+			//angi en spesifisert område
 			if(entering)
 			{
 				Toast t = Toast.makeText(context, "You are in point", 5);
 				t.show();
 				Log.d("IN", "In Test");
 			}
-			//Går ut av angitt område
+			//forlater området
 			else
 			{
 				Toast t = Toast.makeText(context, "Out o point", 5);
