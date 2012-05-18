@@ -15,6 +15,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -45,6 +46,7 @@ public class GamesAllActivity extends ListActivity{
 	private Date date = new Date();
 	private Integer runCode;
 	private long timeToStartTheFirstGame;
+	private Alarm alarmbleat = new Alarm();
 	//End of variabler
 	
 	/**
@@ -70,10 +72,12 @@ public class GamesAllActivity extends ListActivity{
 			{
 				if (gameRebus != null)
 				{
+					alarmbleat.CancelAlarm(getApplicationContext());			//kansellerer alarm hvis vi skal spille
+
 					Log.d("Status", getStatus(gameRebus));				
 					Intent mapIntent = new Intent(GamesAllActivity.this, MapActivity.class);
 					mapIntent.putExtra("game", gameRebus);
-					startActivity(mapIntent);
+					startActivity(mapIntent);					
 				}//end of if(gameRebus=
 			}//end of if(runCode)
 			
@@ -163,8 +167,10 @@ public class GamesAllActivity extends ListActivity{
 				}
 				//sette tid og game-navn når starter snarest spill på listet -> brukes for å sette alarm
 				if (timeToStartTheFirstGame > Long.parseLong(gameArray[i+5])){
-					timeToStartTheFirstGame = Long.parseLong(gameArray[i+5]);
-					nameOfFirstGame = gameArray[i+2];
+					if (SystemClock.elapsedRealtime()< Long.parseLong(gameArray[i+5])){
+						timeToStartTheFirstGame = Long.parseLong(gameArray[i+5]);
+						nameOfFirstGame = gameArray[i+2];
+					}
 				}
 				i = i+7; 
 				j++;
@@ -225,7 +231,6 @@ public class GamesAllActivity extends ListActivity{
 	private void updateGUI() {
 		adapter.notifyDataSetChanged();
 		setListAdapter(adapter);
-		setAlarmToTheFirstGame(timeToStartTheFirstGame, nameOfFirstGame);
 	}
 	
 	protected Dialog onCreateDialog(int id) {
@@ -296,7 +301,18 @@ public class GamesAllActivity extends ListActivity{
 	/** setter alarm for det snareste spillet med parametre tid og navn */
 	public void setAlarmToTheFirstGame(long timeToStartTheFirstGame, String nameOfFirstGame){
 		timeToStartTheFirstGame = timeToStartTheFirstGame + 30*1000;	//gi litt ekstra tid for å logge seg inn
-		Alarm alarmbleat = new Alarm();
 		alarmbleat.SetAlarm(getApplicationContext(), timeToStartTheFirstGame, true, false, nameOfFirstGame);
 	}
+	
+	@Override
+	public void onStop(){
+		setAlarmToTheFirstGame(timeToStartTheFirstGame, nameOfFirstGame);
+		super.onStop();
+	}
+	
+	public void onPause(){
+		setAlarmToTheFirstGame(timeToStartTheFirstGame, nameOfFirstGame);
+		super.onPause();
+		}
+	
 }//end of GamesAllActivity

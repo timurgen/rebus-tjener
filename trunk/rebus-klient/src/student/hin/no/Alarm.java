@@ -57,4 +57,13 @@ public class Alarm extends BroadcastReceiver{
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
         am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, time, pi);
     }
+	
+	public void CancelAlarm(Context context)
+    {
+        Intent intent = new Intent(context, Alarm.class);
+        PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(sender);
+    }
+	
 }
