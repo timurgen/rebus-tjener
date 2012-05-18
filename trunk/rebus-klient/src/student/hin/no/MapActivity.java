@@ -77,21 +77,17 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 	protected void onCreate(Bundle arg0) {
 		// TODO Auto-generated method stub
 		super.onCreate(arg0);
-		setContentView(R.layout.map);
-		
-		AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-		
+		setContentView(R.layout.map);		
 		
 		//Skafe game object fra GamesAllActivity
 		game = (Game) getIntent().getExtras().getSerializable("game");
 		game.getClass();
 		
-		
+		//Alarm, vekker applikasjonen når "game" blir avsluttet
 		time = game.getStartDate() + game.getVarighet() * 60000; //*60000 til å konvertere minutter i millisekunder
-		Intent timeIntent = new Intent(this, TimeReceiver.class);		
-		PendingIntent pendingTimeIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 1253, timeIntent, PendingIntent.FLAG_UPDATE_CURRENT|  Intent.FILL_IN_DATA);		
-	
-		alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingTimeIntent);
+		Alarm alarmbleat = new Alarm();
+        alarmbleat.SetAlarm(getApplicationContext(), time, false, true);
+				
 		
 		
 		changeGamePunkt();
