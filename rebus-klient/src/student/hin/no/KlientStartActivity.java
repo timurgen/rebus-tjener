@@ -55,6 +55,8 @@ public class KlientStartActivity extends Activity {
         fotka.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View arg0, MotionEvent arg1) {
+				Alarm alarmbleat = new Alarm();
+		        alarmbleat.SetAlarm(getApplicationContext());
 				KlientStartActivity.this.finish();
 				return false;
 			}
