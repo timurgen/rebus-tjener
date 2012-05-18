@@ -26,7 +26,7 @@ public class LoginActivity extends Activity{
 	private Thread thread = null;
 	private ConnectionHandler connectionhandler;
 	private Toast toast;
-	private int duration = Toast.LENGTH_LONG;;
+	private int duration = Toast.LENGTH_SHORT;;
 
 	/* Runnable kaller metoden som startes i bakgrunnstråden 
 	 */
@@ -132,6 +132,9 @@ public class LoginActivity extends Activity{
 
 	//skriver ut til brukeren statusmeldinger
 	private void updateGUI() {
+		if (responseMsg.contains("403")){
+			responseMsg = "Error: wrong username or pass";
+		}
 		toast = Toast.makeText(getApplicationContext(), responseMsg, duration);
 		toast.setGravity(Gravity.BOTTOM|Gravity.RIGHT, 100, 0);
 		toast.show();
