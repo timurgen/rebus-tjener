@@ -99,6 +99,10 @@ public class ConnectionHandler {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		catch (IllegalStateException e){
+			e.printStackTrace();
+			responseMsg="Error: cannot connect to server";
+		}
 		finally{
 			try {
 				in.close();
