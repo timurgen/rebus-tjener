@@ -48,7 +48,6 @@ public class FileHandler {
 	/**
 	 * Metoden "ReadLogs" leser fil "logsFile" 
 	 * hvis whatToRead=1 - leser sesjon id,
-	 * hvis whatToRead=2 - leser det siste besøkte punktet (resultatet av rebusløp)
 	 */
 	public String ReadLogs(int whatToRead, Context context){
 		res = context.getResources();
@@ -57,23 +56,8 @@ public class FileHandler {
 			fIn = context.openFileInput(logsFile);
 			InputStreamReader isr = new InputStreamReader(fIn);
     		BufferedReader reader = new BufferedReader(isr);
-    		
-    		/* whatToRead = 1 - Leser sesjons-id
-    		 * 
-    		 */
-    		switch (whatToRead){
-	    		case 1:
-	    		{
-	    			entryFromLogs = reader.readLine();
-		    		break;
-	    		}//end case 1:
-	    		
-	    		//sjekke den siste resultatet
-	    		case 2:
-	    		{
-	    			//blabla
-	    		}
-    		}//end switch
+	    	entryFromLogs = reader.readLine();
+
     		isr.close();
     		reader.close();
     		fIn.close();
@@ -89,7 +73,7 @@ public class FileHandler {
 	}
 	
 	/**
-	 * Fjerne log
+	 * Fjerne log. Service funksjonen, ikke i bruk
 	 * @param context
 	 * @return
 	 */

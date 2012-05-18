@@ -55,11 +55,8 @@ public class ConnectionHandler {
 			url = new URL(myURL);
 			httpConnection = (HttpURLConnection)url.openConnection();
 			httpConnection.setConnectTimeout(2000);
-			// Sett cookie dersom påfølgende kall:
-			if (mSession != null && details ==1){
-				//httpConnection.setRequestProperty("cookie", mSession);
-				}
-			else if (details==0){
+			// Sett Request Property for brukeren med pass
+			if (details==0){
 				httpConnection.addRequestProperty("name", name);
 				httpConnection.addRequestProperty("pass", pass);
 			}
@@ -75,11 +72,11 @@ public class ConnectionHandler {
 					if (mSession != null) {
 						int semicolon = mSession.indexOf(';');
 						mSession = mSession.substring(0, semicolon);
-						filehandler.WriteLog(mSession, context);
+						filehandler.WriteLog(mSession, context);		//sesjons id skrives til filen og hentes når det kreves
 					}
 					responseMsg = "Authentification: success!";
 				} //end (details ==0){
-							//hvis vi vil få informasjon om tilgjengelige spill
+							//hvis vi ikke logger oss inn, får vi informasjon om tilgjengelige spill
 				else{ 
 					while ((enByte = in.read()) != -1){
 						buf.append((char) enByte);
@@ -151,7 +148,7 @@ public class ConnectionHandler {
 				}
 			else{										//setter session id , hvis det er gjest eller session er tom
 				mSession = httpConnection.getHeaderField("Set-cookie");
-				if (mSession != null) {	//sjekker at set finnes property "Set-cookie"
+				if (mSession != null) {	//sjekker at det finnes property "Set-cookie"
 					int semicolon = mSession.indexOf(';');
 					mSession = mSession.substring(0, semicolon);
 					filehandler.WriteLog(mSession, context);
@@ -211,7 +208,7 @@ public class ConnectionHandler {
 	
 	
 	/**
-	 * Sender spil result til tjenester
+	 * Sender spill resultat til tjenester
 	 */
 	public void endGame(Context context, String gameid, String result, String quantity)
 	{
@@ -275,7 +272,7 @@ public class ConnectionHandler {
 	 * Henter spill result fra tjenester
 	 * @param context
 	 * @param gameIdToSend - spill number
-	 * @return Stiring som innholder spill resultater
+	 * @return String som innholder spill resultater
 	 */
 	public String GetGameResults(Context context, String gameIdToSend)
 	{
@@ -296,7 +293,7 @@ public class ConnectionHandler {
 			Log.d("URL", myURL);
 			
 			url = new URL(myURL);
-			//Coble mot tjenester
+			//Koble mot tjenester
 			httpConnection = (HttpURLConnection)url.openConnection();
 			httpConnection.setConnectTimeout(2000);
 			
