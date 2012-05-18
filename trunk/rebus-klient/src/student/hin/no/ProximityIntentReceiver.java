@@ -21,14 +21,14 @@ public class ProximityIntentReceiver extends BroadcastReceiver {
 			//går inn i angitt område
 			if(entering)
 			{
-				Toast t = Toast.makeText(context, "In", 5);
+				Toast t = Toast.makeText(context, "You are in point", 5);
 				t.show();
 				Log.d("IN", "In Test");
 			}
 			//Går ut av angitt område
 			else
 			{
-				Toast t = Toast.makeText(context, "Out", 5);
+				Toast t = Toast.makeText(context, "Out o point", 5);
 				t.show();
 				Log.d("Exit", "Out Test");
 			}

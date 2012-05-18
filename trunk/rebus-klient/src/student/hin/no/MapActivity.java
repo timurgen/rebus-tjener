@@ -17,6 +17,9 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.AlarmClock;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import db.Game;
@@ -43,12 +46,14 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 
 	private double latitude;
 	private double longitude;
+	private float distance;
+	private Location location;
 	
 	private Location rebusLocation;
 	
 	//CHANGES 11.05
 	static final String PROX_ALER_INTENT = "student.hin.no.PBR";
-	private BroadcastReceiver proximityIntentReceiver;
+	private ProximityIntentReceiver proximityIntentReceiver;
 	
 	private db.GamePunkt gamePunkt;
 	
@@ -108,7 +113,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		locationManager = (LocationManager)getSystemService(context);
 		String provider = LocationManager.GPS_PROVIDER;
 		
-		Location location = locationManager.getLastKnownLocation(provider);
+		location = locationManager.getLastKnownLocation(provider);
 
 		mapView = (MapView)findViewById(R.id.mapView);
 		mapView.displayZoomControls(true);
@@ -135,12 +140,17 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		initMyLocation();
 		
 		//CHANGES 11.05
+		/*
 		IntentFilter filter = new IntentFilter(PROX_ALER_INTENT);
 		this.registerReceiver(new ProximityIntentReceiver(), filter);
 		this.setProximityAlert();
+		*/
+		IntentFilter filter = new IntentFilter(PROX_ALER_INTENT);
+		proximityIntentReceiver = new ProximityIntentReceiver();
+		this.registerReceiver(proximityIntentReceiver, filter);
+		this.setProximityAlert();
 		
-		
-	}//end of on create
+	}//end of onCreate
 
 	@Override
 	protected void onPause() {
@@ -161,6 +171,50 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		// TODO Auto-generated method stub
 		return false;
 	}//end of isRouteDisplayed
+	
+	@Override
+	protected void onStop()
+	{
+	    unregisterReceiver(proximityIntentReceiver);
+	    super.onStop();
+	}
+	
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+    	//creates a menu inflater
+    	MenuInflater inflater = getMenuInflater();
+    	//generates a Menu from a menu resource file
+    	//R.menu.main_menu represents the ID of the XML resource file
+    	inflater.inflate(R.menu.map_menu, menu);
+    	return true;
+    }
+	
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    { 	
+    	//check selected menu item
+    	// R.id.exit is @+id/exit
+    	if(item.getItemId() == R.id.menuHelp){
+    		Toast.makeText(MapActivity.this,gamePunkt.getRebus() , Toast.LENGTH_LONG).show();
+    		return true;
+    	}
+    	if(item.getItemId() == R.id.menuDistance){
+    		Toast.makeText(MapActivity.this,"Distance from Point:" + distance, Toast.LENGTH_LONG).show();
+    		return true;
+    	}
+    	if(item.getItemId() == R.id.menuCoordinates){
+    		Toast.makeText(MapActivity.this,"MyLat "+ location.getLatitude() + " MyLong "+ location.getLongitude(), Toast.LENGTH_LONG).show();
+    		return true;
+    	}
+    	if(item.getItemId() == R.id.menuExit){
+    		this.finish();
+    		return true;
+    	}
+    	
+    	return false;
+    }
+
 	
 	//CHANGES <-- 10.05 
 	
@@ -228,7 +282,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		public void onLocationChanged(Location location) {
 			//Location pointLocation = retrievelocationFromPreferences();
 			Location pointLocation = rebusLocation;
-			float distance = location.distanceTo(pointLocation);
+			distance = location.distanceTo(pointLocation);
 			geoPoint = new GeoPoint((int)(location.getLatitude()*1E6),(int)(location.getLongitude()*1E6));
 			
 			//Toast.makeText(MapActivity.this, geoPoint.getLatitudeE6() + " " + geoPoint.getLongitudeE6(), Toast.LENGTH_LONG).show();
@@ -237,13 +291,14 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 			mapController.animateTo(geoPoint);
 			
 			//Toast.makeText(MapActivity.this,"Distance from Point:"+distance, Toast.LENGTH_LONG).show();
-			Toast.makeText(MapActivity.this,"MyLat "+ location.getLatitude() + " MyLong "+ location.getLongitude(), Toast.LENGTH_LONG).show();
+			//Toast.makeText(MapActivity.this,"MyLat "+ location.getLatitude() + " MyLong "+ location.getLongitude(), Toast.LENGTH_LONG).show();
 			Toast.makeText(MapActivity.this,"Lat: "+ pointLocation.getLatitude() + " long: " + pointLocation.getLongitude(), Toast.LENGTH_LONG).show();
+			Toast.makeText(MapActivity.this,gamePunkt.getRebus() , Toast.LENGTH_LONG).show();
 			
 			//Proveriem poziciu
 			if(distance < gamePunkt.getRadius())
 			{
-				Toast.makeText(MapActivity.this, "VOT mi I v TOCHKE", Toast.LENGTH_LONG).show();
+				Toast.makeText(MapActivity.this, "Bingo", Toast.LENGTH_LONG).show();
 				changeGamePunkt();
 				setProximityAlert();
 			}
