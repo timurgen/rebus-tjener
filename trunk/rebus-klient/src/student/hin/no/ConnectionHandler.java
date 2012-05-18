@@ -190,6 +190,9 @@ public class ConnectionHandler {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		catch (IllegalStateException e){
+			e.printStackTrace();
+		}
 		finally{
 			try {
 				in.close();
