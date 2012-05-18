@@ -72,7 +72,7 @@ public class GamesAllActivity extends ListActivity{
 			{
 				if (gameRebus != null)
 				{
-					alarmbleat.CancelAlarm(getApplicationContext());			//kansellerer alarm hvis vi skal spille
+					//alarmbleat.CancelAlarm(getApplicationContext());			//kansellerer alarm hvis vi skal spille
 
 					Log.d("Status", getStatus(gameRebus));				
 					Intent mapIntent = new Intent(GamesAllActivity.this, MapActivity.class);
@@ -170,6 +170,8 @@ public class GamesAllActivity extends ListActivity{
 					if (SystemClock.elapsedRealtime()< Long.parseLong(gameArray[i+5])){
 						timeToStartTheFirstGame = Long.parseLong(gameArray[i+5]);
 						nameOfFirstGame = gameArray[i+2];
+						FileHandler fileh = new FileHandler();
+						fileh.WriteTime(timeToStartTheFirstGame, getApplicationContext());
 					}
 				}
 				i = i+7; 
@@ -300,19 +302,16 @@ public class GamesAllActivity extends ListActivity{
 
 	/** setter alarm for det snareste spillet med parametre tid og navn */
 	public void setAlarmToTheFirstGame(long timeToStartTheFirstGame, String nameOfFirstGame){
-		timeToStartTheFirstGame = timeToStartTheFirstGame + 30*1000;	//gi litt ekstra tid for å logge seg inn
-		alarmbleat.SetAlarm(getApplicationContext(), timeToStartTheFirstGame, true, false, nameOfFirstGame);
+//		timeToStartTheFirstGame = timeToStartTheFirstGame + 30*1000;	//gi litt ekstra tid for å logge seg inn
+//		alarmbleat.SetAlarm(getApplicationContext(), timeToStartTheFirstGame, true, false, nameOfFirstGame);
 	}
 	
-	@Override
-	public void onStop(){
-		setAlarmToTheFirstGame(timeToStartTheFirstGame, nameOfFirstGame);
-		super.onStop();
+	public void onDestroy(){
+//		FileHandler fileh = new FileHandler();
+//		timeToStartTheFirstGame = fileh.ReadTimes(getApplicationContext());
+//		if (String.valueOf(timeToStartTheFirstGame) != null){
+//			setAlarmToTheFirstGame(timeToStartTheFirstGame, "");
+//		}
+		super.onDestroy();
 	}
-	
-	public void onPause(){
-		setAlarmToTheFirstGame(timeToStartTheFirstGame, nameOfFirstGame);
-		super.onPause();
-		}
-	
 }//end of GamesAllActivity

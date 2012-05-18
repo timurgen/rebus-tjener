@@ -133,7 +133,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
-		alarmbleat.SetAlarm(getApplicationContext(), time, false, true, "");
+		//alarmbleat.SetAlarm(getApplicationContext(), time, false, true, "");
 		super.onPause();
 		compass.disableCompass();
 	}//end of onPause
@@ -143,7 +143,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		// TODO Auto-generated method stub
 		super.onResume();
 		compass.enableCompass();
-		alarmbleat.CancelAlarm(getApplicationContext());
+		//alarmbleat.CancelAlarm(getApplicationContext());
 	}//end of onResume
 
 	@Override
@@ -155,7 +155,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 	@Override
 	protected void onStop()
 	{
-		alarmbleat.SetAlarm(getApplicationContext(), time, false, true, "");
+		//alarmbleat.SetAlarm(getApplicationContext(), time, false, true, "");
 	    unregisterReceiver(proximityIntentReceiver);
 	    super.onStop();
 	}
