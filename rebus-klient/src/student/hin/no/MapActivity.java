@@ -4,10 +4,8 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -15,34 +13,29 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.AlarmClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 import db.Game;
 
 public class MapActivity extends com.google.android.maps.MapActivity{
 	
+	//Variabler
 	MapController mapController;
 	GeoPoint geoPoint;
 	MapView mapView;
 	MyLocationOverlay compass;
 	private Thread thread = null;
-	//GameRebus game;
 	Game game;
-	
 	
 	public static String TREASURE_PROXIMITY_ALERT = "student.hin.no.ALERT";
 	
-	//New changes
 	private static final long MINIMUM_DISTANCECHANGE_FOR_UPDATE = 1;		//I meter
 	private static final long MINIMUM_TIME_BETWEEN_UPDATE = 1000;	//I Milliseconds
-	
-	private static final long POINT_RADIUS = 1000; // I Meter
-	private static final long PROX_ALERT_EXPIRATION = -1;	//NET VREMENI ISTECHENIYA
+	//private static final long POINT_RADIUS = 1000; // I Meter
+	//private static final long PROX_ALERT_EXPIRATION = -1;	//Fungerer
 
 	private double latitude;
 	private double longitude;
@@ -56,14 +49,16 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 	private ProximityIntentReceiver proximityIntentReceiver;
 	
 	private db.GamePunkt gamePunkt;
-	
-	
 	private LocationManager locationManager;
-	
 	private ConnectionHandler connectionhandler;
-	
 	private Long time;
 	
+	//End of Variabler
+	
+	/**
+	 * Sender spill result til tjenester
+	 * Runnable kaller metoden som startes i bakgrunnstråden
+	 */
 	private Runnable bakgrunnsSendResult = new Runnable() {
 		public void run() {
 			kontaktServlet();
@@ -81,8 +76,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
 		
 		
-		//CHANGES <-- 10.05 
-		
+		//Skafe game object fra GamesAllActivity
 		game = (Game) getIntent().getExtras().getSerializable("game");
 		game.getClass();
 		
@@ -92,9 +86,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		PendingIntent pendingTimeIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 1253, timeIntent, PendingIntent.FLAG_UPDATE_CURRENT|  Intent.FILL_IN_DATA);		
 	
 		alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingTimeIntent);
-	
 		
-		//CHANGES 11.05 - poluchaem pervuu poziciu i naznachaem ee tochke v dal'neyshem budem meniat' poziciu pri dostizenii!!!
 		
 		changeGamePunkt();
 				
@@ -106,9 +98,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 												new MyLocationListener()
 		);
 		
-		//CHANGES -->
-		
-		//Poluchaem nashi koordinati
+		//skaffe bruker koordinater
 		String context = Context.LOCATION_SERVICE;
 		locationManager = (LocationManager)getSystemService(context);
 		String provider = LocationManager.GPS_PROVIDER;
@@ -121,21 +111,6 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		
 		populateCoordinatesFromLastKnownLocation();
 		//Toast.makeText(MapActivity.this,"Latitude: " + latitude + " Longitude: "+ longitude,Toast.LENGTH_LONG).show();	
-		
-	
-		
-		//double lat = game.getFirstPoint().getLat();
-		//double lng = game.getFirstPoint().getLng();
-		
-		//double lat = location.getLatitude();
-		//double lng = location.getLongitude();
-		
-		//geoPoint = new GeoPoint((int)(lat*1E6),(int)(lng*1E6));
-		
-		
-		//mapController = mapView.getController();
-		//mapController.animateTo(geoPoint);
-		//mapController.setZoom(15);
 		
 		initMyLocation();
 		
@@ -179,6 +154,9 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 	    super.onStop();
 	}
 	
+	/**
+	 * Menu og onClick til menu
+	 */
 	@Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
@@ -228,7 +206,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		{
 			latitude = location.getLatitude();
 			longitude = location.getLongitude();
-			Log.i("populateCoordinatesFromLastKnownLocation", "All set");
+			//Log.i("populateCoordinatesFromLastKnownLocation", "All set");
 		}//end of if
 		
 	}//end of populateCoordinatesFromLastKnownLocation
@@ -244,36 +222,6 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		location.setLongitude(game.getFirstPoint().getLng());
 		return location;
 	}
-	*/
-	
-	private Location retriveLocation()
-	{
-		Location location = new Location("GAME_POINT");
-		
-		try 
-		{
-			gamePunkt = game.getNextPunkt();
-			location.setLatitude(gamePunkt.getLat());
-			location.setLatitude(gamePunkt.getLng());
-		} 
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-		}//end of catch
-		
-		
-		return location;
-	}//end of retriveLocation
-	
-	/*
-	private Location retrieveNextLocationFromPreferences() throws Exception
-	{
-		Location location = new Location("POINT_LOCATION");
-		location.setLatitude(game.getNextPunkt().getLat());
-		location.setLongitude(game.getNextPunkt().getLng());
-		return location;
-	}
-	
 	*/
 	
 	public class MyLocationListener implements LocationListener 

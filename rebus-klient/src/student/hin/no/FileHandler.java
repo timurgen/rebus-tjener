@@ -12,15 +12,16 @@ import android.content.Context;
 import android.content.res.Resources;
 
 public class FileHandler {
+	//Variabler
 	private Resources res;
 	private String logsFile, entryFromLogs;
 	private FileInputStream fIn;
 	private FileOutputStream fOut;
-	
+	//End of variabler
 
 	public FileHandler(){}
-	
-	/*
+
+	/**
 	 * Skriver sesjons-id til filen
 	 */
 	public void WriteLog(String newEntry, Context context){
@@ -43,11 +44,12 @@ public class FileHandler {
 	        e.printStackTrace();
 	        }
 	}
-	
-	/* Metoden "ReadLogs" leser fil "logsFile" 
+
+	/**
+	 * Metoden "ReadLogs" leser fil "logsFile" 
 	 * hvis whatToRead=1 - leser sesjon id,
-	 * hvis  whatToRead=2 - leser det siste besøkte punktet (resultatet av rebusløp)
-	 * */
+	 * hvis whatToRead=2 - leser det siste besøkte punktet (resultatet av rebusløp)
+	 */
 	public String ReadLogs(int whatToRead, Context context){
 		res = context.getResources();
 		logsFile = res.getString(R.string.logsFile);
@@ -86,6 +88,11 @@ public class FileHandler {
 		return entryFromLogs;
 	}
 	
+	/**
+	 * Fjerne log
+	 * @param context
+	 * @return
+	 */
 	public boolean CleanLogs(Context context){
 		res = context.getResources();
 		logsFile = res.getString(R.string.logsFile);

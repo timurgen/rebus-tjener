@@ -28,6 +28,7 @@ import db.Game;
 
 public class GamesAllActivity extends ListActivity{
 
+	//Variabler
 	private ArrayList<db.Game> games = new ArrayList<db.Game>();
 	private db.Game gameRebus;
 	private String gameIdToSend, pinCode = null;
@@ -43,9 +44,11 @@ public class GamesAllActivity extends ListActivity{
 	private String status;
 	private Date date = new Date();
 	private Integer runCode;
+	//End of variabler
 	
-	
-	
+	/**
+	 * Runnable kaller metoden som startes i bakgrunnstråden
+	 */
 	private Runnable bakgrunnsSjekkingListe = new Runnable() {
 		public void run() {
 			GetGamesListFromServlet();
@@ -53,7 +56,7 @@ public class GamesAllActivity extends ListActivity{
 		}
 	};
 	
-	/*
+	/**
 	 * Starter når brukeren velger et spill, sender spill-id
 	 * til "getGameFromServlet()", avbryter bakgrunnstraden og starter MapActivity
 	 */
@@ -77,13 +80,17 @@ public class GamesAllActivity extends ListActivity{
 		}//end of run
 	};
 	
+	/**
+	 * Runnable kaller metoden som startes i bakgrunnstråden
+	 */
 	private Runnable doUpdateGUI = new Runnable() {
 		public void run() {
 		updateGUI();
 		}
 	};
-	/*
-	 * Brukes for å vise bakgrunntjenestesmeldinger til brukeren 	
+
+	/**
+	 * Brukes for å vise bakgrunntjenestesmeldinger til brukeren 
 	 */
 	private Runnable ToastFraTjenester = new Runnable() {
 		public void run() {
@@ -99,11 +106,9 @@ public class GamesAllActivity extends ListActivity{
 		
 		thread = new Thread(null, bakgrunnsSjekkingListe, "logging inn");
 		thread.start();
-		//CreateGames();
 		
 		adapter = new ArrayAdapter<String>(this, R.layout.games_all, gamesList);
 		//setListAdapter(adapter);
-		
 	}//end of onCreate
 	
 	@Override
@@ -114,7 +119,7 @@ public class GamesAllActivity extends ListActivity{
 		gameIdToSend = gameRebus.getId().toString();
 		
 		if (GamesAllActivity.this.getCallingActivity() == null){		//hvis GamesAllActivity ble started fra LoginActivity -
-			thread2 = new Thread(null, bakgrunnsGetGame, "logging inn");	//man laster spillet ned og begynner
+			thread2 = new Thread(null, bakgrunnsGetGame, "logging inn");//man laster spillet ned og begynner
     		thread2.start();
 		}
 		else{															//hvis det ble started med "Free Play"
@@ -131,7 +136,8 @@ public class GamesAllActivity extends ListActivity{
 		}		
 	}//end of onListItemClick
 	
-	/* Funksjonen fyller på liste med alle spillene som finnes på tjeneren 
+	/**
+	 * Funksjonen fyller på liste med alle spillene som finnes på tjeneren
 	 * og oppdaterer deretter "gamesList" som vises til brukeren
 	 */
 	private void GetGamesListFromServlet(){
@@ -142,12 +148,12 @@ public class GamesAllActivity extends ListActivity{
 			String [] gameArray = gamesFromServlet.split(",");
 			int j = 0;
 			for ( int i=0; i< gameArray.length;){
-											//gameid	author-name		game-name			varighet						isOpen								
+											//gameid	author-name		game-name			varighet						isOpen					midlertidig data			
 				try {
 					games.add(new db.Game(gameArray[i+1], gameArray[i+2], Integer.parseInt(gameArray[i+3]), Boolean.parseBoolean(gameArray[i+4]),  "15-05-2012 15:15:15"));
 					games.get(j).setIdGame(Long.parseLong(gameArray[i]));
-					games.get(j).setStartDate(Long.parseLong(gameArray[i+5]));
-					games.get(j).addPartisipant(Long.parseLong(gameArray[i+7]));
+					games.get(j).setStartDate(Long.parseLong(gameArray[i+5]));//set normal dato
+					games.get(j).addPartisipant(Long.parseLong(gameArray[i+6]));
 				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -157,14 +163,17 @@ public class GamesAllActivity extends ListActivity{
 				}
 				i = i+7; 
 				j++;
-				Log.d("GameList", "List from servlet");
+				//Log.d("GameList", "List from servlet");
 			}//end of for
+			
+			//Genererer list
 			for (int i = 0; i < games.size(); i++)
-					gamesList.add("Id " 
-						+ games.get(i).getId() + " " 
-						+ games.get(i).getName() + " " 
+					gamesList.add(
+						//"Id " 
+						//+ games.get(i).getId() + " " 
+						  games.get(i).getName() + " " 
 						+ getDate(games.get(i).getStartDate()) + " " 
-						+ games.get(i).getAllPartisipants().toString() + " " 
+						+ String.valueOf(games.get(i).getAllPartisipants().get(0)) + "Pl " 
 						+ getStatus(games.get(i)));
 			handler.post(doUpdateGUI);
 		}
@@ -172,7 +181,7 @@ public class GamesAllActivity extends ListActivity{
 			handler.post(ToastFraTjenester);
 	}
 	
-	/*
+	/**
 	 * Funksjonen får tak i spillet som ble valgt
 	 * laster spillet ned inn i applikasjonen,
 	 * oppretter et java-objekt (GameRebus) og sender
@@ -205,7 +214,7 @@ public class GamesAllActivity extends ListActivity{
 		Log.d("RunCode", runCode.toString());
 	}
 	
-	/*
+	/**
 	 * Oppdaterer GUI med spillene på tjeneren
 	 */
 	private void updateGUI() {

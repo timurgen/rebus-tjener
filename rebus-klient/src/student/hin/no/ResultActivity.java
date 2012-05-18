@@ -19,14 +19,13 @@ public class ResultActivity extends ListActivity
 	private String gameResultFromServlet;
 	private Thread thread = null;
 	Game game;
-	
 	//end of Variabler
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
+		//Henter objekt fra forrige activity
 		game = (Game) getIntent().getExtras().getSerializable("game");
 		game.getClass();
 		
@@ -38,8 +37,11 @@ public class ResultActivity extends ListActivity
 		
 	}//end of onCreate
 	
-	private Runnable listCheck = new Runnable() {
-		
+	/**
+	 * Thread skaffer resultater fra tjenester
+	 * Runnable kaller metoden som startes i bakgrunnstråden
+	 */
+	private Runnable listCheck = new Runnable() {	
 		@Override
 		public void run() 
 		{
@@ -48,6 +50,9 @@ public class ResultActivity extends ListActivity
 		}
 	};
 	
+	/**
+	 * Genererer list med resultater
+	 */
 	private void GetGameResultFromServlet()
 	{
 		connectionHandlerGameList = new ConnectionHandler();
@@ -57,7 +62,7 @@ public class ResultActivity extends ListActivity
 		
 		for (int i = 0; i < gameResultArray.length;)
 		{
-			//Log.d("Poluchaemaya dlina", Integer.toString(gameResultArray.length));
+			//Log.d("Array length", Integer.toString(gameResultArray.length));
 			try 
 			{
 				resultList.add(gameResultArray[i] + " " + gameResultArray[i+1]);	
