@@ -34,7 +34,7 @@ public class ConnectionHandler {
 		try {
 			/* details equals "0" to get url for log in
 			 * details equals "1" to get url for gamelist
-			 * details equals "2" to get url for game by id
+			 * details equals "2" to get url for log in guest
 			 */
 			switch (details){
 				case 0:
@@ -46,8 +46,7 @@ public class ConnectionHandler {
 					//data += "&" + URLEncoder.encode("sid", "UTF-8") + "=" +URLEncoder.encode(mSession.substring(11), "UTF-8");
 					break;
 				case 2:
-					data = "client?" + URLEncoder.encode("mode", "UTF-8") + "=" +URLEncoder.encode("getgame", "UTF-8");
-					data += "&" + URLEncoder.encode("gameid", "UTF-8") + "=" +URLEncoder.encode("PutGaMeIdHeRe", "UTF-8");
+					data = "android?" + URLEncoder.encode("guestid", "UTF-8") + "=" +URLEncoder.encode(name, "UTF-8");
 					break;
 			}
 			myURL = "http://158.39.124.96:8080/rebus/" + data;
@@ -55,10 +54,10 @@ public class ConnectionHandler {
 			httpConnection = (HttpURLConnection)url.openConnection();
 			httpConnection.setConnectTimeout(2000);
 			// Sett cookie dersom påfølgende kall:
-			if (mSession != null && details !=0){
-				httpConnection.setRequestProperty("cookie", mSession);
+			if (mSession != null && details ==1){
+				//httpConnection.setRequestProperty("cookie", mSession);
 				}
-			else{
+			else if (details==0){
 				httpConnection.addRequestProperty("name", name);
 				httpConnection.addRequestProperty("pass", pass);
 			}
@@ -69,7 +68,7 @@ public class ConnectionHandler {
 			if (responseCode == HttpURLConnection.HTTP_OK) {
 				in = httpConnection.getInputStream();
 				//få sesjons id fra tjeneren og skrive dem i filen hvis vi logger inn, ellers går videre
-				if (details ==0){
+				if (details !=1){
 					mSession = httpConnection.getHeaderField("Set-cookie");
 					if (mSession != null) {
 						int semicolon = mSession.indexOf(';');
@@ -144,7 +143,7 @@ public class ConnectionHandler {
 			url = new URL(myURL);
 			httpConnection = (HttpURLConnection)url.openConnection();
 			
-			if (pinCode == null && mSession != null){		//hvis det ikke er gjest og session-id ikke er tom i filen
+			if (mSession != null){		//hvis det ikke er gjest og session-id ikke er tom i filen
 				// Sett cookie dersom påfølgende kall:
 				httpConnection.setRequestProperty("cookie", mSession);
 				}
