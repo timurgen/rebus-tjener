@@ -1,5 +1,9 @@
 package student.hin.no;
 
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
@@ -53,6 +57,8 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 	private ConnectionHandler connectionhandler;
 	private Long time;
 	
+	private Date date;
+	Timer timerGame = new Timer();
 	//End of Variabler
 	
 	/**
@@ -124,6 +130,8 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		proximityIntentReceiver = new ProximityIntentReceiver();
 		this.registerReceiver(proximityIntentReceiver, filter);
 		this.setProximityAlert();
+		
+		timerGame.schedule(new Task(), 0, 1000);
 		
 	}//end of onCreate
 
@@ -338,6 +346,30 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		
 	}//end of kontaktServlet()
 	
-	
-
+	/**
+	 * class Task brukes til å kontrolere spill tid
+	 */
+	public class Task extends TimerTask
+	{
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			date = new Date();
+			if (game.getStartDate() + game.getVarighet() * 60000 < date.getTime())
+			{
+				thread = new Thread(null, bakgrunnsSendResult, "logging inn");
+				thread.start();
+				
+				Intent resultIntent = new Intent(MapActivity.this, ResultActivity.class);
+				resultIntent.putExtra("game", game);
+				startActivity(resultIntent);
+				
+				//thread.interrupt();
+				timerGame.cancel();
+			}
+			//Log.d("From alarm time time", String.valueOf(date.getTime()));
+			//Log.d("Timer", String.valueOf(game.getStartDate() + game.getVarighet() * 60000));
+		}
+	}
+		
 }//end of MapActivity
