@@ -31,7 +31,7 @@ public class GamesAllActivity extends ListActivity{
 	//Variabler
 	private ArrayList<db.Game> games = new ArrayList<db.Game>();
 	private db.Game gameRebus;
-	private String gameIdToSend, pinCode = null;
+	private String gameIdToSend, nameOfFirstGame, pinCode = null;
 	private ArrayList<String> gamesList = new ArrayList<String>();
 	ArrayAdapter<String> adapter;
 	private ConnectionHandler connectionhandlerGameList, connectionhandlerGameId;
@@ -44,6 +44,7 @@ public class GamesAllActivity extends ListActivity{
 	private String status;
 	private Date date = new Date();
 	private Integer runCode;
+	private long timeToStartTheFirstGame;
 	//End of variabler
 	
 	/**
@@ -108,7 +109,6 @@ public class GamesAllActivity extends ListActivity{
 		thread.start();
 		
 		adapter = new ArrayAdapter<String>(this, R.layout.games_all, gamesList);
-		//setListAdapter(adapter);
 	}//end of onCreate
 	
 	@Override
@@ -160,6 +160,11 @@ public class GamesAllActivity extends ListActivity{
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				}
+				//sette tid og game-navn når starter snarest spill på listet -> brukes for å sette alarm
+				if (timeToStartTheFirstGame > Long.parseLong(gameArray[i+5])){
+					timeToStartTheFirstGame = Long.parseLong(gameArray[i+5]);
+					nameOfFirstGame = gameArray[i+2];
 				}
 				i = i+7; 
 				j++;
@@ -215,11 +220,12 @@ public class GamesAllActivity extends ListActivity{
 	}
 	
 	/**
-	 * Oppdaterer GUI med spillene på tjeneren
+	 * Oppdaterer GUI med spillene på tjeneren og setter en alarm for det snareste spillet
 	 */
 	private void updateGUI() {
 		adapter.notifyDataSetChanged();
 		setListAdapter(adapter);
+		setAlarmToTheFirstGame(timeToStartTheFirstGame, nameOfFirstGame);
 	}
 	
 	protected Dialog onCreateDialog(int id) {
@@ -287,5 +293,10 @@ public class GamesAllActivity extends ListActivity{
 		return status;
 	}
 
-	
+	/** setter alarm for det snareste spillet med parametre tid og navn */
+	public void setAlarmToTheFirstGame(long timeToStartTheFirstGame, String nameOfFirstGame){
+		timeToStartTheFirstGame = timeToStartTheFirstGame + 30*1000;	//gi litt ekstra tid for å logge seg inn
+		Alarm alarmbleat = new Alarm();
+		alarmbleat.SetAlarm(getApplicationContext(), timeToStartTheFirstGame, true, false, nameOfFirstGame);
+	}
 }//end of GamesAllActivity

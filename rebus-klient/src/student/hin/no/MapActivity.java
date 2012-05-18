@@ -86,7 +86,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		//Alarm, vekker applikasjonen når "game" blir avsluttet
 		time = game.getStartDate() + game.getVarighet() * 60000; //*60000 til å konvertere minutter i millisekunder
 		Alarm alarmbleat = new Alarm();
-        alarmbleat.SetAlarm(getApplicationContext(), time, false, true);
+        alarmbleat.SetAlarm(getApplicationContext(), time, false, true, "");
 				
 		
 		
