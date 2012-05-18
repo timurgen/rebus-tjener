@@ -18,5 +18,7 @@
     <string name="menuDistance">Distance to Point</string>
     <string name="menuExit">Exit</string>
     <string name="menuCoordinates">Your Coordinates</string>
+    <string name="timesFile">timesFile</string>
+    
 
 </resources>
