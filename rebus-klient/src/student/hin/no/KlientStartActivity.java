@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -55,8 +56,10 @@ public class KlientStartActivity extends Activity {
         fotka.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View arg0, MotionEvent arg1) {
+				
 				Alarm alarmbleat = new Alarm();
-		        alarmbleat.SetAlarm(getApplicationContext());
+				long timeToWakeUp = SystemClock.elapsedRealtime() + 10*1000;
+		        alarmbleat.SetAlarm(getApplicationContext(), timeToWakeUp, true, false);
 				KlientStartActivity.this.finish();
 				return false;
 			}
