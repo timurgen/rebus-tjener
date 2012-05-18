@@ -109,7 +109,7 @@ public class GamesAllActivity extends ListActivity{
 		//CreateGames();
 		
 		adapter = new ArrayAdapter<String>(this, R.layout.games_all, gamesList);
-		setListAdapter(adapter);
+		//setListAdapter(adapter);
 		
 	}//end of onCreate
 	
@@ -189,6 +189,7 @@ public class GamesAllActivity extends ListActivity{
 	 */
 	private void updateGUI() {
 		adapter.notifyDataSetChanged();
+		setListAdapter(adapter);
 	}
 	
 	protected Dialog onCreateDialog(int id) {
