@@ -147,6 +147,7 @@ public class GamesAllActivity extends ListActivity{
 					games.add(new db.Game(gameArray[i+1], gameArray[i+2], Integer.parseInt(gameArray[i+3]), Boolean.parseBoolean(gameArray[i+4]),  "15-05-2012 15:15:15"));
 					games.get(j).setIdGame(Long.parseLong(gameArray[i]));
 					games.get(j).setStartDate(Long.parseLong(gameArray[i+5]));
+					games.get(j).addPartisipant(Long.parseLong(gameArray[i+7]));
 				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -154,12 +155,17 @@ public class GamesAllActivity extends ListActivity{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				i = i+6; 
+				i = i+7; 
 				j++;
 				Log.d("GameList", "List from servlet");
 			}//end of for
 			for (int i = 0; i < games.size(); i++)
-				gamesList.add("Id " + games.get(i).getId() + " " + games.get(i).getName() + " " + getDate(games.get(i).getStartDate()) + " " + getStatus(games.get(i)));
+					gamesList.add("Id " 
+						+ games.get(i).getId() + " " 
+						+ games.get(i).getName() + " " 
+						+ getDate(games.get(i).getStartDate()) + " " 
+						+ games.get(i).getAllPartisipants().toString() + " " 
+						+ getStatus(games.get(i)));
 			handler.post(doUpdateGUI);
 		}
 		else
