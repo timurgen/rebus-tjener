@@ -191,6 +191,9 @@ public class GamesAllActivity extends ListActivity{
 		{
 			runCode = 2;
 			connectionhandlerGameId = new ConnectionHandler();
+			if (pinCode != null){		//guest får sesjons-id som skrives til filen og går videre til å få Game
+				connectionhandlerGameId.GetDataFromServlet(getApplicationContext(), 2, pinCode, null);
+			}
 			gameRebus = connectionhandlerGameId.getGameData(getApplicationContext(), gameIdToSend, pinCode);
 		}
 		Log.d("RunCode", runCode.toString());
