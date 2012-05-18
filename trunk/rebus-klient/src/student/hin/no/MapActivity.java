@@ -7,6 +7,7 @@ import com.google.android.maps.MyLocationOverlay;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -47,7 +48,8 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 	
 	//CHANGES 11.05
 	static final String PROX_ALER_INTENT = "student.hin.no.PBR";
-	//private GamePunktRebus gamePunkt;
+	private BroadcastReceiver proximityIntentReceiver;
+	
 	private db.GamePunkt gamePunkt;
 	
 	
