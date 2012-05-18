@@ -57,7 +57,7 @@ public class ResultActivity extends ListActivity
 		
 		for (int i = 0; i < gameResultArray.length;)
 		{
-			Log.d("Poluchaemaya dlina", Integer.toString(gameResultArray.length));
+			//Log.d("Poluchaemaya dlina", Integer.toString(gameResultArray.length));
 			try 
 			{
 				resultList.add(gameResultArray[i] + " " + gameResultArray[i+1]);	

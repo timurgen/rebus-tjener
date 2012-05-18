@@ -42,6 +42,7 @@ public class GamesAllActivity extends ListActivity{
 	private int duration = Toast.LENGTH_LONG;
 	private String status;
 	private Date date = new Date();
+	private Integer runCode;
 	
 	
 	
@@ -61,24 +62,16 @@ public class GamesAllActivity extends ListActivity{
 			
 			getGameFromServlet();
 			thread.interrupt();
-			
-			if (gameRebus != null)
+			if(runCode == 2)
 			{
-				Log.d("Status", getStatus(gameRebus));
-				if(getStatus(gameRebus).equals("Join"))
+				if (gameRebus != null)
 				{
+					Log.d("Status", getStatus(gameRebus));				
 					Intent mapIntent = new Intent(GamesAllActivity.this, MapActivity.class);
 					mapIntent.putExtra("game", gameRebus);
 					startActivity(mapIntent);
-				}
-				else
-				{
-					Intent resultIntent = new Intent(GamesAllActivity.this, ResultActivity.class);
-					resultIntent.putExtra("game", gameRebus);
-					startActivity(resultIntent);
-				}
-			}
-			
+				}//end of if(gameRebus=
+			}//end of if(runCode)
 			
 			
 		}//end of run
@@ -116,7 +109,7 @@ public class GamesAllActivity extends ListActivity{
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id)
 	{
-		Log.d("OnClick", "Test");
+		//Log.d("OnClick", "Test");
 		gameRebus = games.get(position);
 		gameIdToSend = gameRebus.getId().toString();
 		
@@ -179,9 +172,28 @@ public class GamesAllActivity extends ListActivity{
 	 * oppretter et java-objekt (GameRebus) og sender
 	 * det til MapActivity vha intent
 	 */
-	private void getGameFromServlet(){
-		connectionhandlerGameId = new ConnectionHandler();
-		gameRebus = connectionhandlerGameId.getGameData(getApplicationContext(), gameIdToSend, pinCode);
+	private void getGameFromServlet()
+	{
+		Log.d("Status", getStatus(gameRebus));
+		if(getStatus(gameRebus).equals("End"))
+		{
+			runCode = 0;
+			Intent resultIntent = new Intent(GamesAllActivity.this, ResultActivity.class);
+			resultIntent.putExtra("game", gameRebus);
+			startActivity(resultIntent);
+		}
+		else if(getStatus(gameRebus).equals("Wait for start"))
+		{
+			runCode = 1;
+			//Toast.makeText(GamesAllActivity.this,"Wait until game starts", Toast.LENGTH_LONG).show();
+		}
+		else
+		{
+			runCode = 2;
+			connectionhandlerGameId = new ConnectionHandler();
+			gameRebus = connectionhandlerGameId.getGameData(getApplicationContext(), gameIdToSend, pinCode);
+		}
+		Log.d("RunCode", runCode.toString());
 	}
 	
 	/*
@@ -220,6 +232,11 @@ public class GamesAllActivity extends ListActivity{
 	return null;
 	}
 	
+	/**
+	 * Konverterer tid fra millisekunder til angit format
+	 * @param milliSeconds
+	 * @return String tid
+	 */
 	public String getDate(long milliSeconds)
 	{
 	    // Create a DateFormatter object for displaying date in specified format.
@@ -229,6 +246,11 @@ public class GamesAllActivity extends ListActivity{
 	     return formatter.format(calendar.getTime());
 	}
 	
+	/**
+	 * Spill status
+	 * @param game 
+	 * @return String spill status
+	 */
 	public String getStatus(Game game)
 	{
 		if(game.getStartDate() > date.getTime())
