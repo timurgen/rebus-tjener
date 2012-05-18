@@ -11,6 +11,5 @@
         android:layout_height="100dp"
         android:textSize="50dp" 
         android:maxLength="8"
-        android:digits="1234567890"
     	/>
 </LinearLayout>
