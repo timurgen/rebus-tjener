@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.widget.Toast;
 
 
@@ -42,7 +43,6 @@ public class Alarm extends BroadcastReceiver{
             
     }
 
-
     /** setter en alarm med viss tid og viss situasjon (game skal starte eller ble sluttet)*/
     public void SetAlarm(Context context, long time, boolean startgame, boolean finishgame, String nameOfFirstGame)
 {
@@ -56,7 +56,7 @@ public class Alarm extends BroadcastReceiver{
                     i.putExtra("startgame", false);
             }
     PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
-    am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, time, pi);
+    am.set(AlarmManager.RTC_WAKEUP, time, pi);
 }
 	
 	public void CancelAlarm(Context context)
