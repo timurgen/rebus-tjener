@@ -45,7 +45,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 	private double longitude;
 	private float distance;
 	private Location location;
-	
+	private Location playerLocation;
 	private Location rebusLocation;
 	
 	//CHANGES 11.05
@@ -188,7 +188,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
     		return true;
     	}
     	if(item.getItemId() == R.id.menuCoordinates){
-    		Toast.makeText(MapActivity.this,"MyLat "+ location.getLatitude() + " MyLong "+ location.getLongitude(), Toast.LENGTH_LONG).show();
+    		Toast.makeText(MapActivity.this,"MyLat "+ playerLocation.getLatitude() + " MyLong "+ playerLocation.getLongitude(), Toast.LENGTH_LONG).show();
     		return true;
     	}
     	if(item.getItemId() == R.id.menuExit){
@@ -236,6 +236,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		public void onLocationChanged(Location location) {
 			//Location pointLocation = retrievelocationFromPreferences();
 			Location pointLocation = rebusLocation;
+			playerLocation = location;
 			distance = location.distanceTo(pointLocation);
 			geoPoint = new GeoPoint((int)(location.getLatitude()*1E6),(int)(location.getLongitude()*1E6));
 			
