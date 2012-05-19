@@ -16,6 +16,8 @@ public class KlientStartActivity extends Activity {
 	//Variabler
 	private int duration = Toast.LENGTH_LONG;
 	private Toast toast;
+	private long timeToStartTheFirstGame= Long.MAX_VALUE;
+	Alarm alarmbleat = new Alarm();
 
     /** Called when the activity is first created. */
     @Override
@@ -47,6 +49,19 @@ public class KlientStartActivity extends Activity {
         fotka.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View arg0, MotionEvent arg1) {
+				
+				FileHandler fileh = new FileHandler();
+		    	String EntryformLogs = fileh.ReadTimes(getApplicationContext());
+		    	if (EntryformLogs.length() > 13){
+			    	int semicolon = EntryformLogs.indexOf(';');
+			    	String time = EntryformLogs.substring(0, semicolon);
+			    	timeToStartTheFirstGame = Long.parseLong(time);
+			    	EntryformLogs = EntryformLogs.substring(semicolon+1);
+					if (String.valueOf(timeToStartTheFirstGame) != null){
+						alarmbleat.SetAlarm(getApplicationContext(), timeToStartTheFirstGame, true, false, EntryformLogs);
+					}
+				}
+				
 				KlientStartActivity.this.finish();
 				return false;
 			}
@@ -63,5 +78,5 @@ public class KlientStartActivity extends Activity {
     			toast.setGravity(Gravity.BOTTOM|Gravity.RIGHT, 100, 0);
     			toast.show();
     	}
-    } // end of onActivityResult
+    } // end of onActivityResult 
 }//end of KlientStartActivity

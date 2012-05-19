@@ -87,13 +87,13 @@ public class FileHandler {
 	}
 	
 	
-	public void WriteTime(long time, Context context){
+	public void WriteTime(long time, String gamename, Context context){
 		res = context.getResources();
 		timesFile = res.getString(R.string.timesFile);
 		try{
 			fOut = context.openFileOutput("timesFile", 0);
 			OutputStreamWriter osw = new OutputStreamWriter(fOut);
-			osw.write(String.valueOf(time));
+			osw.write(String.valueOf(time)+ ";" + gamename);
 			osw.close();
     		fOut.close();
     		
@@ -108,7 +108,7 @@ public class FileHandler {
 	        }
 	}
 	
-	public long ReadTimes(Context context){
+	public String ReadTimes(Context context){
 		res = context.getResources();
 		timesFile = res.getString(R.string.timesFile);
 		try {
@@ -128,7 +128,7 @@ public class FileHandler {
 		catch (IOException e) {
     			e.printStackTrace();
     		}
-		return Long.parseLong(entryFromLogs);
+		return entryFromLogs;
 	}
 	
 }
