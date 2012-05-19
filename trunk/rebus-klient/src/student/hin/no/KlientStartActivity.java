@@ -52,13 +52,15 @@ public class KlientStartActivity extends Activity {
 				
 				FileHandler fileh = new FileHandler();
 		    	String EntryformLogs = fileh.ReadTimes(getApplicationContext());
-		    	if (EntryformLogs.length() > 13){
-			    	int semicolon = EntryformLogs.indexOf(';');
-			    	String time = EntryformLogs.substring(0, semicolon);
-			    	timeToStartTheFirstGame = Long.parseLong(time);
-			    	EntryformLogs = EntryformLogs.substring(semicolon+1);
-					if (String.valueOf(timeToStartTheFirstGame) != null){
-						alarmbleat.SetAlarm(getApplicationContext(), timeToStartTheFirstGame, true, false, EntryformLogs);
+		    	if (EntryformLogs != null){
+			    	if (EntryformLogs.length() > 13){
+				    	int semicolon = EntryformLogs.indexOf(';');
+				    	String time = EntryformLogs.substring(0, semicolon);
+				    	timeToStartTheFirstGame = Long.parseLong(time);
+				    	EntryformLogs = EntryformLogs.substring(semicolon+1);
+						if (String.valueOf(timeToStartTheFirstGame) != null){
+							alarmbleat.SetAlarm(getApplicationContext(), timeToStartTheFirstGame, true, false, EntryformLogs);
+						}
 					}
 				}
 				
