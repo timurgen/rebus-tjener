@@ -45,7 +45,7 @@ public class GamesAllActivity extends ListActivity{
 	private String status;
 	private Date date = new Date();
 	private Integer runCode;
-	private long timeToStartTheFirstGame;
+	private long timeToStartTheFirstGame = Long.MAX_VALUE;
 	private Alarm alarmbleat = new Alarm();
 	//End of variabler
 	
@@ -166,12 +166,12 @@ public class GamesAllActivity extends ListActivity{
 					e.printStackTrace();
 				}
 				//sette tid og game-navn når starter snarest spill på listet -> brukes for å sette alarm
-				if (timeToStartTheFirstGame > Long.parseLong(gameArray[i+5])){
-					if (SystemClock.elapsedRealtime()< Long.parseLong(gameArray[i+5])){
+				if (System.currentTimeMillis()< Long.parseLong(gameArray[i+5])){
+					if (timeToStartTheFirstGame > Long.parseLong(gameArray[i+5])){
 						timeToStartTheFirstGame = Long.parseLong(gameArray[i+5]);
 						nameOfFirstGame = gameArray[i+2];
 						FileHandler fileh = new FileHandler();
-						fileh.WriteTime(timeToStartTheFirstGame, getApplicationContext());
+						fileh.WriteTime(timeToStartTheFirstGame, nameOfFirstGame, getApplicationContext());
 					}
 				}
 				i = i+7; 
@@ -299,19 +299,5 @@ public class GamesAllActivity extends ListActivity{
 		
 		return status;
 	}
-
-	/** setter alarm for det snareste spillet med parametre tid og navn */
-	public void setAlarmToTheFirstGame(long timeToStartTheFirstGame, String nameOfFirstGame){
-//		timeToStartTheFirstGame = timeToStartTheFirstGame + 30*1000;	//gi litt ekstra tid for å logge seg inn
-//		alarmbleat.SetAlarm(getApplicationContext(), timeToStartTheFirstGame, true, false, nameOfFirstGame);
-	}
 	
-	public void onDestroy(){
-//		FileHandler fileh = new FileHandler();
-//		timeToStartTheFirstGame = fileh.ReadTimes(getApplicationContext());
-//		if (String.valueOf(timeToStartTheFirstGame) != null){
-//			setAlarmToTheFirstGame(timeToStartTheFirstGame, "");
-//		}
-		super.onDestroy();
-	}
 }//end of GamesAllActivity
