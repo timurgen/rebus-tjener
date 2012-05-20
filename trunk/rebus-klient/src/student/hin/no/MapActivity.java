@@ -86,7 +86,11 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 		
 		//Alarm, vekker applikasjonen når "game" blir avsluttet
 		time = game.getStartDate() + game.getVarighet() * 60000; //*60000 til å konvertere minutter i millisekunder
-				
+		
+		
+		FileHandler fileh = new FileHandler();
+		fileh.WriteTime(time+20*1000, game.getName(), getApplicationContext());
+		alarmbleat.SetAlarm(getApplicationContext(), (game.getStartDate() + (game.getVarighet() + 10) * 60000 ), false, true, game.getName());		
 		
 		
 		changeGamePunkt();
@@ -364,6 +368,7 @@ public class MapActivity extends com.google.android.maps.MapActivity{
 				startActivity(resultIntent);
 				
 				//thread.interrupt();
+				alarmbleat.CancelAlarm(getApplicationContext());
 				timerGame.cancel();
 			}
 			//Log.d("From alarm time time", String.valueOf(date.getTime()));
