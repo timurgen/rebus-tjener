@@ -25,19 +25,19 @@ public class Alarm extends BroadcastReceiver{
             this.context = context;
             pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
             PowerManager.WakeLock wl;
-            boolean startgame = firedIntent.getBooleanExtra("startgame", true);
+            boolean startgame = firedIntent.getBooleanExtra("startgame", false);
             wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Alarm!");
     wl.acquire();
     
     Intent letsplay = new Intent(context, KlientStartActivity.class);
     letsplay.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     context.startActivity(letsplay);
+    String gamename = firedIntent.getStringExtra("gamename");
             if (startgame){
-                    String gamename = firedIntent.getStringExtra("gamename");
                     Toast.makeText(context, "Next game is about to start: " + gamename, Toast.LENGTH_LONG).show();
     }
             else{
-                    Toast.makeText(context, "The game was finished!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "The game: " + gamename + " was finished!", Toast.LENGTH_LONG).show();
             }
     wl.release();
             
@@ -48,15 +48,11 @@ public class Alarm extends BroadcastReceiver{
 {
     AlarmManager am=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
     Intent i = new Intent(context, Alarm.class);
-            if (startgame){
-                    i.putExtra("startgame", true);
-                    i.putExtra("gamename", nameOfFirstGame);
-            }
-            else{
-                    i.putExtra("startgame", false);
-            }
+    i.putExtra("startgame", startgame);
+    i.putExtra("gamename", nameOfFirstGame);
+            
     PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
-    am.set(AlarmManager.RTC_WAKEUP, time, pi);
+    am.set(AlarmManager.RTC_WAKEUP, (time - 60*1000), pi);
 }
 	
 	public void CancelAlarm(Context context)
